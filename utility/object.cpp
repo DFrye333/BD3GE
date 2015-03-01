@@ -6,41 +6,41 @@
 
 void Object::move(void)
 {
-	if((false == input.getKeyState('w') && false == input.getKeyState('s')) || (true == input.getKeyState('w') && true == input.getKeyState('s')))
+	if ((false == input.getKeyState('w') && false == input.getKeyState('s')) || (true == input.getKeyState('w') && true == input.getKeyState('s')))
 	{
 		setVelY(0);
 	}
-	else if(true == input.getKeyState('w'))
+	else if (true == input.getKeyState('w'))
 	{
-		addVelY(BD3GE_PLAYER_SPEED);
+		setVelY(BD3GE_PLAYER_SPEED);
 	}
-	else if(true == input.getKeyState('s'))
+	else if (true == input.getKeyState('s'))
 	{
-		addVelY(-BD3GE_PLAYER_SPEED);
+		setVelY(-BD3GE_PLAYER_SPEED);
 	}
-	if((false == input.getKeyState('a') && false == input.getKeyState('d')) || (true == input.getKeyState('a') && true == input.getKeyState('d')))
+	if ((false == input.getKeyState('a') && false == input.getKeyState('d')) || (true == input.getKeyState('a') && true == input.getKeyState('d')))
 	{
 		setVelX(0);
 	}
-	else if(true == input.getKeyState('a'))
+	else if (true == input.getKeyState('a'))
 	{
-		addVelX(-BD3GE_PLAYER_SPEED);
+		setVelX(-BD3GE_PLAYER_SPEED);
 	}
-	else if(true == input.getKeyState('d'))
+	else if (true == input.getKeyState('d'))
 	{
-		addVelX(BD3GE_PLAYER_SPEED);
+		setVelX(BD3GE_PLAYER_SPEED);
 	}
-	if((false == input.getKeyState('q') && false == input.getKeyState('e')) || (true == input.getKeyState('q') && true == input.getKeyState('e')))
+	if ((false == input.getKeyState('q') && false == input.getKeyState('e')) || (true == input.getKeyState('q') && true == input.getKeyState('e')))
 	{
 		setVelZ(0);
 	}
-	else if(true == input.getKeyState('q'))
+	else if (true == input.getKeyState('q'))
 	{
-		addVelZ(-BD3GE_PLAYER_SPEED);
+		setVelZ(-BD3GE_PLAYER_SPEED);
 	}
-	else if(true == input.getKeyState('e'))
+	else if (true == input.getKeyState('e'))
 	{
-		addVelZ(BD3GE_PLAYER_SPEED);
+		setVelZ(BD3GE_PLAYER_SPEED);
 	}
 
 	mPos.u.g.x += mVel.u.g.x;
@@ -50,7 +50,7 @@ void Object::move(void)
 
 void Object::setVelX(double x)
 {
-	if(x > -10 && x < 10)
+	if (x > -10 && x < 10)
 	{
 		mVel.u.g.x = x;
 	}
@@ -58,7 +58,7 @@ void Object::setVelX(double x)
 
 void Object::setVelY(double y)
 {
-	if(y > -10 && y < 10)
+	if (y > -10 && y < 10)
 	{
 		mVel.u.g.y = y;
 	}
@@ -66,7 +66,7 @@ void Object::setVelY(double y)
 
 void Object::setVelZ(double z)
 {
-	if(z > -10 && z < 10)
+	if (z > -10 && z < 10)
 	{
 		mVel.u.g.z = z;
 	}
@@ -74,7 +74,7 @@ void Object::setVelZ(double z)
 
 void Object::addVelX(double x)
 {
-	if(BD3GE_PLAYER_SPEED >= mVel.u.g.x && -BD3GE_PLAYER_SPEED <= mVel.u.g.x)
+	if (BD3GE_PLAYER_SPEED >= mVel.u.g.x && -BD3GE_PLAYER_SPEED <= mVel.u.g.x)
 	{
 		mVel.u.g.x += x;
 	}
@@ -82,7 +82,7 @@ void Object::addVelX(double x)
 
 void Object::addVelY(double y)
 {
-	if(BD3GE_PLAYER_SPEED >= mVel.u.g.y && -BD3GE_PLAYER_SPEED <= mVel.u.g.y)
+	if (BD3GE_PLAYER_SPEED >= mVel.u.g.y && -BD3GE_PLAYER_SPEED <= mVel.u.g.y)
 	{
 		mVel.u.g.y += y;
 	}

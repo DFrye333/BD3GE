@@ -28,13 +28,13 @@ class XWindow
 
 		Display* 				mDisplay;
 		Window 					mWindow;
-		GC 						mGraphicsContext = NULL;
-		GLXFBConfig* 			mFBConfig = NULL;
-		XVisualInfo* 			mVisualInfo = NULL;
+		GC 						mGraphicsContext;
+		GLXFBConfig* 			mFBConfig;
+		XVisualInfo* 			mVisualInfo;
 		XSetWindowAttributes 	mWindowAttr;
-		GLXContext 				mGlxContext = NULL;
+		GLXContext 				mGlxContext;
 		GLXWindow 				mGlxWindow;
-		bool 					mDBFlag = true;
+		bool 					mDBFlag;
 		// Single-buffered attributes.
 		int 					mSBAttr[];
 		// Double-buffered attributes.

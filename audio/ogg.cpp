@@ -39,7 +39,7 @@ void Ogg::loadOggFile(std::string fileName)
 	char tempBuffer[32768];
 	bool success;
 
-	if(true == mLoaded)
+	if (true == mLoaded)
 	{
 		std::cout << "File object already loaded." << std::endl;
 		return;
@@ -48,7 +48,7 @@ void Ogg::loadOggFile(std::string fileName)
 	infile = fopen(fileName.c_str(), "rb");
 	success = ov_open(infile, &mFile, NULL, 0);
 
-	switch(success)
+	switch (success)
 	{
 		case OV_EREAD:
 			std::cout << BD3GE_PRINT_ERROR << "OV_EREAD" << std::endl;
@@ -73,7 +73,7 @@ void Ogg::loadOggFile(std::string fileName)
 	}
 
 	mInfo = ov_info(&mFile, -1);
-	switch(mInfo->channels)
+	switch (mInfo->channels)
 	{
 		case 1:
 			mFormat = AL_FORMAT_MONO16;
@@ -90,7 +90,7 @@ void Ogg::loadOggFile(std::string fileName)
 	{
 		bytes = ov_read(&mFile, tempBuffer, 32768, 0, 2, 1, &bitStream);
 		mBuffer.insert(mBuffer.end(), tempBuffer, tempBuffer + bytes);
-	} while(bytes > 0);
+	} while (bytes > 0);
 
 	ov_clear(&mFile);
 }

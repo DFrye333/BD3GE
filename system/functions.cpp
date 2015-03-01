@@ -24,15 +24,15 @@ void run(void)
 			Vector3(0.0f, 0.0f, -3.0f),
 			Vector3(0.75f, 0.75f, 0.75f),
 			Vector3(0.0f, 0.0f, 0.0f),
-			1.0);
+			1.0f);
 	Cube boxanne2 = Cube(
 			Vector3(-1.0f, 0.0f, -3.0f),
 			Vector3(0.0f, 0.0f, 0.0f),
 			Vector3(0.0f, 0.0f, 0.0f),
-			1.0);
-	Cube* cubettes[2];
-	cubettes[0] = &boxanne;
-	cubettes[1] = &boxanne2;
+			1.0f);
+	Scene scene;
+	scene.addObject(&boxanne);
+	scene.addObject(&boxanne2);
 
 	//    Main game loop
 	// =====================
@@ -60,7 +60,7 @@ void run(void)
 		if (renderTimer.isDue(&elapsedTime))
 		{
 			// Process a rendering frame.
-			gl.render(cubettes);
+			gl.render(scene);
 
 			// Display FPS.
 			std::cout << "FPS: " << 1 / (elapsedTime / 1000.0) << std::endl;

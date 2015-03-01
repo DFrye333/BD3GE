@@ -22,11 +22,11 @@ Camera::~Camera()
 
 void Camera::setLookXZAngle(double lookXZAngle)
 {
-	if(0 > lookXZAngle)
+	if (0 > lookXZAngle)
 	{
 		lookXZAngle += 360;
 	}
-	else if(360 < lookXZAngle)
+	else if (360 < lookXZAngle)
 	{
 		lookXZAngle -= 360;
 	}
@@ -35,11 +35,11 @@ void Camera::setLookXZAngle(double lookXZAngle)
 
 void Camera::setLookYZAngle(double lookYZAngle)
 {
-	if(0 > lookYZAngle)
+	if (0 > lookYZAngle)
 	{
 		lookYZAngle += 360;
 	}
-	else if(360 < lookYZAngle)
+	else if (360 < lookYZAngle)
 	{
 		lookYZAngle -= 360;
 	}
@@ -53,19 +53,19 @@ double Camera::calcDistance(Vector3 point)
 
 short	Camera::calcQuadrant(void)
 {
-	if(mPos.u.g.x >= 0 && mPos.u.g.z >= 0)		// Quadrant I
+	if (mPos.u.g.x >= 0 && mPos.u.g.z >= 0)		// Quadrant I
 	{
 		return 1;
 	}
-	else if(mPos.u.g.x < 0 && mPos.u.g.z >= 0)	// Quadrant II
+	else if (mPos.u.g.x < 0 && mPos.u.g.z >= 0)	// Quadrant II
 	{
 		return 2;
 	}
-	else if(mPos.u.g.x <= 0 && mPos.u.g.z < 0)	// Quadrant III
+	else if (mPos.u.g.x <= 0 && mPos.u.g.z < 0)	// Quadrant III
 	{
 		return 3;
 	}
-	else if(mPos.u.g.x > 0 && mPos.u.g.z <= 0)	// Quadrant IV
+	else if (mPos.u.g.x > 0 && mPos.u.g.z <= 0)	// Quadrant IV
 	{
 		return 4;
 	}

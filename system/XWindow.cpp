@@ -2,11 +2,11 @@
 
 XWindow::XWindow()
 {
-	int colorBlack = 0;
-	int colorWhite = 0;
-	int configReturn = 0;
-	int windowAttrMask = 0;
-	int inputMask = 0;
+	mGraphicsContext = NULL;
+	mFBConfig = NULL;
+	mVisualInfo = NULL;
+	mGlxContext = NULL;
+	mDBFlag = true;
 
 	// Request a single-buffered color buffer with the maximum number of color bits for each component.
 	mSBAttr[0] = GLX_DRAWABLE_TYPE;
@@ -35,6 +35,12 @@ XWindow::XWindow()
 	mDBAttr[10] = GLX_BLUE_SIZE;
 	mDBAttr[11] = 1;
 	mDBAttr[12] = None;
+
+	int colorBlack = 0;
+	int colorWhite = 0;
+	int configReturn = 0;
+	int windowAttrMask = 0;
+	int inputMask = 0;
 
 	// Initialize the display.
 	mDisplay = XOpenDisplay(NULL);
@@ -90,7 +96,7 @@ XWindow::XWindow()
 
 	// Wait on the MapNotify event.
 	XEvent event;
-	while(1)
+	while (1)
 	{
 		XNextEvent(mDisplay, &event);
 		if (event.type == MapNotify)
@@ -133,8 +139,6 @@ void XWindow::messageListener(void)
 		XNextEvent(mDisplay, &event);
 
 		// Determine the type of the event.
-		KeySym keysym;
-		char *keyString = NULL;
 		switch (event.type)
 		{
 			// A keyboard key has been pressed.
@@ -148,13 +152,13 @@ void XWindow::messageListener(void)
 			case KeyRelease:
 				// Make sure there are events in the queue to prevent XPeekEvent from blocking execution.
 				XEvent bugEvent;
-				if(XPending(mDisplay))
+				if (XPending(mDisplay))
 				{
 					XPeekEvent(mDisplay, &bugEvent);
 				}
 
 				// Check for X11 auto-repeat and dispose of false releases/presses.
-				if(KeyPress == bugEvent.type && bugEvent.xkey.keycode == event.xkey.keycode && bugEvent.xkey.time == event.xkey.time)
+				if (KeyPress == bugEvent.type && bugEvent.xkey.keycode == event.xkey.keycode && bugEvent.xkey.time == event.xkey.time)
 				{
 	//				std::cout << BD3GE_PRINT_INFORMATION << "Extra key release, discarding." << std::endl;
 					XNextEvent(mDisplay, &bugEvent);

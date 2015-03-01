@@ -26,7 +26,7 @@ void GL::init(void)
 
 void GL::reshape(GLsizei width, GLsizei height)
 {
-	if(width > 0 && width < BD3GE_SCREEN_WIDTH && height > 0 && height < BD3GE_SCREEN_HEIGHT)
+	if (width > 0 && width < BD3GE_SCREEN_WIDTH && height > 0 && height < BD3GE_SCREEN_HEIGHT)
 	{
 		mViewportWidth = width;
 		mViewportHeight = height;
@@ -34,13 +34,12 @@ void GL::reshape(GLsizei width, GLsizei height)
 	}
 }
 
-void GL::render(Cube** cubettes)
+void GL::render(Scene scene)
 {
 	// Clear the color buffer.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	cubettes[0]->render();
-	cubettes[1]->render();
+	scene.render();
 
 	xWindow.swapBuffers();
 }

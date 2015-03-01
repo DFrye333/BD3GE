@@ -20,13 +20,13 @@ Key::~Key()
 
 Input::Input()
 {
-	int i = 0;
-
-	for(; i < 26; ++i)					// Initialize a-z character keys
+	// Initialize a-z character keys
+	for (unsigned int i = 0; i < 26; ++i)
 	{
 		mKeys[i].setCharacter((char)(i + 97));
 	}
-	mKeys[26].setCharacter(' ');		// Initialize space key
+	// Initialize space key
+	mKeys[26].setCharacter(' ');
 }
 
 Input::~Input()
@@ -38,35 +38,34 @@ void Input::handler(XEvent event)
 	KeySym keysym;
 	char *keyString = NULL;
 
-	if(KeyPress == event.type)
+	if (KeyPress == event.type)
 	{
 		XLookupString(&event.xkey, keyString, 32, &keysym, NULL);
 		keyString = XKeysymToString(keysym);
-		if(0 == strcmp("Escape", keyString))
+		if (0 == strcmp("Escape", keyString))
 		{
 			quit();
 		}
 		setKeyState(*keyString, true);
-//		std::cout << BD3GE_PRINT_INFORMATION << "'" << keyString << "' key pressed." << std::endl;
+		std::cout << BD3GE_PRINT_INFORMATION << "'" << keyString << "' key pressed." << std::endl;
 	}
-	else if(KeyRelease == event.type)
+
+	else if (KeyRelease == event.type)
 	{
 
 		XLookupString(&event.xkey, keyString, 32, &keysym, NULL);
 		keyString = XKeysymToString(keysym);
 		setKeyState(*keyString, false);
-//		std::cout << BD3GE_PRINT_INFORMATION << "'" << keyString << "' key released" << std::endl;
+		std::cout << BD3GE_PRINT_INFORMATION << "'" << keyString << "' key released" << std::endl;
 
 	}
 }
 
 void Input::setKeyState(char character, bool state)
 {
-	int i = 0;
-
-	for(; i < BD3GE_KEY_COUNT; ++i)
+	for (unsigned int i = 0; i < BD3GE_KEY_COUNT; ++i)
 	{
-		if(mKeys[i].getCharacter() == character)
+		if (mKeys[i].getCharacter() == character)
 		{
 			mKeys[i].setState(state);
 		}
@@ -75,11 +74,9 @@ void Input::setKeyState(char character, bool state)
 
 bool Input::getKeyState(char character)
 {
-	int i = 0;
-
-	for(; i < BD3GE_KEY_COUNT; ++i)
+	for (unsigned int i = 0; i < BD3GE_KEY_COUNT; ++i)
 	{
-		if(mKeys[i].getCharacter() == character)
+		if (mKeys[i].getCharacter() == character)
 		{
 			return mKeys[i].getState();
 		}

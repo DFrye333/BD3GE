@@ -76,7 +76,7 @@ GLuint Shader::createShader(GLenum shaderType, const std::string filePath)
 		glGetShaderInfoLog(shaderId, infoLogLength, NULL, strInfoLog);
 
 		const char* strShaderType = NULL;
-		switch(shaderType)
+		switch (shaderType)
 		{
 			case GL_VERTEX_SHADER:
 				strShaderType = "vertex";

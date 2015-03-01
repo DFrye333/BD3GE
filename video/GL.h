@@ -2,9 +2,10 @@
 #define GL_H
 
 #include "../utility/object.h"
+#include "scene.h"
 
 // Forward declaration.
-class Cube;
+class Scene;
 
 class GL
 {
@@ -12,7 +13,7 @@ class GL
 
 		void			init(void);
 		void			reshape(int x, int y);
-		void			render(Cube** cubettes);
+		void			render(Scene scene);
 		const GLubyte*	getOpenGLVersion(void);
 		unsigned int	getViewportWidth(void);
 		unsigned int	getViewportHeight(void);
