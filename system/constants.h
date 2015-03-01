@@ -15,7 +15,12 @@ const int			BD3GE_WINDOW_HEIGHT = 900;
 
 const float			BD3GE_PLAYER_SPEED = 0.1;
 
-// Number of frames to be created per-second.
+// Number of ticks to be processed per-second.
+const float			BD3GE_TICK_RATE = 60.0;
+// Minimum time between ticks, in milliseconds.
+const float			BD3GE_TICK_TIME = (1.0 / BD3GE_TICK_RATE) * 1000.0;
+
+// Number of frames to be processed per-second.
 const float			BD3GE_FRAME_RATE = 60.0;
 // Minimum time between frames, in milliseconds.
 const float			BD3GE_FRAME_TIME = (1.0 / BD3GE_FRAME_RATE) * 1000.0;

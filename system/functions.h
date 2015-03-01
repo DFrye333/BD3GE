@@ -4,6 +4,7 @@
 #include <sys/time.h>
 
 #include "../audio/AL.h"
+#include "../utility/timer.h"
 #include "constants.h"
 #include "globals.h"
 

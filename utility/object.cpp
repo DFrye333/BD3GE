@@ -253,25 +253,25 @@ Cube::Cube(const Vector3 position, const Vector3 color, const Vector3 velocity, 
 
 Cube::~Cube()
 {
-	if (mVertexPositionBuffer != NULL)
+	if (mVertexPositionBuffer)
 	{
 		delete[] mVertexPositionBuffer;
 		mVertexPositionBuffer = NULL;
 	}
 
-	if (mIndexPositionBuffer != NULL)
+	if (mIndexPositionBuffer)
 	{
 		delete[] mIndexPositionBuffer;
 		mIndexPositionBuffer = NULL;
 	}
 
-	if (mShader != NULL)
+	if (mShader)
 	{
 		delete mShader;
 		mShader = NULL;
 	}
 
-	if (mOgg != NULL)
+	if (mOgg)
 	{
 		delete mOgg;
 		mOgg = NULL;

@@ -103,7 +103,7 @@ void Shader::readFile(const std::string filePath, std::string* shaderText)
 	std::ifstream infile(filePath.c_str());
 
 	// Ensure that the shader file was opened successfully.
-	if (infile == NULL)
+	if (!infile)
 	{
 		std::cerr << "(BD3GE | Error): Cannot open shader file path " << filePath << " for reading!" << std::endl;
 		return;

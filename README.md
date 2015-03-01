@@ -11,4 +11,3 @@ Let's build a game from the ground up. Rendering, physics, audio - all of that g
 * Encapsulate OGG stuff into a more general Audio class. 
 * More commenting!
 * Fix that input key press bug.
-* Encapsulate all of the timeval/gettimeofday stuff inside of a class.

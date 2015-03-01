@@ -19,8 +19,6 @@ void quit(void)
 
 void run(void)
 {
-	timeval beforeTime;
-	timeval afterTime;
 	double elapsedTime = 0.0;
 	Cube boxanne = Cube(
 			Vector3(0.0f, 0.0f, -3.0f),
@@ -33,33 +31,39 @@ void run(void)
 			Vector3(0.0f, 0.0f, 0.0f),
 			1.0);
 	Cube* cubettes[2];
-
 	cubettes[0] = &boxanne;
 	cubettes[1] = &boxanne2;
 
 	//    Main game loop
 	// =====================
-	gettimeofday(&beforeTime, NULL);
+
+	// Initialize the logic and rendering timers.
+	Timer renderTimer("Render", BD3GE_FRAME_TIME);
+	Timer logicTimer("Logic", BD3GE_TICK_TIME);
+	renderTimer.start();
+	logicTimer.start();
+
+	// Iterate endlessly (unless halted elsewhere).
 	while (1)
 	{
+		// Listen for X messages.
 		xWindow.messageListener();
 
-		// Check timer.
-		gettimeofday(&afterTime, NULL);
-		// elapsedTime was adding the (afterTime - beforeTime) interval to itself every single iteration! That did *not* measure elapsed time! Below should now be correct.
-		elapsedTime = ((afterTime.tv_sec - beforeTime.tv_sec) * 1000.0) + ((afterTime.tv_usec - beforeTime.tv_usec) / 1000.0);
-		if (elapsedTime >= BD3GE_FRAME_TIME)
+		// Check logic timer.
+		if (logicTimer.isDue())
 		{
-			// Update and render.
+			// Process a logic tick.
 			boxanne.move();
+		}
+
+		// Check render timer.
+		if (renderTimer.isDue(&elapsedTime))
+		{
+			// Process a rendering frame.
 			gl.render(cubettes);
 
 			// Display FPS.
 			std::cout << "FPS: " << 1 / (elapsedTime / 1000.0) << std::endl;
-
-			// Reset timer.
-			gettimeofday(&beforeTime, NULL);
-			elapsedTime = 0.0;
 		}
 	}
 	// =====================
