@@ -15,9 +15,13 @@ const int			BD3GE_WINDOW_HEIGHT = 900;
 
 const float			BD3GE_PLAYER_SPEED = 0.1;
 
-const float			BD3GE_FRAME_RATE = 16.6;	// Minimum time between frames, in milliseconds.
+// Number of frames to be created per-second.
+const float			BD3GE_FRAME_RATE = 60.0;
+// Minimum time between frames, in milliseconds.
+const float			BD3GE_FRAME_TIME = (1.0 / BD3GE_FRAME_RATE) * 1000.0;
 
-const int			BD3GE_KEY_COUNT = 64;		// Number of keys contained within the input handler.
+// Number of keys contained within the input handler.
+const int			BD3GE_KEY_COUNT = 64;
 const char			BD3GE_KEY_W = 'w';
 const char			BD3GE_KEY_S = 's';
 const char			BD3GE_KEY_A = 'a';

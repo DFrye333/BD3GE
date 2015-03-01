@@ -37,23 +37,30 @@ void run(void)
 	cubettes[0] = &boxanne;
 	cubettes[1] = &boxanne2;
 
+	//    Main game loop
+	// =====================
 	gettimeofday(&beforeTime, NULL);
 	while (1)
 	{
-		//    Main game loop
-		// =====================
 		xWindow.messageListener();
+
+		// Check timer.
 		gettimeofday(&afterTime, NULL);
-		elapsedTime += ((afterTime.tv_sec - beforeTime.tv_sec) * 1000.0) + ((afterTime.tv_usec - beforeTime.tv_usec) / 1000.0);
-		if (elapsedTime >= BD3GE_FRAME_RATE)
+		// elapsedTime was adding the (afterTime - beforeTime) interval to itself every single iteration! That did *not* measure elapsed time! Below should now be correct.
+		elapsedTime = ((afterTime.tv_sec - beforeTime.tv_sec) * 1000.0) + ((afterTime.tv_usec - beforeTime.tv_usec) / 1000.0);
+		if (elapsedTime >= BD3GE_FRAME_TIME)
 		{
+			// Update and render.
 			boxanne.move();
-//			boxanne2.move();
-			gettimeofday(&beforeTime, NULL);
-//			std::cout << "FPS: " << 1 / (elapsedTime / 1000.0) << std::endl;
-			elapsedTime = 0.0;
 			gl.render(cubettes);
+
+			// Display FPS.
+			std::cout << "FPS: " << 1 / (elapsedTime / 1000.0) << std::endl;
+
+			// Reset timer.
+			gettimeofday(&beforeTime, NULL);
+			elapsedTime = 0.0;
 		}
-		// =====================
 	}
+	// =====================
 }

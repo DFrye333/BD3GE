@@ -172,7 +172,6 @@ void XWindow::messageListener(void)
 				break;
 
 			default:
-
 				std::cout <<  BD3GE_PRINT_INFORMATION << "XEvent: " << event.type << std::endl;
 
 				break;

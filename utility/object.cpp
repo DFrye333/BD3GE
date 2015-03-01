@@ -235,15 +235,18 @@ Cube::Cube(const Vector3 position, const Vector3 color, const Vector3 velocity, 
 	float frustrumScale = 1.0f;
 	float zNear = 0.01f;
 	float zFar = 1000.0f;
+
 	Matrix4 perspectiveMatrix = Matrix4(
 			frustrumScale / (gl.getViewportWidth() / (GLfloat)gl.getViewportHeight()), 0, 0, 0,
 			0, frustrumScale, 0, 0,
 			0, 0, ((zNear + zFar) / (zNear - zFar)), ((2 * zNear * zFar) / (zNear - zFar)),
 			0, 0, -1.0f, 0
 			);
-	GLfloat d[16];
-	perspectiveMatrix.toFloatArray(d);
-	glUniformMatrix4fv(glGetUniformLocation(mShader->getProgramId(), "perspectiveMatrix"), 1, GL_TRUE, d);
+
+	GLfloat perspectiveArray[16];
+	perspectiveMatrix.toFloatArray(perspectiveArray);
+
+	glUniformMatrix4fv(glGetUniformLocation(mShader->getProgramId(), "perspectiveMatrix"), 1, GL_TRUE, perspectiveArray);
 
 	glUseProgram(0);
 }
