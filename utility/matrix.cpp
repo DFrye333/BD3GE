@@ -61,7 +61,16 @@ const Matrix4 Matrix4::inverse(void)
 		return *this;
 	}
 
+	// TODO: Finish this method.
+}
 
+Matrix4 Matrix4::identity(void)
+{
+	return Matrix4(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 const float Matrix4::determinant(void)

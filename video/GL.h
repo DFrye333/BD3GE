@@ -1,19 +1,19 @@
 #ifndef GL_H
 #define GL_H
 
-#include "../utility/object.h"
-#include "scene.h"
+#include <iostream>
 
-// Forward declaration.
-class Scene;
+#include <GL/glew.h>
+
+#include "../system/constants.h"
+#include "../utility/vector.h"
 
 class GL
 {
 	public:
 
-		void			init(void);
+						GL();
 		void			reshape(int x, int y);
-		void			render(Scene scene);
 		const GLubyte*	getOpenGLVersion(void);
 		unsigned int	getViewportWidth(void);
 		unsigned int	getViewportHeight(void);

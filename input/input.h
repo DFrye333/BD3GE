@@ -1,37 +1,27 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <iostream>
 #include <cstring>
+#include <map>
 
 #include <X11/Xlib.h>
 
-#include "../system/functions.h"
 #include "../system/constants.h"
-
-class Key
-{
-	public:
-				Key();
-				~Key();
-		void	setCharacter(char character)	{ mCharacter = character; }
-		void	setState(bool state)			{ mState = state; }
-		char	getCharacter(void)				{ return mCharacter; }
-		bool	getState(void)					{ return mState; }
-	protected:
-		char	mCharacter;
-		bool	mState;
-};
+#include "../utility/message.h"
 
 class Input
 {
 	public:
+
 				Input();
-				~Input();
-		void	handler(XEvent event);
-		void	setKeyState(char character, bool state);
-		bool	getKeyState(char character);
+		void	handler(Message< std::pair <char*, bool> > message);
+		void	setKeyState(std::string key, bool state);
+		bool	getKeyState(const std::string key);
+
 	protected:
-		Key		mKeys[BD3GE_KEY_COUNT];
+
+		std::map<const std::string, unsigned int>	mKeys;
 };
 
 #endif // INPUT_H

@@ -10,8 +10,8 @@ class AL
 {
 	public:
 
-		void init(void);
-		void quit(void);
+		AL();
+		~AL();
 
 	private:
 

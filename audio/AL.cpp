@@ -1,6 +1,6 @@
 #include "AL.h"
 
-void AL::init(void)
+AL::AL()
 {
 	device = alcOpenDevice(NULL);
 	context = alcCreateContext(device, NULL);
@@ -8,7 +8,7 @@ void AL::init(void)
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
 }
 
-void AL::quit(void)
+AL::~AL()
 {
 	alcDestroyContext(context);
 	alcCloseDevice(device);

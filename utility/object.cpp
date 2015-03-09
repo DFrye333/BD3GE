@@ -6,91 +6,59 @@
 
 void Object::move(void)
 {
-	if ((false == input.getKeyState('w') && false == input.getKeyState('s')) || (true == input.getKeyState('w') && true == input.getKeyState('s')))
-	{
-		setVelY(0);
-	}
-	else if (true == input.getKeyState('w'))
-	{
-		setVelY(BD3GE_PLAYER_SPEED);
-	}
-	else if (true == input.getKeyState('s'))
-	{
-		setVelY(-BD3GE_PLAYER_SPEED);
-	}
-	if ((false == input.getKeyState('a') && false == input.getKeyState('d')) || (true == input.getKeyState('a') && true == input.getKeyState('d')))
-	{
-		setVelX(0);
-	}
-	else if (true == input.getKeyState('a'))
-	{
-		setVelX(-BD3GE_PLAYER_SPEED);
-	}
-	else if (true == input.getKeyState('d'))
-	{
-		setVelX(BD3GE_PLAYER_SPEED);
-	}
-	if ((false == input.getKeyState('q') && false == input.getKeyState('e')) || (true == input.getKeyState('q') && true == input.getKeyState('e')))
-	{
-		setVelZ(0);
-	}
-	else if (true == input.getKeyState('q'))
-	{
-		setVelZ(-BD3GE_PLAYER_SPEED);
-	}
-	else if (true == input.getKeyState('e'))
-	{
-		setVelZ(BD3GE_PLAYER_SPEED);
-	}
+	mPosition.u.g.x += mVelocity.u.g.x;
+	mPosition.u.g.y += mVelocity.u.g.y;
+	mPosition.u.g.z += mVelocity.u.g.z / 10;
 
-	mPos.u.g.x += mVel.u.g.x;
-	mPos.u.g.y += mVel.u.g.y;
-	mPos.u.g.z += mVel.u.g.z / 10;
+//	mTransformationMatrix(0, 3, mPosition.u.g.x);
+//	mTransformationMatrix(1, 3, mPosition.u.g.y);
+//	mTransformationMatrix(2, 3, mPosition.u.g.z);
+//	mTransformationMatrix(1, 3, 1.0f);
 }
 
-void Object::setVelX(double x)
+void Object::setVelocityX(double x)
 {
 	if (x > -10 && x < 10)
 	{
-		mVel.u.g.x = x;
+		mVelocity.u.g.x = x;
 	}
 }
 
-void Object::setVelY(double y)
+void Object::setVelocityY(double y)
 {
 	if (y > -10 && y < 10)
 	{
-		mVel.u.g.y = y;
+		mVelocity.u.g.y = y;
 	}
 }
 
-void Object::setVelZ(double z)
+void Object::setVelocityZ(double z)
 {
 	if (z > -10 && z < 10)
 	{
-		mVel.u.g.z = z;
+		mVelocity.u.g.z = z;
 	}
 }
 
-void Object::addVelX(double x)
+void Object::addVelocityX(double x)
 {
-	if (BD3GE_PLAYER_SPEED >= mVel.u.g.x && -BD3GE_PLAYER_SPEED <= mVel.u.g.x)
+	if (BD3GE_PLAYER_SPEED >= mVelocity.u.g.x && -BD3GE_PLAYER_SPEED <= mVelocity.u.g.x)
 	{
-		mVel.u.g.x += x;
+		mVelocity.u.g.x += x;
 	}
 }
 
-void Object::addVelY(double y)
+void Object::addVelocityY(double y)
 {
-	if (BD3GE_PLAYER_SPEED >= mVel.u.g.y && -BD3GE_PLAYER_SPEED <= mVel.u.g.y)
+	if (BD3GE_PLAYER_SPEED >= mVelocity.u.g.y && -BD3GE_PLAYER_SPEED <= mVelocity.u.g.y)
 	{
-		mVel.u.g.y += y;
+		mVelocity.u.g.y += y;
 	}
 }
 
-void Object::addVelZ(double z)
+void Object::addVelocityZ(double z)
 {
-	mVel.u.g.z += z;
+	mVelocity.u.g.z += z;
 }
 
 /*
@@ -99,67 +67,68 @@ void Object::addVelZ(double z)
 
 Cube::Cube(const Vector3 position, const Vector3 color, const Vector3 velocity, const double size)
 {
-	mPos.u.g.x = position.u.g.x;
-	mPos.u.g.y = position.u.g.y;
-	mPos.u.g.z = position.u.g.z;
+	mPosition.u.g.x = position.u.g.x;
+	mPosition.u.g.y = position.u.g.y;
+	mPosition.u.g.z = position.u.g.z;
 
 	mColor.u.c.r = color.u.c.r;
 	mColor.u.c.g = color.u.c.g;
 	mColor.u.c.b = color.u.c.b;
 
-	mVel.u.g.x = velocity.u.g.x;
-	mVel.u.g.y = velocity.u.g.y;
-	mVel.u.g.z = velocity.u.g.z;
+	mVelocity.u.g.x = velocity.u.g.x;
+	mVelocity.u.g.y = velocity.u.g.y;
+	mVelocity.u.g.z = velocity.u.g.z;
 
 	mSize = size;
 
 	mShader = new Shader();
 
-	std::string fileName = std::string("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/DH.ogg");
-	mOgg = new Ogg(fileName);
+	// TODO: Revisit audio stuff later!
+//	std::string fileName = std::string("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/DH.ogg");
+//	mOgg = new Ogg(fileName);
 //	mOgg->play();
 
 	// Cube vertex positions.
 	mVertexPositionBuffer = new GLfloat[32];
 
-	mVertexPositionBuffer[0] = mPos.u.g.x + (mSize / 2);
-	mVertexPositionBuffer[1] = mPos.u.g.y + (mSize / 2);
-	mVertexPositionBuffer[2] = mPos.u.g.z + (mSize / 2);
+	mVertexPositionBuffer[0] = mPosition.u.g.x + (mSize / 2);
+	mVertexPositionBuffer[1] = mPosition.u.g.y + (mSize / 2);
+	mVertexPositionBuffer[2] = mPosition.u.g.z + (mSize / 2);
 	mVertexPositionBuffer[3] = 1.0f;
 
-	mVertexPositionBuffer[4] = mPos.u.g.x + (mSize / 2);
-	mVertexPositionBuffer[5] = mPos.u.g.y - (mSize / 2);
-	mVertexPositionBuffer[6] = mPos.u.g.z + (mSize / 2);
+	mVertexPositionBuffer[4] = mPosition.u.g.x + (mSize / 2);
+	mVertexPositionBuffer[5] = mPosition.u.g.y - (mSize / 2);
+	mVertexPositionBuffer[6] = mPosition.u.g.z + (mSize / 2);
 	mVertexPositionBuffer[7] = 1.0f;
 
-	mVertexPositionBuffer[8] = mPos.u.g.x - (mSize / 2);
-	mVertexPositionBuffer[9] = mPos.u.g.y - (mSize / 2);
-	mVertexPositionBuffer[10] = mPos.u.g.z + (mSize / 2);
+	mVertexPositionBuffer[8] = mPosition.u.g.x - (mSize / 2);
+	mVertexPositionBuffer[9] = mPosition.u.g.y - (mSize / 2);
+	mVertexPositionBuffer[10] = mPosition.u.g.z + (mSize / 2);
 	mVertexPositionBuffer[11] = 1.0f;
 
-	mVertexPositionBuffer[12] = mPos.u.g.x - (mSize / 2);
-	mVertexPositionBuffer[13] = mPos.u.g.y + (mSize / 2);
-	mVertexPositionBuffer[14] = mPos.u.g.z + (mSize / 2);
+	mVertexPositionBuffer[12] = mPosition.u.g.x - (mSize / 2);
+	mVertexPositionBuffer[13] = mPosition.u.g.y + (mSize / 2);
+	mVertexPositionBuffer[14] = mPosition.u.g.z + (mSize / 2);
 	mVertexPositionBuffer[15] = 1.0f;
 
-	mVertexPositionBuffer[16] = mPos.u.g.x + (mSize / 2);
-	mVertexPositionBuffer[17] = mPos.u.g.y + (mSize / 2);
-	mVertexPositionBuffer[18] = mPos.u.g.z - (mSize / 2);
+	mVertexPositionBuffer[16] = mPosition.u.g.x + (mSize / 2);
+	mVertexPositionBuffer[17] = mPosition.u.g.y + (mSize / 2);
+	mVertexPositionBuffer[18] = mPosition.u.g.z - (mSize / 2);
 	mVertexPositionBuffer[19] = 1.0f;
 
-	mVertexPositionBuffer[20] = mPos.u.g.x + (mSize / 2);
-	mVertexPositionBuffer[21] = mPos.u.g.y - (mSize / 2);
-	mVertexPositionBuffer[22] = mPos.u.g.z - (mSize / 2);
+	mVertexPositionBuffer[20] = mPosition.u.g.x + (mSize / 2);
+	mVertexPositionBuffer[21] = mPosition.u.g.y - (mSize / 2);
+	mVertexPositionBuffer[22] = mPosition.u.g.z - (mSize / 2);
 	mVertexPositionBuffer[23] = 1.0f;
 
-	mVertexPositionBuffer[24] = mPos.u.g.x - (mSize / 2);
-	mVertexPositionBuffer[25] = mPos.u.g.y - (mSize / 2);
-	mVertexPositionBuffer[26] = mPos.u.g.z - (mSize / 2);
+	mVertexPositionBuffer[24] = mPosition.u.g.x - (mSize / 2);
+	mVertexPositionBuffer[25] = mPosition.u.g.y - (mSize / 2);
+	mVertexPositionBuffer[26] = mPosition.u.g.z - (mSize / 2);
 	mVertexPositionBuffer[27] = 1.0f;
 
-	mVertexPositionBuffer[28] = mPos.u.g.x - (mSize / 2);
-	mVertexPositionBuffer[29] = mPos.u.g.y + (mSize / 2);
-	mVertexPositionBuffer[30] = mPos.u.g.z - (mSize / 2);
+	mVertexPositionBuffer[28] = mPosition.u.g.x - (mSize / 2);
+	mVertexPositionBuffer[29] = mPosition.u.g.y + (mSize / 2);
+	mVertexPositionBuffer[30] = mPosition.u.g.z - (mSize / 2);
 	mVertexPositionBuffer[31] = 1.0f;
 
 	// Cube vertex indices.
@@ -229,16 +198,18 @@ Cube::Cube(const Vector3 position, const Vector3 color, const Vector3 velocity, 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	// Setup for shader's perspective matrix.
+	// Setup for shader's matrices.
 	glUseProgram(mShader->getProgramId());
 
-	float frustrumScale = 1.0f;
+	float frustumScale = 1.0f;
 	float zNear = 0.01f;
 	float zFar = 1000.0f;
 
+	// This matrix can probably be given to the scene, as there is no reason for every object to have its own copy of an identical matrix.
 	Matrix4 perspectiveMatrix = Matrix4(
-			frustrumScale / (gl.getViewportWidth() / (GLfloat)gl.getViewportHeight()), 0, 0, 0,
-			0, frustrumScale, 0, 0,
+//			frustumScale / (gl.getViewportWidth() / (GLfloat)gl.getViewportHeight()), 0, 0, 0,
+			frustumScale / (1600 / (GLfloat)900), 0, 0, 0,
+			0, frustumScale, 0, 0,
 			0, 0, ((zNear + zFar) / (zNear - zFar)), ((2 * zNear * zFar) / (zNear - zFar)),
 			0, 0, -1.0f, 0
 			);
@@ -247,6 +218,8 @@ Cube::Cube(const Vector3 position, const Vector3 color, const Vector3 velocity, 
 	perspectiveMatrix.toFloatArray(perspectiveArray);
 
 	glUniformMatrix4fv(glGetUniformLocation(mShader->getProgramId(), "perspectiveMatrix"), 1, GL_TRUE, perspectiveArray);
+
+	mModelTransform = Matrix4::identity();
 
 	glUseProgram(0);
 }
@@ -280,7 +253,7 @@ Cube::~Cube()
 
 Cube::Cube(const Cube& source)
 {
-	mPos = source.mPos;
+	mPosition = source.mPosition;
 	mColor = source.mColor;
 	mVBO_Position = source.mVBO_Position;
 	mIBO_Position = source.mIBO_Position;
@@ -288,7 +261,7 @@ Cube::Cube(const Cube& source)
 	mIndexPositionBuffer = source.mIndexPositionBuffer;
 	mShader = source.mShader;
 	mOgg = source.mOgg;
-	mVel = source.mVel;
+	mVelocity = source.mVelocity;
 	mSize = source.mSize;
 }
 
@@ -298,7 +271,10 @@ void Cube::render(void)
 	glUseProgram(mShader->getProgramId());
 
 	// Update position.
-	glUniform3f(glGetUniformLocation(mShader->getProgramId(), "offset"), mPos.u.g.x, mPos.u.g.y, mPos.u.g.z);
+//	GLfloat transformationArray[16];
+//	mTransformationMatrix.toFloatArray(transformationArray);
+//	glUniformMatrix4fv(glGetUniformLocation(mShader->getProgramId(), "transformationMatrix"), 1, GL_TRUE, transformationArray);
+	glUniform3f(glGetUniformLocation(mShader->getProgramId(), "offset"), mPosition.u.g.x, mPosition.u.g.y, mPosition.u.g.z);
 	glUniform4f(glGetUniformLocation(mShader->getProgramId(), "color"), mColor.u.c.r, mColor.u.c.g, mColor.u.c.b, 1.0f);
 
 	// Draw cube using its VAO.

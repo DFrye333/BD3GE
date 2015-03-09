@@ -1,10 +1,9 @@
-#include "system/functions.h"
+#include "system/game.h"
 
 int main()
 {
-	init();
-	run();
-	quit();
+	Game game;
+	game.run();
 
 	return 0;
 }

@@ -6,7 +6,7 @@ Let's build a game from the ground up. Rendering, physics, audio - all of that g
 **TODO:**
 
 * Libraries to consider adding:
-	- OpenGL-FreeType (OGLFT)
+	- OpenGL-FreeType (OGLFT) or implement my own very simple text rendering.
 	- Open Asset Import Library (Assimp)
 * Multiplatform support. Get this thing running on Windows?
 * Finish Matrix4 inverse functionality.

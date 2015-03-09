@@ -5,40 +5,44 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <queue>
+#include <utility>
 
 #include <GL/glew.h>
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 
+#include "../utility/message.h"
 #include "constants.h"
-#include "globals.h"
 
 class XWindow
 {
 	public:
 
-						XWindow(void);
-						~XWindow(void);
-		void 			messageListener(void);
-		void 			swapBuffers(void);
-		unsigned int	getWindowWidth();
-		unsigned int	getWindowHeight();
+											XWindow();
+											~XWindow(void);
+		void 								messageListener(void);
+		void 								swapBuffers(void);
+		Message< std::pair<char*, bool> >	pullInputMessage(void);
+		Message< std::pair<int, int> >		pullReshapeMessage(void);
 
 	private:
 
-		Display* 				mDisplay;
-		Window 					mWindow;
-		GC 						mGraphicsContext;
-		GLXFBConfig* 			mFBConfig;
-		XVisualInfo* 			mVisualInfo;
-		XSetWindowAttributes 	mWindowAttr;
-		GLXContext 				mGlxContext;
-		GLXWindow 				mGlxWindow;
-		bool 					mDBFlag;
+		std::queue< Message< std::pair<char*, bool> > >	mInputQueue;
+		std::queue< Message< std::pair<int, int> > >	mReshapeQueue;
+		Display* 										mDisplay;
+		Window 											mWindow;
+		GC 												mGraphicsContext;
+		GLXFBConfig* 									mFBConfig;
+		XVisualInfo* 									mVisualInfo;
+		XSetWindowAttributes							mWindowAttr;
+		GLXContext 										mGlxContext;
+		GLXWindow 										mGlxWindow;
+		bool 											mDBFlag;
 		// Single-buffered attributes.
-		int 					mSBAttr[];
+		int 											mSBAttr[];
 		// Double-buffered attributes.
-		int 					mDBAttr[];
+		int 											mDBAttr[];
 };
 
 #endif // XWINDOW_H

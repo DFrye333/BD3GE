@@ -1,6 +1,10 @@
 #include "GL.h"
 
-void GL::init(void)
+/*
+ * 	GL class
+ */
+
+GL::GL()
 {
 	// Set the clear color of the screen.
 	Vector3 cornflowerBlue(0.39f, 0.58f, 0.93f);
@@ -30,18 +34,8 @@ void GL::reshape(GLsizei width, GLsizei height)
 	{
 		mViewportWidth = width;
 		mViewportHeight = height;
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, mViewportWidth, mViewportHeight);
 	}
-}
-
-void GL::render(Scene scene)
-{
-	// Clear the color buffer.
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	scene.render();
-
-	xWindow.swapBuffers();
 }
 
 const GLubyte* GL::getOpenGLVersion(void)

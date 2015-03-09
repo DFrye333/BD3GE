@@ -15,6 +15,7 @@ class Matrix4
 		void operator()(unsigned short i, unsigned short j, double value);
 		void toFloatArray(float* floatArray);
 		const Matrix4 inverse(void);
+		static Matrix4 identity(void);
 
 	private:
 
