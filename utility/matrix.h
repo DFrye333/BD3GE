@@ -1,28 +1,45 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-class Matrix4
+#include <iostream>
+
+namespace BD3GE
 {
-	public:
+	class Matrix4
+	{
+		public:
 
-		Matrix4();
-		Matrix4(double* elements);
-		Matrix4(double a11, double a12, double a13, double a14,
-				double a21, double a22, double a23, double a24,
-				double a31, double a32, double a33, double a34,
-				double a41, double a42, double a43, double a44);
-		const double operator()(unsigned short i, unsigned short j);
-		void operator()(unsigned short i, unsigned short j, double value);
-		void toFloatArray(float* floatArray);
-		const Matrix4 inverse(void);
-		static Matrix4 identity(void);
+			static Matrix4 identity(void);
 
-	private:
+							Matrix4();
+							Matrix4(float* elements);
+							Matrix4(float a11, float a12, float a13, float a14,
+									float a21, float a22, float a23, float a24,
+									float a31, float a32, float a33, float a34,
+									float a41, float a42, float a43, float a44);
+							Matrix4(const Matrix4& source);
+			void 			to_float_array(float* float_array) const;
+			void 			print(void) const;
+			const 			Matrix4 inverse(void) const;
+			void 			row_add(unsigned short row_destination, unsigned short row_source, float multiplier);
+			void 			row_multiply(unsigned short row, float multipler);
+			void 			row_swap(unsigned short row_1, unsigned short row_2);
+			const 			float operator()(unsigned short i, unsigned short j) const;
+			void 			operator()(unsigned short i, unsigned short j, float value);
+			const Matrix4& 	operator=(const Matrix4& other);
+			const Matrix4& 	operator*=(const Matrix4& other);
+			const Matrix4 	operator*(const Matrix4& other) const;
 
-		const float determinant(void);
+		private:
 
-		double mElements[16];
-		static const short m_NUMBER_ELEMENTS = 16;
-};
+			const float compute_determinant(void) const;
+
+			static const short m_NUMBER_ROWS = 4;
+			static const short m_NUMBER_COLUMNS = 4;
+			static const short m_NUMBER_ELEMENTS = m_NUMBER_ROWS * m_NUMBER_COLUMNS;
+
+			float m_elements[m_NUMBER_ELEMENTS];
+	};
+}
 
 #endif // MATRIX_H

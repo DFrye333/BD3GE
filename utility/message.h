@@ -1,82 +1,82 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-template<class T>
-class Message
+namespace BD3GE
 {
-	public:
+	template<class T>
+	class Message
+	{
+		public:
 
 			Message()
-		{
-			mData = NULL;
-		}
+			{
+				m_data = NULL;
+			}
 
 			Message(T data)
-		{
-			mData = new T(data);
-		}
+			{
+				m_data = new T(data);
+			}
 
 			Message(const Message& source)
-		{
-			if (source.mData)
 			{
-				mData = new T(*(source.mData));
+				if (source.m_data)
+				{
+					m_data = new T(*(source.m_data));
+				}
 			}
-		}
 
 			~Message()
-		{
-			if (mData)
 			{
-				delete mData;
-				mData = NULL;
+				delete m_data;
+				m_data = NULL;
 			}
-		}
 
-		Message& operator=(const Message& source)
-		{
-			if (this != &source)
+			Message& operator=(const Message& source)
 			{
-				if (mData)
+				if (this != &source)
 				{
-					delete mData;
-					mData = NULL;
+					if (m_data)
+					{
+						delete m_data;
+						m_data = NULL;
+					}
+
+					m_data = new T(*(source.m_data));
 				}
 
-				mData = new T(*(source.mData));
+				return *this;
 			}
 
-			return *this;
-		}
-
-		bool operator==(const Message& other)
-		{
-			return (*mData == other.mData);
-		}
-
-		bool operator!=(const Message& other)
-		{
-			return !(this == other);
-		}
-
-		T* getData(void) const
-		{
-			return mData;
-		}
-
-		void setData(T data)
-		{
-			if (!mData)
+			bool operator==(const Message& other)
 			{
-				mData = new T;
+				return (*m_data == other.m_data);
 			}
 
-			*mData = data;
-		}
+			bool operator!=(const Message& other)
+			{
+				return !(this == other);
+			}
 
-	private:
+			T* get_data(void) const
+			{
+				return m_data;
+			}
 
-		T*	mData;
-};
+			void set_data(T data)
+			{
+				if (!m_data)
+				{
+					m_data = new T;
+				}
+
+				*m_data = data;
+			}
+
+		private:
+
+			T*	m_data;
+	};
+}
 
 #endif // MESSAGE_H

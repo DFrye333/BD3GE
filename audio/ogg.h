@@ -10,29 +10,33 @@
 #include <vorbis/vorbisfile.h>
 
 #include "../system/constants.h"
+#include "../system/globals.h"
 
-class Ogg
+namespace BD3GE
 {
-	public:
-							Ogg();
-							Ogg(std::string fileName);
-							~Ogg();
-		ALuint				getIdBuffer(void) 	{ return mIdBuffer; }
-		ALuint				getIdSources(void) 	{ return mIdSources; }
-		ALuint				getFormat(void)		{ return mFormat; }
-		ALsizei				getFrequency(void)	{ return mFrequency; }
-		std::vector <char>	getBuffer(void)		{ return mBuffer; }
-		void				loadOggFile(std::string fileName);
-		void				play(void);
-	protected:
-		ALuint				mIdBuffer;
-		ALuint				mIdSources;
-		bool				mLoaded;
-		OggVorbis_File		mFile;
-		vorbis_info*		mInfo;
-		ALuint				mFormat;
-		ALsizei				mFrequency;
-		std::vector <char>	mBuffer;
-};
+	class Ogg
+	{
+		public:
+								Ogg();
+								Ogg(std::string file_name);
+								~Ogg();
+			void				load_OGG_file(std::string file_name);
+			void				play(void);
+			ALuint				get_ID_buffer(void)		{ return m_ID_buffer; }
+			ALuint				get_ID_sources(void)	{ return m_ID_sources; }
+			ALuint				get_format(void)		{ return m_format; }
+			ALsizei				get_frequency(void)		{ return m_frequency; }
+			std::vector <char>	get_buffer(void)		{ return m_buffer; }
+		protected:
+			ALuint				m_ID_buffer;
+			ALuint				m_ID_sources;
+			bool				m_loaded;
+			OggVorbis_File		m_file;
+			vorbis_info*		m_info;
+			ALuint				m_format;
+			ALsizei				m_frequency;
+			std::vector <char>	m_buffer;
+	};
+}
 
 #endif // OGG_H

@@ -3,68 +3,56 @@
 
 #include <string>
 
+#include <assimp/mesh.h>
 #include <GL/glew.h>
 
 #include "../audio/ogg.h"
 #include "../system/constants.h"
 #include "../utility/matrix.h"
+#include "../utility/transform.h"
 #include "../utility/vector.h"
+#include "../video/mesh.h"
 #include "../video/shader.h"
 
-class Object
+namespace BD3GE
 {
-	public:
+	class Object
+	{
+		public:
 
-		virtual			~Object() {};
-		virtual void	render(void) {};
-		void			setPositionX(double x)	{ mPosition.u.g.x = x; }
-		void			setPositionY(double y)	{ mPosition.u.g.y = y; }
-		void			setPositionZ(double z)	{ mPosition.u.g.z = z; }
-		double			getPositionX(void)		{ return mPosition.u.g.x; }
-		double			getPositionY(void)		{ return mPosition.u.g.y; }
-		double			getPositionZ(void)		{ return mPosition.u.g.z; }
-		Vector3			getColor(void)			{ return mColor; }
-		void			move(void);
-		void			setVelocityX(double x);
-		void			setVelocityY(double y);
-		void			setVelocityZ(double z);
-		double			getVelocityX(void)		{ return mVelocity.u.g.x; }
-		double			getVelocityY(void)		{ return mVelocity.u.g.y; }
-		double			getVelocityZ(void)		{ return mVelocity.u.g.z; }
-		double			getVelocityVector(void);
-		void			addVelocityX(double x);
-		void			addVelocityY(double y);
-		void			addVelocityZ(double z);
+							Object();
+							Object(const Vector3 position, const Vector3 color, const Vector3 velocity, const aiMesh* mesh);
+			virtual			~Object();
+			void			move(void);
+			void			scale(float scaler);
+			virtual void	render(Transform view_projection_transform);
+			void			set_position_X(float x)		{ m_position.v.g.x = x; }
+			void			set_position_Y(float y)		{ m_position.v.g.y = y; }
+			void			set_position_Z(float z)		{ m_position.v.g.z = z; }
+			float			get_position_X(void)		{ return m_position.v.g.x; }
+			float			get_position_Y(void)		{ return m_position.v.g.y; }
+			float			get_position_Z(void)		{ return m_position.v.g.z; }
+			Vector3&		get_color(void)				{ return m_color; }
+			void			set_velocity_X(float x);
+			void			set_velocity_Y(float y);
+			void			set_velocity_Z(float z);
+			float			get_velocity_X(void)		{ return m_velocity.v.g.x; }
+			float			get_velocity_Y(void)		{ return m_velocity.v.g.y; }
+			float			get_velocity_Z(void)		{ return m_velocity.v.g.z; }
+			float			get_velocity_Vector(void);
+			void			add_velocity_X(float x);
+			void			add_velocity_Y(float y);
+			void			add_velocity_Z(float z);
 
-	protected:
+		protected:
 
-		Matrix4		mModelTransform;
-		Vector3		mPosition;
-		Vector3		mColor;
-		Vector3		mVelocity;
-		GLuint		mVBO_Position;
-		GLuint		mIBO_Position;
-		GLuint		mVAO;
-		GLfloat*	mVertexPositionBuffer;
-		GLushort*	mIndexPositionBuffer;
-		Shader*		mShader;
-		Ogg*		mOgg;	// TODO: Encapsulate OGG-specific stuff inside a class (i.e. "Audio" object).
-};
-
-class Cube : public Object
-{
-	public:
-
-						Cube(const Vector3 position, const Vector3 color, const Vector3 velocity, const double size);
-						Cube(const Cube& source);
-		virtual			~Cube();
-		virtual void	render(void);
-		void			setSize(double size)	{ mSize = size; }
-		double			getSize(void)			{ return mSize; }
-
-	protected:
-
-		double			mSize;
-};
+			Transform	m_world_transform;
+			Vector3		m_position;
+			Vector3		m_color;
+			Vector3		m_velocity;
+			Mesh*		m_mesh;
+			Ogg*		m_OGG;	// TODO: Encapsulate OGG-specific stuff inside a class (i.e. "Audio" object).
+	};
+}
 
 #endif // OBJECT_H

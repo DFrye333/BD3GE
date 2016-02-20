@@ -1,39 +1,60 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-class Vector3
+#include <cmath>
+
+#include "../system/globals.h"
+
+namespace BD3GE
 {
-	public:
-		Vector3(void);
-		Vector3(const double x, const double y, const double z);
-		Vector3(const double a[3]);
-		Vector3(const Vector3& v);
-		Vector3& operator+=(const Vector3& v);
-		Vector3& operator+(const Vector3& v);
-		Vector3& operator*=(const Vector3& v);
-		Vector3& operator*(const Vector3& v);
-		Vector3& operator*=(const double s);
-		Vector3& operator*(const double s);
+	class Vector3
+	{
+		public:
 
-		union // Union allows different Vector3 notation in different contexts.
-		{
-			struct			// Vector3 as geometry.
+			Vector3(void);
+			Vector3(const float a[3]);
+			Vector3(const float first, const float second, const float third);
+			Vector3(const Vector3& source);
+			const float dot_product(const Vector3& other);
+			const Vector3 cross_product(const Vector3& other);
+			const float get_magnitude(void);
+			const Vector3 get_normalized(void);
+			const Vector3& normalize(void);
+			const Vector3& operator=(const Vector3& other);
+			const Vector3& operator+=(const Vector3& other);
+			const Vector3 operator+(const Vector3& other);
+			const Vector3& operator-=(const Vector3& other);
+			const Vector3 operator-(const Vector3& other);
+			const Vector3& operator*=(const Vector3& other);
+			const Vector3 operator*(const Vector3& other);
+			const Vector3& operator*=(const float other);
+			const Vector3 operator*(const float other);
+			const Vector3& operator/=(const Vector3& other);
+			const Vector3 operator/(const Vector3& other);
+			const Vector3& operator/=(const float other);
+			const Vector3 operator/(const float other);
+
+			static constexpr float EPSILON = 1.0e-12f;
+
+			union // Union allows different Vector3 notation in different contexts.
 			{
-				double x;
-				double y;
-				double z;
-			} g;
+				struct			// Vector3 as geometry.
+				{
+					float x;
+					float y;
+					float z;
+				} g;
 
-			struct			// Vector3 as color.
-			{
-				double r;
-				double g;
-				double b;
-			} c;
+				struct			// Vector3 as color.
+				{
+					float r;
+					float g;
+					float b;
+				} c;
 
-			double a[3];	// Vector3 as generic array.
-		} u;
-
-};
+				float a[3];	// Vector3 as generic array.
+			} v;
+	};
+}
 
 #endif // VECTOR_H

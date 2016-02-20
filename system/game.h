@@ -1,34 +1,42 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "../audio/AL.h"
 #include "../input/input.h"
 #include "../utility/timer.h"
 #include "../video/GL.h"
 #include "../video/scene.h"
+#include "../system/window.h"
 #include "constants.h"
-#include "XWindow.h"
+#include "globals.h"
 
-class Game
+namespace BD3GE
 {
-	public:
-				Game();
-		void	startup(void);
-		void	shutdown(void);
-		void 	run(void);
-		void	busMessages(void);
+	class Game
+	{
+		public:
 
-	private:
+					Game() {};
+					~Game();
+			void	startup(void);
+			void	shutdown(void);
+			void 	run(void);
+			void	bus_messages(void);
 
-		bool	mRunning;
-		// The below order matters! For instance, if mXWindow is placed after (and therefore initialized after) mGL, the OpenGL context is not properly set up.
-		XWindow	mXWindow;
-		Scene	mScene;
-		GL		mGL;
-		AL		mAL;
-		Input	mInput;
-};
+		private:
+
+			bool				m_running;
+			Abstract_Window*	m_window;
+			Scene*				m_scene;
+			GL*					m_GL;
+			AL*					m_AL;
+			Input*				m_input;
+	};
+}
 
 #endif // GAME_H

@@ -2,8 +2,10 @@
 
 int main()
 {
-	Game game;
+	BD3GE::Game game;
+	game.startup();
 	game.run();
+	game.shutdown();
 
 	return 0;
 }

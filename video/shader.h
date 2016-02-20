@@ -9,23 +9,27 @@
 #include <GL/glew.h>
 
 #include "../system/constants.h"
+#include "../system/globals.h"
 
-class Shader
+namespace BD3GE
 {
-	public:
+	class Shader
+	{
+		public:
 
-				Shader();
-				~Shader();
-		GLuint	getProgramId(void);
+					Shader();
+					~Shader();
+			GLuint	get_program_ID(void);
 
-	private:
+		private:
 
-		GLuint		createProgram(void);
-		GLuint		createShader(GLenum shaderType, const std::string filePath);
-		void		readFile(const std::string filePath, std::string* shaderText);
+			GLuint		create_program(void);
+			GLuint		create_shader(GLenum shader_type, const std::string file_path);
+			void		read_file(const std::string file_path, std::string* shader_text);
 
-		std::vector<GLuint>		mShaderObjects;
-		GLuint					mProgramId;
-};
+			std::vector<GLuint>		m_shader_objects;
+			GLuint					m_program_ID;
+	};
+}
 
 #endif // SHADER_H

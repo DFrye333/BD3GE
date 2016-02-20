@@ -1,75 +1,176 @@
 #include "vector.h"
 
-/*
- * 	Vector3 class
- */
-
-Vector3::Vector3(void)
+namespace BD3GE
 {
-	u.a[0] = 0.0;
-	u.a[1] = 0.0;
-	u.a[2] = 0.0;
-}
+	/*
+	 * 	Vector3 class
+	 */
 
-Vector3::Vector3(const double x, const double y, const double z)
-{
-	u.g.x = x;
-	u.g.y = y;
-	u.g.z = z;
-}
+	static float EPSILON = 1.0e-12;
 
-Vector3::Vector3(const double a[3])
-{
-	u.a[0] = a[0];
-	u.a[1] = a[1];
-	u.a[2] = a[2];
-}
+	Vector3::Vector3(void)
+	{
+		v.a[0] = 0.0f;
+		v.a[1] = 0.0f;
+		v.a[2] = 0.0f;
+	}
 
-Vector3::Vector3(const Vector3& v)
-{
-	u.a[0] = v.u.a[0];
-	u.a[1] = v.u.a[1];
-	u.a[2] = v.u.a[2];
-}
+	Vector3::Vector3(const float a[3])
+	{
+		v.a[0] = a[0];
+		v.a[1] = a[1];
+		v.a[2] = a[2];
+	}
 
-Vector3& Vector3::operator+=(const Vector3& v)
-{
-	u.a[0] += v.u.a[0];
-	u.a[1] += v.u.a[1];
-	u.a[2] += v.u.a[2];
+	Vector3::Vector3(const float first, const float second, const float third)
+	{
+		v.a[0] = first;
+		v.a[1] = second;
+		v.a[2] = third;
+	}
 
-	return *this;
-}
+	Vector3::Vector3(const Vector3& source)
+	{
+		v.a[0] = source.v.a[0];
+		v.a[1] = source.v.a[1];
+		v.a[2] = source.v.a[2];
+	}
 
-Vector3& Vector3::operator+(const Vector3& v)
-{
-	return Vector3(*this) += v;
-}
+	const float Vector3::dot_product(const Vector3& other)
+	{
+		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]) + (v.a[2] + other.v.a[2]));
+	}
 
-Vector3& Vector3::operator*=(const Vector3& v)
-{
-	u.a[0] *= v.u.a[0];
-	u.a[1] *= v.u.a[1];
-	u.a[2] *= v.u.a[2];
+	const Vector3 Vector3::cross_product(const Vector3& other)
+	{
+		return Vector3(
+			(this->v.a[1] * other.v.a[2]) - (this->v.a[2] * other.v.a[1]),
+			(this->v.a[2] * other.v.a[0]) - (this->v.a[0] * other.v.a[2]),
+			(this->v.a[0] * other.v.a[1]) - (this->v.a[1] * other.v.a[0])
+		);
+	}
 
-	return *this;
-}
+	const float Vector3::get_magnitude(void)
+	{
+		return sqrt(dot_product(*this));
+	}
 
-Vector3& Vector3::operator*(const Vector3& v)
-{
-	return Vector3(*this) *= v;
-}
+	const Vector3 Vector3::get_normalized(void)
+	{
+		float magnitude = get_magnitude();
+		if (magnitude > EPSILON)
+		{
+			return Vector3(*this / magnitude);
+		}
+		else
+		{
+			g_log.write("Vector magnitude <= EPSILON", LOG_ERROR);
+		}
+	}
 
-Vector3& Vector3::operator*=(const double s)
-{
-	u.a[0] *= s;
-	u.a[1] *= s;
-	u.a[2] *= s;
+	const Vector3& Vector3::normalize(void)
+	{
+		float magnitude = get_magnitude();
+		if (magnitude > EPSILON)
+		{
+			return *this /= magnitude;
+		}
+		else
+		{
+			g_log.write("Vector magnitude <= EPSILON", LOG_ERROR);
+		}
+	}
 
-	return *this;
-}
+	const Vector3& Vector3::operator=(const Vector3& other)
+	{
+		v.a[0] = other.v.a[0];
+		v.a[1] = other.v.a[1];
+		v.a[2] = other.v.a[2];
 
-Vector3& Vector3::operator*(const double s)
-{
-	return Vector3(*this) *= s;
+		return *this;
+	}
+
+	const Vector3& Vector3::operator+=(const Vector3& other)
+	{
+		v.a[0] += other.v.a[0];
+		v.a[1] += other.v.a[1];
+		v.a[2] += other.v.a[2];
+
+		return *this;
+	}
+
+	const Vector3 Vector3::operator+(const Vector3& other)
+	{
+		return Vector3(*this) += other;
+	}
+
+	const Vector3& Vector3::operator-=(const Vector3& other)
+	{
+		v.a[0] -= other.v.a[0];
+		v.a[1] -= other.v.a[1];
+		v.a[2] -= other.v.a[2];
+
+		return *this;
+	}
+
+	const Vector3 Vector3::operator-(const Vector3& other)
+	{
+		return Vector3(*this) -= other;
+	}
+
+	const Vector3& Vector3::operator*=(const Vector3& other)
+	{
+		v.a[0] *= other.v.a[0];
+		v.a[1] *= other.v.a[1];
+		v.a[2] *= other.v.a[2];
+
+		return *this;
+	}
+
+	const Vector3 Vector3::operator*(const Vector3& other)
+	{
+		return Vector3(*this) *= other;
+	}
+
+	const Vector3& Vector3::operator*=(const float other)
+	{
+		v.a[0] *= other;
+		v.a[1] *= other;
+		v.a[2] *= other;
+
+		return *this;
+	}
+
+	const Vector3 Vector3::operator*(const float other)
+	{
+		return Vector3(*this) *= other;
+	}
+
+	const Vector3& Vector3::operator/=(const Vector3& other)
+	{
+		v.a[0] /= other.v.a[0];
+		v.a[1] /= other.v.a[1];
+		v.a[2] /= other.v.a[2];
+
+		return *this;
+	}
+
+	const Vector3 Vector3::operator/(const Vector3& other)
+	{
+		return Vector3(*this) /= other;
+	}
+
+	const Vector3& Vector3::operator/=(const float other)
+	{
+		v.a[0] /= other;
+		v.a[1] /= other;
+		v.a[2] /= other;
+
+		return *this;
+	}
+
+	const Vector3 Vector3::operator/(const float other)
+	{
+		return Vector3(*this) /= other;
+	}
 }

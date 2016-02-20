@@ -1,109 +1,112 @@
-/*
- * 		Ogg class
- */
-
 #include "ogg.h"
 
-Ogg::Ogg()
+namespace BD3GE
 {
-	alGenBuffers(1, &mIdBuffer);
-	alGenSources(1, &mIdSources);
-	alSource3f(mIdSources, AL_POSITION, 0.0f, 0.0f, 0.0f);
-	mInfo = NULL;
-	mFormat = 0;
-	mFrequency = 0;
-	mLoaded = false;
-}
+	/*
+	 * 		Ogg class
+	 */
 
-Ogg::Ogg(std::string fileName)
-{
-	alGenBuffers(1, &mIdBuffer);
-	alGenSources(1, &mIdSources);
-	alSource3f(mIdSources, AL_POSITION, 0.0f, 0.0f, 0.0f);
-	mLoaded = false;
-	loadOggFile(fileName);
-	mLoaded = true;
-}
-
-Ogg::~Ogg()
-{
-	alDeleteBuffers(1, &mIdBuffer);
-	alDeleteSources(1, &mIdSources);
-}
-
-void Ogg::loadOggFile(std::string fileName)
-{
-	FILE* infile = NULL;
-	int bitStream = 0;
-	long bytes = 0;
-	char tempBuffer[32768];
-	bool success;
-
-	if (true == mLoaded)
+	Ogg::Ogg()
 	{
-		std::cout << "File object already loaded." << std::endl;
-		return;
+		alGenBuffers(1, &m_ID_buffer);
+		alGenSources(1, &m_ID_sources);
+		alSource3f(m_ID_sources, AL_POSITION, 0.0f, 0.0f, 0.0f);
+		m_info = NULL;
+		m_format = 0;
+		m_frequency = 0;
+		m_loaded = false;
 	}
 
-	infile = fopen(fileName.c_str(), "rb");
-	success = ov_open(infile, &mFile, NULL, 0);
-
-	switch (success)
+	Ogg::Ogg(std::string file_name)
 	{
-		case OV_EREAD:
-			std::cout << BD3GE_PRINT_ERROR << "OV_EREAD" << std::endl;
-			break;
-		case OV_ENOTVORBIS:
-			std::cout << BD3GE_PRINT_ERROR << "OV_ENOTVORBIS" << std::endl;
-			break;
-		case OV_EVERSION:
-			std::cout << BD3GE_PRINT_ERROR << "OV_EVERSION" << std::endl;
-			break;
-		case OV_EBADHEADER:
-			std::cout << BD3GE_PRINT_ERROR << "OV_EBADHEADER" << std::endl;
-			break;
-		case OV_EFAULT:
-			std::cout << BD3GE_PRINT_ERROR << "OV_EFAULT" << std::endl;
-			break;
-		case 0:
-			std::cout << BD3GE_PRINT_INFORMATION << "File opened successfully." << std::endl;
-			break;
-		default:
-			std::cout << BD3GE_PRINT_ERROR << "Unknown Ogg error." << std::endl;
+		alGenBuffers(1, &m_ID_buffer);
+		alGenSources(1, &m_ID_sources);
+		alSource3f(m_ID_sources, AL_POSITION, 0.0f, 0.0f, 0.0f);
+		m_loaded = false;
+		load_OGG_file(file_name);
+		m_loaded = true;
 	}
 
-	mInfo = ov_info(&mFile, -1);
-	switch (mInfo->channels)
+	Ogg::~Ogg()
 	{
-		case 1:
-			mFormat = AL_FORMAT_MONO16;
-			std::cout << BD3GE_PRINT_INFORMATION << "Format is mono-16." << std::endl;
-			break;
-		case 2:
-			std::cout << BD3GE_PRINT_INFORMATION << "Format is stereo-16." << std::endl;
-			mFormat = AL_FORMAT_STEREO16;
-			break;
+		alDeleteBuffers(1, &m_ID_buffer);
+		alDeleteSources(1, &m_ID_sources);
 	}
 
-	mFrequency = mInfo->rate;
-	do
+	void Ogg::load_OGG_file(std::string file_name)
 	{
-		bytes = ov_read(&mFile, tempBuffer, 32768, 0, 2, 1, &bitStream);
-		mBuffer.insert(mBuffer.end(), tempBuffer, tempBuffer + bytes);
-	} while (bytes > 0);
+		FILE* infile = NULL;
+		int bitStream = 0;
+		long bytes = 0;
+		char tempBuffer[32768];
+		bool success;
 
-	ov_clear(&mFile);
-}
+		if (true == m_loaded)
+		{
+			g_log.write("File object already loaded.", LOG_ERROR);
+			return;
+		}
 
-void Ogg::play(void)
-{
-//	ALint state = 0;
+		infile = fopen(file_name.c_str(), "rb");
+		success = ov_open(infile, &m_file, NULL, 0);
 
-	alBufferData(mIdBuffer, mFormat, &mBuffer[0], mBuffer.size(), mFrequency);
-	alSourcei(mIdSources, AL_BUFFER, mIdBuffer);
-	alSourcePlay(mIdSources);
-/*	do
+		switch (success)
+		{
+			case OV_EREAD:
+				g_log.write("Cannot open Ogg - OV_EREAD", LOG_ERROR);
+				break;
+			case OV_ENOTVORBIS:
+				g_log.write("Cannot open Ogg - OV_ENOTVORBIS", LOG_ERROR);
+				break;
+			case OV_EVERSION:
+				g_log.write("Cannot open Ogg - OV_EVERSION", LOG_ERROR);
+				break;
+			case OV_EBADHEADER:
+				g_log.write("Cannot open Ogg - OV_EBADHEADER", LOG_ERROR);
+				break;
+			case OV_EFAULT:
+				g_log.write("Cannot open Ogg - OV_EFAULT", LOG_ERROR);
+				break;
+			case 0:
+				g_log.write("Ogg file opened successfully.", LOG_INFORMATION);
+				break;
+			default:
+				g_log.write("Cannot open Ogg - Unknown Ogg error.", LOG_ERROR);
+		}
+
+		m_info = ov_info(&m_file, -1);
+		switch (m_info->channels)
+		{
+			case 1:
+				m_format = AL_FORMAT_MONO16;
+				g_log.write("Format is mono-16.", LOG_INFORMATION);
+				break;
+			case 2:
+				g_log.write("Format is stereo-16.", LOG_INFORMATION);
+				m_format = AL_FORMAT_STEREO16;
+				break;
+		}
+
+		m_frequency = m_info->rate;
+		do
+		{
+			bytes = ov_read(&m_file, tempBuffer, 32768, 0, 2, 1, &bitStream);
+			m_buffer.insert(m_buffer.end(), tempBuffer, tempBuffer + bytes);
+		} while (bytes > 0);
+
+		ov_clear(&m_file);
+	}
+
+	void Ogg::play(void)
 	{
-		alGetSourcei(mIdSources, AL_SOURCE_STATE, &state);
-	} while (state != AL_STOPPED);*/
+	//	ALint state = 0;
+
+		alBufferData(m_ID_buffer, m_format, &m_buffer[0], m_buffer.size(), m_frequency);
+		alSourcei(m_ID_sources, AL_BUFFER, m_ID_buffer);
+		alSourcePlay(m_ID_sources);
+	/*	do
+		{
+			alGetSourcei(m_ID_sources, AL_SOURCE_STATE, &state);
+		} while (state != AL_STOPPED);*/
+	}
 }

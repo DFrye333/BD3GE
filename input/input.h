@@ -5,23 +5,24 @@
 #include <cstring>
 #include <map>
 
-#include <X11/Xlib.h>
-
 #include "../system/constants.h"
+#include "../system/globals.h"
 #include "../utility/message.h"
 
-class Input
+namespace BD3GE
 {
-	public:
+	class Input
+	{
+		public:
 
-				Input();
-		void	handler(Message< std::pair <char*, bool> > message);
-		void	setKeyState(std::string key, bool state);
-		bool	getKeyState(const std::string key);
+			void	handler(Message< std::pair <char*, bool> > message);
+			void	set_key_state(std::string key, bool state);
+			bool	get_key_state(const std::string key);
 
-	protected:
+		protected:
 
-		std::map<const std::string, unsigned int>	mKeys;
-};
+			std::map<const std::string, bool>	m_keys;
+	};
+}
 
 #endif // INPUT_H

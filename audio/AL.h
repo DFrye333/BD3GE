@@ -6,17 +6,20 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 
-class AL
+namespace BD3GE
 {
-	public:
+	class AL
+	{
+		public:
 
-		AL();
-		~AL();
+			AL();
+			~AL();
 
-	private:
+		private:
 
-		ALCdevice* device;
-		ALCcontext* context;
-};
+			ALCdevice* m_device;
+			ALCcontext* m_context;
+	};
+}
 
 #endif // AL_H

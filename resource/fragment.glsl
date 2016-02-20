@@ -1,13 +1,13 @@
 #version 440
 
-uniform vec4 color;
+uniform vec4 vertex_color;
 
-out vec4 finalColor;
+out vec4 fragment_color;
 
 void main(void)
 {
-	float lerpValue = gl_FragCoord.y / 500.0f;
-    
-    finalColor = mix(vec4(1.0f, 1.0f, 1.0f, 1.0f), vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);
-    finalColor = color;
+	float lerpValue = (gl_FragCoord.y - 300.0) / 300.0f;
+	
+	// fragment_color = mix(vertex_color, vec4(1.0f, 1.0f, 1.0f, 1.0f), lerpValue);
+	fragment_color = mix(vec4(0.0f, 0.0f, 0.0f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), lerpValue);
 }

@@ -1,121 +1,124 @@
 #include "shader.h"
 
-/*
- * 	Shader class
- */
-
-Shader::Shader()
+namespace BD3GE
 {
-	mProgramId = createProgram();
-}
+	/*
+	 * 	Shader class
+	 */
 
-Shader::~Shader()
-{
-}
-
-// Create a shader program composed of shader objects.
-GLuint Shader::createProgram(void)
-{
-	mShaderObjects.push_back(createShader(GL_VERTEX_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/vertex.glsl"));
-	mShaderObjects.push_back(createShader(GL_FRAGMENT_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/fragment.glsl"));
-
-	GLuint programId = glCreateProgram();
-
-	for (size_t i = 0; i < mShaderObjects.size(); ++i)
+	BD3GE::Shader::Shader()
 	{
-		glAttachShader(programId, mShaderObjects[i]);
+		m_program_ID = create_program();
 	}
 
-	glLinkProgram(programId);
-
-	GLint status;
-	glGetShaderiv(programId, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE)
+	BD3GE::Shader::~Shader()
 	{
-		GLint infoLogLength;
-		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-		glGetProgramInfoLog(programId, infoLogLength, NULL, strInfoLog);
-		std::cerr << BD3GE_PRINT_ERROR << "Shader linker failure: " << strInfoLog << std::endl;
-		delete[] strInfoLog;
 	}
 
-	for (size_t i = 0; i < mShaderObjects.size(); ++i)
+	// Create a shader program composed of shader objects.
+	GLuint BD3GE::Shader::create_program(void)
 	{
-		glDetachShader(programId, mShaderObjects[i]);
-	}
+		m_shader_objects.push_back(create_shader(GL_VERTEX_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/vertex.glsl"));
+		m_shader_objects.push_back(create_shader(GL_FRAGMENT_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/fragment.glsl"));
 
-	std::for_each(mShaderObjects.begin(), mShaderObjects.end(), glDeleteShader);
+		GLuint program_ID = glCreateProgram();
 
-	return programId;
-}
-
-// Create an individual shader object.
-GLuint Shader::createShader(GLenum shaderType, const std::string filePath)
-{
-	GLuint shaderId = glCreateShader(shaderType);
-
-	std::string shaderString;
-	readFile(filePath, &shaderString);
-
-	const char* shaderText = shaderString.c_str();
-
-	glShaderSource(shaderId, 1, &shaderText, NULL);
-
-	glCompileShader(shaderId);
-
-	GLint status;
-	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		GLint infoLogLength;
-		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-		glGetShaderInfoLog(shaderId, infoLogLength, NULL, strInfoLog);
-
-		const char* strShaderType = NULL;
-		switch (shaderType)
+		for (size_t i = 0; i < m_shader_objects.size(); ++i)
 		{
-			case GL_VERTEX_SHADER:
-				strShaderType = "vertex";
-				break;
-			case GL_GEOMETRY_SHADER:
-				strShaderType = "geometry";
-				break;
-			case GL_FRAGMENT_SHADER:
-				strShaderType = "fragment";
-				break;
+			glAttachShader(program_ID, m_shader_objects[i]);
 		}
 
-		std::cerr << BD3GE_PRINT_ERROR << "Shader compiler failure in " << strShaderType << " shader:\n " << strInfoLog << std::endl;
-		delete[] strInfoLog;
+		glLinkProgram(program_ID);
+
+		GLint status = GL_TRUE;
+		glGetShaderiv(program_ID, GL_LINK_STATUS, &status);
+		if (status == GL_FALSE)
+		{
+			GLint information_log_length;
+			glGetProgramiv(program_ID, GL_INFO_LOG_LENGTH, &information_log_length);
+
+			GLchar* information_log_string = new GLchar[information_log_length + 1];
+			glGetProgramInfoLog(program_ID, information_log_length, NULL, information_log_string);
+			g_log.write("Shader linker failure: " + std::string(information_log_string), LOG_ERROR);
+			delete[] information_log_string;
+		}
+
+		for (size_t i = 0; i < m_shader_objects.size(); ++i)
+		{
+			glDetachShader(program_ID, m_shader_objects[i]);
+		}
+
+		std::for_each(m_shader_objects.begin(), m_shader_objects.end(), glDeleteShader);
+
+		return program_ID;
 	}
 
-	return shaderId;
-}
-
-// Read shader program text from a file.
-void Shader::readFile(const std::string filePath, std::string* shaderText)
-{
-	// Open shader file stream.
-	std::ifstream infile(filePath.c_str());
-
-	// Ensure that the shader file was opened successfully.
-	if (!infile)
+	// Create an individual shader object.
+	GLuint BD3GE::Shader::create_shader(GLenum shaderType, const std::string filePath)
 	{
-		std::cerr << "(BD3GE | Error): Cannot open shader file path " << filePath << " for reading!" << std::endl;
-		return;
+		GLuint shader_ID = glCreateShader(shaderType);
+
+		std::string shader_string;
+		read_file(filePath, &shader_string);
+
+		const char* shaderText = shader_string.c_str();
+
+		glShaderSource(shader_ID, 1, &shaderText, NULL);
+
+		glCompileShader(shader_ID);
+
+		GLint status = GL_TRUE;
+		glGetShaderiv(shader_ID, GL_COMPILE_STATUS, &status);
+		if (status == GL_FALSE)
+		{
+			GLint information_log_length;
+			glGetShaderiv(shader_ID, GL_INFO_LOG_LENGTH, &information_log_length);
+
+			GLchar* information_log_string = new GLchar[information_log_length + 1];
+			glGetShaderInfoLog(shader_ID, information_log_length, NULL, information_log_string);
+
+			const char* strShaderType = NULL;
+			switch (shaderType)
+			{
+				case GL_VERTEX_SHADER:
+					strShaderType = "vertex";
+					break;
+				case GL_GEOMETRY_SHADER:
+					strShaderType = "geometry";
+					break;
+				case GL_FRAGMENT_SHADER:
+					strShaderType = "fragment";
+					break;
+			}
+
+			g_log.write("Shader compiler failure in " + std::string(strShaderType) + " shader:\n " + std::string(information_log_string), LOG_ERROR);
+			delete[] information_log_string;
+		}
+
+		return shader_ID;
 	}
 
-	// Read entire file into shader file text string.
-	*shaderText = std::string((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+	// Read shader program text from a file.
+	void BD3GE::Shader::read_file(const std::string filePath, std::string* shaderText)
+	{
+		// Open shader file stream.
+		std::ifstream infile(filePath.c_str());
 
-	infile.close();
-}
+		// Ensure that the shader file was opened successfully.
+		if (!infile)
+		{
+			g_log.write("Cannot open shader file path " + filePath + " for reading!", LOG_ERROR);
+			return;
+		}
 
-GLuint Shader::getProgramId(void)
-{
-	return mProgramId;
+		// Read entire file into shader file text string.
+		*shaderText = std::string((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+
+		infile.close();
+	}
+
+	GLuint BD3GE::Shader::get_program_ID(void)
+	{
+		return m_program_ID;
+	}
 }

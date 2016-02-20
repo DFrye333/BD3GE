@@ -1,59 +1,59 @@
 #include "timer.h"
 
-/*
- * 	Timer class
- */
-
-/* 	Method: Timer constructor
- * 	Parameter: name - Descriptive name for the timer.
- * 	Parameter: delta - The time delta between timer due times.
- */
-Timer::Timer(std::string name, double delta)
+namespace BD3GE
 {
-	mName = new std::string(name);
-	mDelta = delta;
-}
+	/*
+	 * 	Timer class
+	 */
 
-Timer::~Timer()
-{
-	if (mName)
+	/* 	Method: Timer constructor
+	 * 	Parameter: name - Descriptive name for the timer.
+	 * 	Parameter: delta - The time delta between timer due times.
+	 */
+	Timer::Timer(std::string name, float delta)
 	{
-		delete mName;
-		mName = NULL;
-	}
-}
-
-void Timer::start(void)
-{
-	gettimeofday(&mStartTime, NULL);
-}
-
-bool Timer::isDue(void)
-{
-	double elapsedTime = 0.0;
-
-	return isDue(&elapsedTime);
-}
-
-bool Timer::isDue(double* elapsedTime)
-{
-	*elapsedTime = 0.0;
-
-	// Calculate the amount of time since the last due time.
-	gettimeofday(&mLastTime, NULL);
-	*elapsedTime = ((mLastTime.tv_sec - mStartTime.tv_sec) * 1000.0) + ((mLastTime.tv_usec - mStartTime.tv_usec) / 1000.0);
-
-	// The timer is due.
-	if (*elapsedTime >= mDelta)
-	{
-		// Reset the timer.
-		gettimeofday(&mStartTime, NULL);
-		return true;
+		m_name = new std::string(name);
+		m_delta = delta;
 	}
 
-	// The timer is not due.
-	else
+	Timer::~Timer()
 	{
-		return false;
+		delete m_name;
+		m_name = NULL;
+	}
+
+	void Timer::start(void)
+	{
+		gettimeofday(&m_time_start, NULL);
+	}
+
+	bool Timer::is_due(void)
+	{
+		float elapsed_time = 0.0f;
+
+		return is_due(&elapsed_time);
+	}
+
+	bool Timer::is_due(float* elapsed_time)
+	{
+		*elapsed_time = 0.0f;
+
+		// Calculate the amount of time since the last due time.
+		gettimeofday(&m_time_last, NULL);
+		*elapsed_time = ((m_time_last.tv_sec - m_time_start.tv_sec) * 1000.0f) + ((m_time_last.tv_usec - m_time_start.tv_usec) / 1000.0f);
+
+		// The timer is due.
+		if (*elapsed_time >= m_delta)
+		{
+			// Reset the timer.
+			gettimeofday(&m_time_start, NULL);
+			return true;
+		}
+
+		// The timer is not due.
+		else
+		{
+			return false;
+		}
 	}
 }

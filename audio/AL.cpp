@@ -1,15 +1,21 @@
 #include "AL.h"
 
-AL::AL()
+namespace BD3GE
 {
-	device = alcOpenDevice(NULL);
-	context = alcCreateContext(device, NULL);
-	alcMakeContextCurrent(context);
-	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-}
+	/*
+	 *	AL class
+	 */
+	AL::AL()
+	{
+		m_device = alcOpenDevice(NULL);
+		m_context = alcCreateContext(m_device, NULL);
+		alcMakeContextCurrent(m_context);
+		alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+	}
 
-AL::~AL()
-{
-	alcDestroyContext(context);
-	alcCloseDevice(device);
+	AL::~AL()
+	{
+		alcDestroyContext(m_context);
+		alcCloseDevice(m_device);
+	}
 }
