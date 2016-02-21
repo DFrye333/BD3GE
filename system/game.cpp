@@ -125,7 +125,7 @@ namespace BD3GE
 		m_window->message_listener();
 
 		// Pass input events.
-		Message< std::pair<char*, bool> > input_message = m_window->pull_input_message();
+		Message< std::pair<std::string, bool> > input_message = m_window->pull_input_message();
 		if (input_message.get_data())
 		{
 			m_input->handler(input_message);

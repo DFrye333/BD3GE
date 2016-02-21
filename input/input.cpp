@@ -6,7 +6,7 @@ namespace BD3GE
 	 *	Input class
 	 */
 
-	void Input::handler(Message< std::pair <char*, bool> > message)
+	void Input::handler(Message< std::pair <std::string, bool> > message)
 	{
 		if (message.get_data())
 		{

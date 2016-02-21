@@ -6,6 +6,109 @@ namespace BD3GE
 	 *	X_Window class
 	 */
 
+	X_Window::t_key_map X_Window::m_key_map =
+	{
+		{ "BackSpace", KEY_BACKSPACE },
+		{ "Tab", KEY_TAB },
+		{ "Escape", KEY_ESCAPE },
+		{ "space", KEY_SPACE },
+		{ "apostrophe", KEY_APOSTROPHE },
+		{ "comma", KEY_COMMA },
+		{ "minus", KEY_MINUS },
+		{ "period", KEY_PERIOD },
+		{ "slash", KEY_SLASH },
+		{ "0", KEY_0 },
+		{ "1", KEY_1 },
+		{ "2", KEY_2 },
+		{ "3", KEY_3 },
+		{ "4", KEY_4 },
+		{ "5", KEY_5 },
+		{ "6", KEY_6 },
+		{ "7", KEY_7 },
+		{ "8", KEY_8 },
+		{ "semicolon", KEY_SEMICOLON },
+		{ "equal", KEY_EQUAL },
+		{ "bracketleft", KEY_BRACKETLEFT },
+		{ "backslash", KEY_BACKSLASH },
+		{ "bracketright", KEY_BRACKETRIGHT },
+		{ "grave", KEY_GRAVE },
+		{ "a", KEY_A },
+		{ "b", KEY_B },
+		{ "c", KEY_C },
+		{ "d", KEY_D },
+		{ "e", KEY_E },
+		{ "f", KEY_F },
+		{ "g", KEY_G },
+		{ "h", KEY_H },
+		{ "i", KEY_I },
+		{ "j", KEY_J },
+		{ "k", KEY_K },
+		{ "l", KEY_L },
+		{ "m", KEY_M },
+		{ "n", KEY_N },
+		{ "o", KEY_O },
+		{ "p", KEY_P },
+		{ "q", KEY_Q },
+		{ "r", KEY_R },
+		{ "s", KEY_S },
+		{ "t", KEY_T },
+		{ "u", KEY_U },
+		{ "v", KEY_V },
+		{ "w", KEY_W },
+		{ "x", KEY_X },
+		{ "y", KEY_Y },
+		{ "z", KEY_Z },
+		{ "Return", KEY_RETURN },
+		{ "Print", KEY_PRINT },
+		{ "Scroll_Lock", KEY_SCROLLLOCK },
+		{ "Pause", KEY_PAUSE },
+		{ "Insert", KEY_INSERT },
+		{ "Home", KEY_HOME },
+		{ "Prior", KEY_PRIOR },
+		{ "Delete", KEY_DELETE },
+		{ "End", KEY_END },
+		{ "Next", KEY_NEXT },
+		{ "Up", KEY_UP },
+		{ "Left", KEY_LEFT },
+		{ "Down", KEY_DOWN },
+		{ "Right", KEY_RIGHT },
+		{ "Shift_L", KEY_SHIFTL },
+		{ "Shift_R", KEY_SHIFTR },
+		{ "Alt_L", KEY_ALTL },
+		{ "Alt_R", KEY_ALTR },
+		{ "Super_L", KEY_SUPERL },
+		{ "Caps_Lock", KEY_CAPSLOCK },
+		{ "Num_Lock", KEY_NUMLOCK },
+		{ "F1", KEY_F1 },
+		{ "F2", KEY_F2 },
+		{ "F3", KEY_F3 },
+		{ "F4", KEY_F4 },
+		{ "F5", KEY_F5 },
+		{ "F6", KEY_F6 },
+		{ "F7", KEY_F7 },
+		{ "F8", KEY_F8 },
+		{ "F9", KEY_F9 },
+		{ "F10", KEY_F10 },
+		{ "F11", KEY_F11 },
+		{ "F12", KEY_F12 },
+		{ "KP_Divide", KEY_KPDIVIDE },
+		{ "KP_Multiply", KEY_KPMULTIPLY },
+		{ "KP_Subtract", KEY_KPSUBTRACT },
+		{ "KP_Add", KEY_KPADD },
+		{ "KP_Enter", KEY_KPENTER },
+		{ "KP_Decimal", KEY_KPENTER },
+		{ "KP_0", KEY_KP0 },
+		{ "KP_1", KEY_KP1 },
+		{ "KP_2", KEY_KP2 },
+		{ "KP_3", KEY_KP3 },
+		{ "KP_4", KEY_KP4 },
+		{ "KP_5", KEY_KP5 },
+		{ "KP_6", KEY_KP6 },
+		{ "KP_7", KEY_KP7 },
+		{ "KP_8", KEY_KP8 },
+		{ "KP_9", KEY_KP9 },
+	};
+
 	X_Window::X_Window()
 	{
 		m_graphics_context 			= 	NULL;
@@ -161,7 +264,7 @@ namespace BD3GE
 					XLookupString(&event.xkey, key_string, 32, &keysym, NULL);
 					key_string = XKeysymToString(keysym);
 
-					m_input_queue.push(std::make_pair(key_string, true));
+					m_input_queue.push(std::make_pair(m_key_map[std::string(key_string)], true));
 
 					break;
 				}
@@ -190,7 +293,7 @@ namespace BD3GE
 					XLookupString(&event.xkey, key_string, 32, &keysym, NULL);
 					key_string = XKeysymToString(keysym);
 
-					m_input_queue.push(std::make_pair(key_string, false));
+					m_input_queue.push(std::make_pair(m_key_map[std::string(key_string)], false));
 
 					break;
 				}
@@ -217,7 +320,7 @@ namespace BD3GE
 				// The mouse pointer has been moved.
 				case MotionNotify:
 				{
-					g_log.write("Pointer motion at (" + std::to_string(event.xmotion.x)  + ", " + std::to_string(event.xmotion.y) + ")", LOG_INFORMATION);
+					// g_log.write("Pointer motion at (" + std::to_string(event.xmotion.x)  + ", " + std::to_string(event.xmotion.y) + ")", LOG_INFORMATION);
 
 					break;
 				}
@@ -245,9 +348,9 @@ namespace BD3GE
 		glXSwapBuffers(m_display, m_GLX_window);
 	}
 
-	Message< std::pair<char*, bool> > X_Window::pull_input_message(void)
+	Message< std::pair<std::string, bool> > X_Window::pull_input_message(void)
 	{
-		Message< std::pair<char*, bool> > input_event;
+		Message< std::pair<std::string, bool> > input_event;
 
 		if (!m_input_queue.empty())
 		{
