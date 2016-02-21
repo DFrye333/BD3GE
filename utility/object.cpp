@@ -28,6 +28,8 @@ namespace BD3GE
 		m_velocity.v.g.y = velocity.v.g.y;
 		m_velocity.v.g.z = velocity.v.g.z;
 
+		m_angle = 0.0;
+
 		m_world_transform.translate(m_position);
 
 		m_mesh = new Mesh(mesh);
@@ -58,6 +60,11 @@ namespace BD3GE
 		m_world_transform.scale(scaler);
 	}
 
+	void Object::rotate(Vector3 rotation)
+	{
+		m_world_transform.rotate(rotation);
+	}
+
 	void Object::render(Transform view_projection_transform)
 	{
 		m_mesh->render(view_projection_transform * m_world_transform);
@@ -65,26 +72,29 @@ namespace BD3GE
 
 	void Object::set_velocity_X(float x)
 	{
-		if (x > -10 && x < 10)
-		{
-			m_velocity.v.g.x = x;
-		}
+		m_velocity.v.g.x = x;
 	}
 
 	void Object::set_velocity_Y(float y)
 	{
-		if (y > -10 && y < 10)
-		{
-			m_velocity.v.g.y = y;
-		}
+		m_velocity.v.g.y = y;
 	}
 
 	void Object::set_velocity_Z(float z)
 	{
-		if (z > -10 && z < 10)
-		{
-			m_velocity.v.g.z = z;
-		}
+		m_velocity.v.g.z = z;
+	}
+
+	void Object::set_velocity(float x, float y, float z)
+	{
+		set_velocity_X(x);
+		set_velocity_Y(y);
+		set_velocity_Z(z);
+	}
+
+	void Object::set_velocity(Vector3 velocity)
+	{
+		m_velocity = velocity;
 	}
 
 	void Object::add_velocity_X(float x)

@@ -122,9 +122,9 @@ namespace BD3GE
 		glUniformMatrix4fv(glGetUniformLocation(m_shader->get_program_ID(), "transformation_matrix"), 1, GL_TRUE, transformation_array);
 
 		// Update position.
-		glUniform3f(glGetUniformLocation(m_shader->get_program_ID(), "offset"), world_view_projection_transform(3, 0), world_view_projection_transform(3, 1), world_view_projection_transform(3, 2));
+		// glUniform3f(glGetUniformLocation(m_shader->get_program_ID(), "offset"), world_view_projection_transform(3, 0), world_view_projection_transform(3, 1), world_view_projection_transform(3, 2));
 
-		glUniform4f(glGetUniformLocation(m_shader->get_program_ID(), "color"), 1.0f, 0.0f, 0.0f, 1.0f);
+		glUniform4f(glGetUniformLocation(m_shader->get_program_ID(), "in_color"), 1.0f, 0.0f, 0.0f, 1.0f);
 
 		// Draw mesh using its VAO.
 		glBindVertexArray(m_VAO);

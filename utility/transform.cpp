@@ -35,6 +35,50 @@ namespace BD3GE
 		this->m_matrix(2, 2, scaler);
 	}
 
+	void Transform::scale(Vector3 scaler)
+	{
+		this->m_matrix(0, 0, scaler.v.g.x);
+		this->m_matrix(0, 0, scaler.v.g.y);
+		this->m_matrix(0, 0, scaler.v.g.z);
+	}
+
+	void Transform::rotate(Vector3 angle)
+	{
+		rotate_z(angle.v.g.z);
+		rotate_y(angle.v.g.y);
+		rotate_x(angle.v.g.x);
+	}
+
+	void Transform::rotate_x(float angle)
+	{
+		this->m_matrix *= Matrix4(
+			1,	0,			0,				0,
+			0,	cos(angle),	-(sin(angle)),	0,
+			0,	sin(angle),	cos(angle),		0,
+			0,	0,			0,				1
+		);
+	}
+
+	void Transform::rotate_y(float angle)
+	{
+		this->m_matrix *= Matrix4(
+			cos(angle),		0,		sin(angle),	0,
+			0,				1,		0,			0,
+			-(sin(angle)),	0,		cos(angle),	0,
+			0,				0,		0,			1
+		);
+	}
+
+	void Transform::rotate_z(float angle)
+	{
+		this->m_matrix *= Matrix4(
+			cos(angle),	-(sin(angle)),	0,	0,
+			sin(angle),	cos(angle),		0,	0,
+			0,			0,				1,	0,
+			0,			0,				0,	1
+		);
+	}
+
 	void Transform::to_float_array(float* float_array) const
 	{
 		this->m_matrix.to_float_array(float_array);

@@ -17,7 +17,11 @@ namespace BD3GE
 								~Transform();
 			void 				translate(Vector3 translation);
 			void				scale(float scaler);
-			// void				rotate();
+			void				scale(Vector3 scaler);
+			void				rotate(Vector3 angle);
+			void				rotate_x(float angle);
+			void				rotate_y(float angle);
+			void				rotate_z(float angle);
 			void 				to_float_array(float* float_array) const;
 			Transform 			inverse(void) const;
 			Matrix4				get_matrix(void) const;

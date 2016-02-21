@@ -25,6 +25,7 @@ namespace BD3GE
 			virtual			~Object();
 			void			move(void);
 			void			scale(float scaler);
+			void			rotate(Vector3 angle);
 			virtual void	render(Transform view_projection_transform);
 			void			set_position_X(float x)		{ m_position.v.g.x = x; }
 			void			set_position_Y(float y)		{ m_position.v.g.y = y; }
@@ -36,6 +37,8 @@ namespace BD3GE
 			void			set_velocity_X(float x);
 			void			set_velocity_Y(float y);
 			void			set_velocity_Z(float z);
+			void			set_velocity(float x, float y, float z);
+			void			set_velocity(Vector3 velocity);
 			float			get_velocity_X(void)		{ return m_velocity.v.g.x; }
 			float			get_velocity_Y(void)		{ return m_velocity.v.g.y; }
 			float			get_velocity_Z(void)		{ return m_velocity.v.g.z; }
@@ -50,6 +53,7 @@ namespace BD3GE
 			Vector3		m_position;
 			Vector3		m_color;
 			Vector3		m_velocity;
+			float		m_angle;
 			Mesh*		m_mesh;
 			Ogg*		m_OGG;	// TODO: Encapsulate OGG-specific stuff inside a class (i.e. "Audio" object).
 	};

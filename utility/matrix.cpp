@@ -242,13 +242,13 @@ namespace BD3GE
 		}
 	}
 
-	// Returns the matrix element mapped to by the 0-based subscripts "i" and "j".
+	// Returns the matrix element mapped to by the 0-based subscripts "i" and "j". Row-major order.
 	const float Matrix4::operator()(unsigned short i, unsigned short j) const
 	{
 		return m_elements[i + (4 * j)];
 	}
 
-	// Set the matrix element mapped to by the 0-based subscripts "i" and "j" to the input "value".
+	// Set the matrix element mapped to by the 0-based subscripts "i" and "j" to the input "value". Row-major order.
 	void Matrix4::operator()(unsigned short i, unsigned short j, float value)
 	{
 		m_elements[i + (4 * j)] = value;

@@ -11,7 +11,13 @@ namespace BD3GE
 		Assimp::Importer importer;
 
 		// Import asset residing at given file path.
-		const aiScene* scene = importer.ReadFile(file_path, aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_SortByPType | aiProcess_FlipWindingOrder);
+		unsigned int importer_options = 
+			aiProcess_CalcTangentSpace | 
+			aiProcess_JoinIdenticalVertices | 
+			aiProcess_Triangulate | 
+			aiProcess_SortByPType | 
+			aiProcess_FlipWindingOrder;
+		const aiScene* scene = importer.ReadFile(file_path, importer_options);
 
 		// Ensure that asset importing succeeded.
 		if (scene)
@@ -123,6 +129,18 @@ namespace BD3GE
 		{
 			m_camera.set_velocity_Y(PLAYER_SPEED);
 		}
+		if (input->get_key_state(KEY_LEFT)) {
+			m_camera.rotate(Vector3(0, 0, 0.01));
+		}
+		if (input->get_key_state(KEY_RIGHT)) {
+			m_camera.rotate(Vector3(0, 0, -0.01));
+		}
+		if (input->get_key_state(KEY_UP)) {
+			m_camera.rotate(Vector3(-0.01, 0, 0));
+		}
+		if (input->get_key_state(KEY_DOWN)) {
+			m_camera.rotate(Vector3(0.01, 0, 0));
+		}
 
 		static unsigned int count = 0;
 		++count;
@@ -134,6 +152,7 @@ namespace BD3GE
 		// {
 		// 	m_objects[i]->scale((count % 25) / 100.0f);
 		// }
+		m_objects[0]->rotate(Vector3(0, 0, 0.1));
 
 		m_camera.move();
 		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i)

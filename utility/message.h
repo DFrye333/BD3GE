@@ -36,11 +36,8 @@ namespace BD3GE
 			{
 				if (this != &source)
 				{
-					if (m_data)
-					{
-						delete m_data;
-						m_data = NULL;
-					}
+					delete m_data;
+					m_data = NULL;
 
 					m_data = new T(*(source.m_data));
 				}

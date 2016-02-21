@@ -40,8 +40,8 @@ namespace BD3GE
 
 			glewInit();
 			
-			// m_scene = new Scene("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/mesh/cube.dae");
-			m_scene = new Scene("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/mesh/duck.dae");
+			m_scene = new Scene("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/mesh/cube.dae");
+			// m_scene = new Scene("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/mesh/duck.dae");
 		}
 	}
 
