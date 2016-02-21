@@ -18,8 +18,8 @@ namespace BD3GE
 	// Create a shader program composed of shader objects.
 	GLuint BD3GE::Shader::create_program(void)
 	{
-		m_shader_objects.push_back(create_shader(GL_VERTEX_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/vertex.glsl"));
-		m_shader_objects.push_back(create_shader(GL_FRAGMENT_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/fragment.glsl"));
+		m_shader_objects.push_back(create_shader(GL_VERTEX_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/shader/vertex.glsl"));
+		m_shader_objects.push_back(create_shader(GL_FRAGMENT_SHADER, "/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/shader/fragment.glsl"));
 
 		GLuint program_ID = glCreateProgram();
 

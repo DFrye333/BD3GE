@@ -33,7 +33,7 @@ namespace BD3GE
 		m_mesh = new Mesh(mesh);
 
 		// TODO: Revisit audio stuff later!
-		// std::string fileName = std::string("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/DH.ogg");
+		// std::string fileName = std::string("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/audio/DH.ogg");
 		// m_OGG = new Ogg(fileName);
 		// m_OGG->play();
 	}
