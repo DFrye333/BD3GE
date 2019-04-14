@@ -26,3 +26,11 @@
 *.exe
 *.out
 *.app
+
+.vs/*
+*.sln
+*.vcxproj*
+Debug/*
+
+#=== Custom entries ===#
+x64/*

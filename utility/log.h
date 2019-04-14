@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef BD3GE_LOG_H
+#define BD3GE_LOG_H
 
 #include <ctime>
 #include <fstream>
@@ -11,6 +11,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#ifdef _WIN32
+#include <direct.h>
+#endif
+
 #include "../system/constants.h"
 
 namespace BD3GE
@@ -20,10 +24,9 @@ namespace BD3GE
 	{
 		public:
 
-					Log();
-					Log(std::string custom_log_directory);
+					Log(std::string custom_log_directory = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY);
 					~Log();
-			void	write(std::string entry, BD3GE::LOG_OUTPUT output);
+			void	write(std::string entry, BD3GE::LOG_OUTPUT outputMode);
 
 		private:
 
@@ -31,4 +34,4 @@ namespace BD3GE
 	};
 }
 
-#endif // LOG_H
+#endif // BD3GE_LOG_H

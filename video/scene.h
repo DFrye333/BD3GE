@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef BD3GE_SCENE_H
+#define BD3GE_SCENE_H
 
 #include <deque>
 #include <vector>
@@ -39,4 +39,4 @@ namespace BD3GE
 	};
 }
 
-#endif // SCENE_H
+#endif // BD3GE_SCENE_H

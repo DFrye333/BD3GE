@@ -1,5 +1,5 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef BD3GE_MATRIX_H
+#define BD3GE_MATRIX_H
 
 #include <iostream>
 
@@ -42,4 +42,4 @@ namespace BD3GE
 	};
 }
 
-#endif // MATRIX_H
+#endif // BD3GE_MATRIX_H

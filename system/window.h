@@ -1,17 +1,26 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef BD3GE_WINDOW_H
+#define BD3GE_WINDOW_H
 
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <unistd.h>
 #include <queue>
 #include <utility>
 #include <map>
 
 #include <GL/glew.h>
+
+#ifdef __linux__
+
+#include <unistd.h>
 #include <GL/glx.h>
 #include <X11/Xlib.h>
+
+#elif _WIN32
+
+#include <Windows.h>
+
+#endif
 
 #include "../system/constants.h"
 #include "../system/globals.h"
@@ -19,33 +28,44 @@
 
 namespace BD3GE
 {
-	class Abstract_Window
+	class Window
 	{
 		public:
 
-			virtual 										~Abstract_Window() {};
+			struct ReshapeEvent {
+				uint16_t width;
+				uint16_t height;
+			};
+
+			virtual 										~Window() {};
 			virtual void									message_listener(void) = 0;
 			virtual void									swap_buffers(void) = 0;
-			virtual Message< std::pair<std::string, bool> >	pull_input_message(void) = 0;
-			virtual Message< std::pair<int, int> >			pull_reshape_message(void) = 0;
+			virtual Message<std::pair<std::string, bool>>	pull_input_message(void) = 0;
+			virtual Message<std::pair<int, int>>			pull_reshape_message(void) = 0;
+
+		protected:
+
+			std::queue<Message<ReshapeEvent>>*				reshapeQueue;
 	};
 
-	class X_Window : public Abstract_Window
+#ifdef __linux__
+
+	class XWindow : public Window
 	{
 		public:
 
-														X_Window();
-														~X_Window(void);
+														XWindow();
+														~XWindow(void);
 			void 										message_listener(void);
 			void 										swap_buffers(void);
-			Message< std::pair<std::string, bool> >		pull_input_message(void);
-			Message< std::pair<int, int> >				pull_reshape_message(void);
+			Message<std::pair<std::string, bool>>		pull_input_message(void);
+			Message<std::pair<int, int>>				pull_reshape_message(void);
 
 		private:
+
 			typedef std::map<std::string, std::string>					t_key_map;
 			static t_key_map											m_key_map;
-			std::queue< Message< std::pair<std::string, bool> > >		m_input_queue;
-			std::queue< Message< std::pair<int, int> > >				m_reshape_queue;
+			std::queue<Message<std::pair<std::string, bool>>>			m_input_queue;
 			Display* 													m_display;
 			Window 														m_window;
 			GC 															m_graphics_context;
@@ -58,6 +78,39 @@ namespace BD3GE
 			int															m_singlebuffered_attributes[16];
 			int															m_doublebuffered_attributes[16];
 	};
+
+#elif _WIN32
+
+	class WinAPIWindow : public Window
+	{
+		public:
+
+			struct WinAPIEntryArgs {
+				HINSTANCE hInstance;
+				HINSTANCE hPrevInstance;
+				LPSTR lpCmdLine;
+				int nCmdShow;
+			};
+
+			struct WindowProcData {
+				std::queue<Message<ReshapeEvent>>* reshapeQueue;
+			};
+
+													WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
+													~WinAPIWindow(void);
+			void									message_listener(void);
+			void									swap_buffers(void);
+			Message<std::pair<std::string, bool>>	pull_input_message(void);
+			Message<std::pair<int, int>>			pull_reshape_message(void);
+
+		private:
+
+			BD3GE::WinAPIWindow::WindowProcData* windowProcData;
+			HWND windowHandle;
+	};
+
+#endif
+
 }
 
-#endif // WINDOW_H
+#endif // BD3GE_WINDOW_H

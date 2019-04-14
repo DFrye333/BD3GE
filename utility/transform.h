@@ -1,5 +1,5 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#ifndef BD3GE_TRANSFORM_H
+#define BD3GE_TRANSFORM_H
 
 #include <cmath>
 
@@ -37,4 +37,4 @@ namespace BD3GE
 	};
 }
 
-#endif // TRANSFORM_H
+#endif // BD3GE_TRANSFORM_H

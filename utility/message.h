@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef BD3GE_MESSAGE_H
+#define BD3GE_MESSAGE_H
 
 namespace BD3GE
 {
@@ -76,4 +76,4 @@ namespace BD3GE
 	};
 }
 
-#endif // MESSAGE_H
+#endif // BD3GE_MESSAGE_H

@@ -1,11 +1,11 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef BD3GE_CONSTANTS_H
+#define BD3GE_CONSTANTS_H
 
 #include <string>
 
 namespace BD3GE
 {
-	const std::string 	WINDOW_TITLE = 	"Game Prototype 0 | BD3GE";
+	const std::string 	WINDOW_TITLE = 	"BD3GE";
 
 	const std::string	DEFAULT_SYSTEM_DIRECTORY	=	"/home/david/.local/share/BD3GE/";
 	const std::string	DEFAULT_LOG_DIRECTORY		=	"log/";
@@ -13,10 +13,10 @@ namespace BD3GE
 	const std::string	LOG_PRINT_INFORMATION		=	"(BD3GE | Information): ";
 	const std::string	LOG_PRINT_ERROR				=	"(BD3GE | Error): ";
 
-	const int			SCREEN_WIDTH = 	1920;
-	const int			SCREEN_HEIGHT =	1080;
-	const int			WINDOW_WIDTH =	1600;
-	const int			WINDOW_HEIGHT =	900;
+	const int			SCREEN_WIDTH = 	3440;
+	const int			SCREEN_HEIGHT =	1440;
+	const int			WINDOW_WIDTH =	1920;
+	const int			WINDOW_HEIGHT =	1080;
 
 	const float			PLAYER_SPEED = 1.0f;
 
@@ -144,4 +144,4 @@ namespace BD3GE
 	const std::string KEY_KP9 =				"KEY_KP9";
 }
 
-#endif // CONSTANTS_H
+#endif // BD3GE_CONSTANTS_H

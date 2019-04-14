@@ -6,12 +6,17 @@ namespace BD3GE
 	 *	Game class
 	 */
 
+	Game::Game(BD3GE::Window* window)
+	{
+		startup(window);
+	}
+
 	Game::~Game()
 	{
 		shutdown();
 	}
 
-	void Game::startup(void)
+	void Game::startup(BD3GE::Window* window)
 	{
 		m_running = false;
 		
@@ -24,7 +29,12 @@ namespace BD3GE
 			DIR* default_system_directory_stream = opendir(DEFAULT_SYSTEM_DIRECTORY.c_str());
 			if (!default_system_directory_stream)
 			{
+// TODO: Ugly! Create a class to handle filesystem stuff.
+#ifdef __linux__
 				if (-1 == mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH))
+#elif _WIN32
+				if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str()))
+#endif
 				{
 					g_log.write("System directory creation failure.", LOG_ERROR);
 				}
@@ -33,15 +43,14 @@ namespace BD3GE
 
 			// The below initialization order matters! For instance, if m_XWindow is placed after (and therefore initialized after) m_GL, the OpenGL context is not properly set up.
 			// TODO: Consider platform independence here.
-			m_window = new X_Window;
-			m_GL = new GL;
-			m_AL = new AL;
-			m_input = new Input;
+			m_window = window;
+			m_GL = new GL();
+			m_AL = new AL();
+			m_input = new Input();
 
 			glewInit();
 			
-			m_scene = new Scene("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/mesh/cube.dae");
-			// m_scene = new Scene("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/mesh/duck.dae");
+			m_scene = new Scene("D:/Users/David/Downloads/assimp-3.3.1/test/models/Collada/duck.dae");
 		}
 	}
 
@@ -76,15 +85,16 @@ namespace BD3GE
 		// ========================================================================
 
 		// Initialize the logic and rendering timers.
-		float elapsed_time = 0.0f;
-		Timer render_timer("Render", FRAME_TIME);
-		Timer logic_timer("Logic", TICK_TIME);
+		Timer render_timer("Render", FRAME_RATE);
+		Timer logic_timer("Logic", TICK_RATE);
 		render_timer.start();
 		logic_timer.start();
 
 		// Iterate endlessly (unless halted elsewhere).
 		while (m_running)
 		{
+			//std::cout << "Main game loop!" << std::endl;
+
 			// Handle subsystem communication.
 			bus_messages();
 
@@ -104,8 +114,10 @@ namespace BD3GE
 			}
 
 			// Check render timer.
-			if (render_timer.is_due(&elapsed_time))
+			if (render_timer.is_due())
 			{
+				//std::cout << "FRAME" << std::endl;
+
 				// Process a rendering frame.
 				m_scene->render();
 
@@ -121,7 +133,7 @@ namespace BD3GE
 
 	void Game::bus_messages(void)
 	{
-		// Listen for X messages.
+		// Listen for window messages.
 		m_window->message_listener();
 
 		// Pass input events.
@@ -135,6 +147,7 @@ namespace BD3GE
 		Message< std::pair<int, int> > reshape_message = m_window->pull_reshape_message();
 		if (reshape_message.get_data())
 		{
+			std::cout << "Reshape" << std::endl;
 			m_GL->reshape(reshape_message.get_data()->first, reshape_message.get_data()->second);
 			m_scene->getCamera().set_viewport(m_GL->get_viewport_width(), m_GL->get_viewport_height());
 		}

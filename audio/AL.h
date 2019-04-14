@@ -1,10 +1,10 @@
-#ifndef AL_H
-#define AL_H
+#ifndef BD3GE_AL_H
+#define BD3GE_AL_H
 
 #include <cstddef>
 
-#include "AL/al.h"
-#include "AL/alc.h"
+#include <al.h>
+#include <alc.h>
 
 namespace BD3GE
 {
@@ -22,4 +22,4 @@ namespace BD3GE
 	};
 }
 
-#endif // AL_H
+#endif // BD3GE_AL_H

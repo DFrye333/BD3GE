@@ -1,5 +1,5 @@
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef BD3GE_INPUT_H
+#define BD3GE_INPUT_H
 
 #include <iostream>
 #include <cstring>
@@ -25,4 +25,4 @@ namespace BD3GE
 	};
 }
 
-#endif // INPUT_H
+#endif // BD3GE_INPUT_H

@@ -1,5 +1,5 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef BD3GE_OBJECT_H
+#define BD3GE_OBJECT_H
 
 #include <string>
 
@@ -59,4 +59,4 @@ namespace BD3GE
 	};
 }
 
-#endif // OBJECT_H
+#endif // BD3GE_OBJECT_H

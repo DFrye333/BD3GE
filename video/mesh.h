@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef BD3GE_MESH_H
+#define BD3GE_MESH_H
 
 #include <assimp/Importer.hpp>
 #include <assimp/mesh.h>
@@ -35,4 +35,4 @@ namespace BD3GE
 	};
 }
 
-#endif // MESH_H
+#endif // BD3GE_MESH_H

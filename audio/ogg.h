@@ -1,12 +1,12 @@
-#ifndef OGG_H
-#define OGG_H
+#ifndef BD3GE_OGG_H
+#define BD3GE_OGG_H
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include <AL/al.h>
-#include <AL/alc.h>
+#include <al.h>
+#include <alc.h>
 #include <vorbis/vorbisfile.h>
 
 #include "../system/constants.h"
@@ -39,4 +39,4 @@ namespace BD3GE
 	};
 }
 
-#endif // OGG_H
+#endif // BD3GE_OGG_H

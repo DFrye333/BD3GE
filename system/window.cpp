@@ -2,11 +2,14 @@
 
 namespace BD3GE
 {
+
+#ifdef __linux__
+
 	/*
-	 *	X_Window class
+	 *	XWindow class
 	 */
 
-	X_Window::t_key_map X_Window::m_key_map =
+	XWindow::t_key_map XWindow::m_key_map =
 	{
 		{ "BackSpace", KEY_BACKSPACE },
 		{ "Tab", KEY_TAB },
@@ -109,7 +112,7 @@ namespace BD3GE
 		{ "KP_9", KEY_KP9 },
 	};
 
-	X_Window::X_Window()
+	XWindow::XWindow()
 	{
 		m_graphics_context 			= 	NULL;
 		m_framebuffer_configuration = 	NULL;
@@ -225,7 +228,7 @@ namespace BD3GE
 		XFlush(m_display);
 	}
 
-	X_Window::~X_Window()
+	XWindow::~XWindow()
 	{
 		// Destroy the graphics context, window, and display.
 		if (m_GLX_context)
@@ -242,7 +245,7 @@ namespace BD3GE
 		XCloseDisplay(m_display);
 	}
 
-	void X_Window::message_listener(void)
+	void XWindow::message_listener(void)
 	{
 		// If there is a pending message, handle it.
 		if (XPending(m_display))
@@ -328,7 +331,7 @@ namespace BD3GE
 				// The window has been resized.
 				case ConfigureNotify:
 				{
-					m_reshape_queue.push(std::make_pair(event.xconfigure.width, event.xconfigure.height));
+					reshapeQueue.push(std::make_pair(event.xconfigure.width, event.xconfigure.height));
 
 					break;
 				}
@@ -343,12 +346,12 @@ namespace BD3GE
 		}
 	}
 
-	void X_Window::swap_buffers(void)
+	void XWindow::swap_buffers(void)
 	{
 		glXSwapBuffers(m_display, m_GLX_window);
 	}
 
-	Message< std::pair<std::string, bool> > X_Window::pull_input_message(void)
+	Message<std::pair<std::string, bool>> XWindow::pull_input_message(void)
 	{
 		Message< std::pair<std::string, bool> > input_event;
 
@@ -362,17 +365,179 @@ namespace BD3GE
 		return input_event;
 	}
 
-	Message< std::pair<int, int> > X_Window::pull_reshape_message(void)
+	Message<std::pair<int, int>> XWindow::pull_reshape_message(void)
 	{
-		Message< std::pair<int, int> > reshape_event;
+		Message<std::pair<int, int>> reshape_event;
 
-		if (!m_reshape_queue.empty())
+		if (!reshapeQueue.empty())
 		{
-			reshape_event = m_reshape_queue.front();
+			reshape_event = reshapeQueue.front();
 
-			m_reshape_queue.pop();
+			reshapeQueue.pop();
 		}
 
 		return reshape_event;
 	}
+
+#elif _WIN32
+
+	// TODO: Make this a property of the BD3GE::WinAPIWindow class?
+	LRESULT CALLBACK WindowProc(HWND hwnd, UINT messageCode, WPARAM wParam, LPARAM lParam)
+	{
+		BD3GE::WinAPIWindow::WindowProcData* data;
+		LONG_PTR dataLongPtr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		if (dataLongPtr != 0) {
+			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(dataLongPtr);
+		}
+
+		switch (messageCode)
+		{
+			case WM_CREATE:
+				{
+					CREATESTRUCT* dataCreation = reinterpret_cast<CREATESTRUCT*>(lParam);
+					data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(dataCreation->lpCreateParams);
+					SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)data);
+
+					HDC displayContext = GetDC(hwnd);
+
+					PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
+					PIXELFORMATDESCRIPTOR* pixelFormatDescriptorPointer = &pixelFormatDescriptor;
+					pixelFormatDescriptorPointer->nSize = sizeof(PIXELFORMATDESCRIPTOR);
+					pixelFormatDescriptorPointer->nVersion = 1;
+					pixelFormatDescriptorPointer->dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+					pixelFormatDescriptorPointer->iPixelType = PFD_TYPE_COLORINDEX;
+					pixelFormatDescriptorPointer->cColorBits = 8;
+					pixelFormatDescriptorPointer->cDepthBits = 16;
+					pixelFormatDescriptorPointer->cAccumBits = 0;
+					pixelFormatDescriptorPointer->cStencilBits = 0;
+
+					int pixelFormat = ChoosePixelFormat(displayContext, pixelFormatDescriptorPointer);
+					SetPixelFormat(displayContext, pixelFormat, pixelFormatDescriptorPointer);
+
+					HGLRC renderContext = wglCreateContext(displayContext);
+					wglMakeCurrent(displayContext, renderContext);
+				}
+
+				break;
+			case WM_PAINT:
+				{
+					PAINTSTRUCT paintStruct;
+					BeginPaint(hwnd, &paintStruct);
+					EndPaint(hwnd, &paintStruct);
+				}
+
+				break;
+			case WM_SIZE:
+				BD3GE::Window::ReshapeEvent reshapeEvent;
+				reshapeEvent.width = LOWORD(lParam);
+				reshapeEvent.height = HIWORD(lParam);
+
+				data->reshapeQueue->push(BD3GE::Message(reshapeEvent));
+
+				break;
+			case WM_CLOSE:
+				DestroyWindow(hwnd);
+
+				break;
+			case WM_DESTROY:
+				PostQuitMessage(0);
+
+				break;
+			default:
+				return DefWindowProc(hwnd, messageCode, wParam, lParam);
+		}
+
+		return 0;
+	}
+
+	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs)
+	{
+		WNDCLASSEX wc;
+		const char g_szClassName[] = "BD3GEWindowClass";
+
+		wc.cbSize = sizeof(WNDCLASSEX);
+		wc.style = CS_OWNDC;
+		wc.lpfnWndProc = WindowProc;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hInstance = winAPIEntryArgs.hInstance;
+		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = g_szClassName;
+		wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
+		if (!RegisterClassEx(&wc))
+		{
+			MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+			//return 0;
+		}
+
+		reshapeQueue = new std::queue<BD3GE::Message<BD3GE::Window::ReshapeEvent>>;
+
+		windowProcData = new BD3GE::WinAPIWindow::WindowProcData;
+		windowProcData->reshapeQueue = reshapeQueue;
+
+		windowHandle = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			g_szClassName,
+			BD3GE::WINDOW_TITLE.c_str(),
+			WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT, CW_USEDEFAULT, BD3GE::WINDOW_WIDTH, BD3GE::WINDOW_HEIGHT,
+			NULL, NULL, winAPIEntryArgs.hInstance,
+			windowProcData
+		);
+
+		if (windowHandle == NULL)
+		{
+			MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+			//return 0;
+		}
+
+		ShowWindow(windowHandle, winAPIEntryArgs.nCmdShow);
+		UpdateWindow(windowHandle);
+
+		std::cout << "Command line arguments: ";
+		std::cout << winAPIEntryArgs.lpCmdLine << std::endl;
+	}
+
+	WinAPIWindow::~WinAPIWindow()
+	{
+
+	}
+
+	void WinAPIWindow::message_listener(void)
+	{
+		MSG msg;
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		/*std::cout << msg.message;
+		std::cout << ": (";
+		std::cout << msg.pt.x;
+		std::cout << ", ";
+		std::cout << msg.pt.y;
+		std::cout <<  +")" << std::endl;*/
+	}
+
+	void WinAPIWindow::swap_buffers(void)
+	{
+		SwapBuffers(GetDC(windowHandle));
+	}
+
+	Message<std::pair<std::string, bool>> WinAPIWindow::pull_input_message(void)
+	{
+		return Message<std::pair<std::string, bool>>();
+	}
+
+	Message<std::pair<int, int>> WinAPIWindow::pull_reshape_message(void)
+	{
+		return Message<std::pair<int, int>> ();
+	}
+
+#endif
 }

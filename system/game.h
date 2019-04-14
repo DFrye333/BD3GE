@@ -1,9 +1,10 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef BD3GE_GAME_H
+#define BD3GE_GAME_H
 
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <sys/types.h>
+
+//#include <sys/time.h>
 #include <dirent.h>
 
 #include "../audio/AL.h"
@@ -21,9 +22,9 @@ namespace BD3GE
 	{
 		public:
 
-					Game() {};
+					Game(BD3GE::Window* window);
 					~Game();
-			void	startup(void);
+			void	startup(BD3GE::Window* window);
 			void	shutdown(void);
 			void 	run(void);
 			void	bus_messages(void);
@@ -31,7 +32,7 @@ namespace BD3GE
 		private:
 
 			bool				m_running;
-			Abstract_Window*	m_window;
+			Window*				m_window;
 			Scene*				m_scene;
 			GL*					m_GL;
 			AL*					m_AL;
@@ -39,4 +40,4 @@ namespace BD3GE
 	};
 }
 
-#endif // GAME_H
+#endif // BD3GE_GAME_H

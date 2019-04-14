@@ -1,5 +1,5 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#ifndef BD3GE_VECTOR_H
+#define BD3GE_VECTOR_H
 
 #include <cmath>
 
@@ -57,4 +57,4 @@ namespace BD3GE
 	};
 }
 
-#endif // VECTOR_H
+#endif // BD3GE_VECTOR_H
