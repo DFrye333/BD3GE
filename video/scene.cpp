@@ -22,11 +22,11 @@ namespace BD3GE
 		// Ensure that asset importing succeeded.
 		if (scene)
 		{
-			g_log.write("Assimp scene loading succeeded!", LOG_INFORMATION);
+			g_log.write(BD3GE::LOG_TYPE::INFO, "Assimp scene loading succeeded!");
 		}
 		else
 		{
-			g_log.write("Assimp scene loading failed...", LOG_ERROR);
+			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
 		// Cube boxanne = Cube(

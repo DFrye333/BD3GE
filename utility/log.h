@@ -26,7 +26,7 @@ namespace BD3GE
 
 					Log(std::string custom_log_directory = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY);
 					~Log();
-			void	write(std::string entry, BD3GE::LOG_OUTPUT outputMode);
+			void	write(BD3GE::LOG_TYPE outputMode, std::string entry);
 
 		private:
 

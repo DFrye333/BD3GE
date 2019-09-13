@@ -39,7 +39,7 @@ namespace BD3GE
 
 			GLchar* information_log_string = new GLchar[information_log_length + 1];
 			glGetProgramInfoLog(program_ID, information_log_length, NULL, information_log_string);
-			g_log.write("Shader linker failure: " + std::string(information_log_string), LOG_ERROR);
+			g_log.write(BD3GE::LOG_TYPE::ERR, "Shader linker failure: " + std::string(information_log_string));
 			delete[] information_log_string;
 		}
 
@@ -91,7 +91,7 @@ namespace BD3GE
 					break;
 			}
 
-			g_log.write("Shader compiler failure in " + std::string(strShaderType) + " shader:\n " + std::string(information_log_string), LOG_ERROR);
+			g_log.write(BD3GE::LOG_TYPE::ERR, "Shader compiler failure in " + std::string(strShaderType) + " shader:\n " + std::string(information_log_string));
 			delete[] information_log_string;
 		}
 
@@ -107,7 +107,7 @@ namespace BD3GE
 		// Ensure that the shader file was opened successfully.
 		if (!infile)
 		{
-			g_log.write("Cannot open shader file path " + filePath + " for reading!", LOG_ERROR);
+			g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open shader file path " + filePath + " for reading!");
 			return;
 		}
 

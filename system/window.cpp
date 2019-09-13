@@ -158,7 +158,7 @@ namespace BD3GE
 		m_display = XOpenDisplay(NULL);
 		if (NULL == m_display)
 		{
-			g_log.write("Null display", LOG_ERROR);
+			g_log.write("Null display", BD3GE::LOG_TYPE::ERR);
 			exit(1);
 		}
 
@@ -210,12 +210,12 @@ namespace BD3GE
 		XEvent event;
 		while (true)
 		{
-			g_log.write("Waiting on MapNotify XEvent...", LOG_INFORMATION);
+			g_log.write("Waiting on MapNotify XEvent...", BD3GE::LOG_TYPE::INFO);
 
 			XNextEvent(m_display, &event);
 			if (event.type == MapNotify)
 			{
-				g_log.write("Found MapNotify XEvent!", LOG_INFORMATION);
+				g_log.write("Found MapNotify XEvent!", BD3GE::LOG_TYPE::INFO);
 				
 				break;
 			}
@@ -235,7 +235,7 @@ namespace BD3GE
 		{
 			if (!glXMakeCurrent(m_display, None, NULL))
 			{
-				g_log.write("Could not release X context!", LOG_ERROR);
+				g_log.write("Could not release X context!", BD3GE::LOG_TYPE::ERR);
 			}
 			glXDestroyContext(m_display, m_GLX_context);
 			m_GLX_context = NULL;
@@ -285,7 +285,7 @@ namespace BD3GE
 					// Check for X11 auto-repeat and dispose of false releases/presses.
 					if (KeyPress == bug_event.type && bug_event.xkey.keycode == event.xkey.keycode && bug_event.xkey.time == event.xkey.time)
 					{
-						g_log.write("Extra key release, discarding.", LOG_INFORMATION);
+						g_log.write("Extra key release, discarding.", BD3GE::LOG_TYPE::INFO);
 
 						XNextEvent(m_display, &bug_event);
 						return;
@@ -305,7 +305,7 @@ namespace BD3GE
 				// A mouse button has been pressed.
 				case ButtonPress:
 				{
-					g_log.write("Button " + std::to_string(event.xbutton.button) + " pressed at (" + std::to_string(event.xbutton.x) + ", " + std::to_string(event.xbutton.y) + ")", LOG_INFORMATION);
+					g_log.write("Button " + std::to_string(event.xbutton.button) + " pressed at (" + std::to_string(event.xbutton.x) + ", " + std::to_string(event.xbutton.y) + ")", BD3GE::LOG_TYPE::INFO);
 
 					break;
 				}
@@ -314,7 +314,7 @@ namespace BD3GE
 				// A mouse button has been released.
 				case ButtonRelease:
 				{
-					g_log.write("Button " + std::to_string(event.xbutton.button) + " released at (" + std::to_string(event.xbutton.x) + ", " + std::to_string(event.xbutton.y) + ")", LOG_INFORMATION);
+					g_log.write("Button " + std::to_string(event.xbutton.button) + " released at (" + std::to_string(event.xbutton.x) + ", " + std::to_string(event.xbutton.y) + ")", BD3GE::LOG_TYPE::INFO);
 
 					break;
 				}
@@ -323,7 +323,7 @@ namespace BD3GE
 				// The mouse pointer has been moved.
 				case MotionNotify:
 				{
-					// g_log.write("Pointer motion at (" + std::to_string(event.xmotion.x)  + ", " + std::to_string(event.xmotion.y) + ")", LOG_INFORMATION);
+					// g_log.write("Pointer motion at (" + std::to_string(event.xmotion.x)  + ", " + std::to_string(event.xmotion.y) + ")", BD3GE::LOG_TYPE::INFO);
 
 					break;
 				}
@@ -338,7 +338,7 @@ namespace BD3GE
 
 				default:
 				{
-					g_log.write("XEvent: " + std::to_string(event.type), LOG_INFORMATION);
+					g_log.write("XEvent: " + std::to_string(event.type), BD3GE::LOG_TYPE::INFO);
 
 					break;
 				}

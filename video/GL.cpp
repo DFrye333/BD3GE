@@ -41,6 +41,11 @@ namespace BD3GE
 	}
 
 	const GLubyte* GL::get_openGL_version(void)
+		g_log.write(BD3GE::LOG_TYPE::INFO,
+					"Vendor: " + std::string((char*)get_vendor()) + "\n" +
+					"Renderer: " + std::string((char*)get_renderer()) + "\n" +
+					"Version: " + std::string((char*)get_version()) + "\n" +
+					"Shading Language Version: " + std::string((char*)get_shading_language_version()));
 	{
 		return glGetString(GL_VERSION);
 	}

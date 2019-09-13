@@ -22,7 +22,7 @@ namespace BD3GE
 		
 		if (!m_running)
 		{
-			g_log.write("Starting up BD3GE now...", LOG_INFORMATION);
+			g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
 
 			m_running = true;
 
@@ -36,7 +36,7 @@ namespace BD3GE
 				if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str()))
 #endif
 				{
-					g_log.write("System directory creation failure.", LOG_ERROR);
+					g_log.write(BD3GE::LOG_TYPE::ERR, "System directory creation failure.");
 				}
 			}
 			closedir(default_system_directory_stream);
@@ -58,7 +58,7 @@ namespace BD3GE
 	{
 		if (m_running)
 		{
-			g_log.write("Shutting down BD3GE now...", LOG_INFORMATION);
+			g_log.write(BD3GE::LOG_TYPE::INFO, "Shutting down BD3GE now...");
 
 			m_running = false;
 		}

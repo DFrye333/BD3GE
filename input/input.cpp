@@ -14,12 +14,14 @@ namespace BD3GE
 
 			if (message.get_data()->second == true)
 			{
-				g_log.write("'" + std::string(message.get_data()->first) + "' key pressed.", LOG_INFORMATION);
+				// TODO: Write conversion utility between key code enum and string.
+				//g_log.write("'" + std::string(message.get_data()->first) + "' key pressed.", BD3GE::LOG_TYPE::INFO);
 			}
 
 			else if (message.get_data()->second == false)
 			{
-				g_log.write("'" + std::string(message.get_data()->first) + "' key released.", LOG_INFORMATION);
+				// TODO: Write conversion utility between key code enum and string.
+				//g_log.write("'" + std::string(message.get_data()->first) + "' key released.", BD3GE::LOG_TYPE::INFO);
 			}
 		}
 	}

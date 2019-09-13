@@ -64,7 +64,7 @@ namespace BD3GE
 		}
 		else
 		{
-			g_log.write("Vector magnitude <= EPSILON", LOG_ERROR);
+			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
 
@@ -77,7 +77,7 @@ namespace BD3GE
 		}
 		else
 		{
-			g_log.write("Vector magnitude <= EPSILON", LOG_ERROR);
+			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
 

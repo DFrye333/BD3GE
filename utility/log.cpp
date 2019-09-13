@@ -35,16 +35,16 @@ namespace BD3GE
 	}
 
 	// Write a string entry to the log file and the appropriate standard stream, specifying the entry as an error, informative, or otherwise.
-	void Log::write(std::string entry, LOG_OUTPUT outputMode)
+	void Log::write(BD3GE::LOG_TYPE loggingMode, std::string entry)
 	{
 		char log_time_formatted[32];
 		time_t log_time = time(NULL);
 
 		strftime(log_time_formatted, 32, "[%F %T]", localtime(&log_time));
 
-		switch (outputMode)
+		switch (loggingMode)
 		{
-			case LOG_INFORMATION:
+			case BD3GE::LOG_TYPE::INFO:
 			{
 				m_log_stream << log_time_formatted << " " << LOG_PRINT_INFORMATION << entry << std::endl;
 				std::cout << log_time_formatted << " " << LOG_PRINT_INFORMATION << entry << std::endl;
@@ -52,7 +52,7 @@ namespace BD3GE
 				break;
 			}
 
-			case LOG_ERROR:
+			case BD3GE::LOG_TYPE::ERR:
 			{
 				m_log_stream << log_time_formatted << " " << LOG_PRINT_ERROR << entry << std::endl;
 				std::cerr << log_time_formatted << " " << LOG_PRINT_ERROR << entry << std::endl;

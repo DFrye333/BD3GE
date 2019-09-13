@@ -22,9 +22,9 @@ namespace BD3GE
 
 	typedef enum
 	{
-		LOG_INFORMATION =	0,
-		LOG_ERROR = 		1
-	} LOG_OUTPUT;
+		INFO,
+		ERR,
+	} LOG_TYPE;
 
 	// Number of ticks to be processed per-second.
 	const float			TICK_RATE = 60.0f;
