@@ -30,12 +30,12 @@ namespace BD3GE
 			void 			add_object(Object* object);
 			void			tick(Input* input);
 			void 			render(void);
-			Camera& 	getCamera(void);
+			Camera& 		getCamera(void);
 
 		private:
 
 			std::vector<Object*>	m_objects;
-			Camera				m_camera;
+			Camera					m_camera;
 	};
 }
 

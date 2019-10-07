@@ -105,6 +105,7 @@ namespace BD3GE
 		{
 			m_camera.set_velocity_Z(PLAYER_SPEED);
 		}
+
 		if ((false == input->get_key_state(BD3GE::KEY_CODE::A) && false == input->get_key_state(BD3GE::KEY_CODE::D)) || (true == input->get_key_state(BD3GE::KEY_CODE::A) && true == input->get_key_state(BD3GE::KEY_CODE::D)))
 		{
 			m_camera.set_velocity_X(0);
@@ -117,6 +118,7 @@ namespace BD3GE
 		{
 			m_camera.set_velocity_X(PLAYER_SPEED);
 		}
+
 		if ((false == input->get_key_state(BD3GE::KEY_CODE::Q) && false == input->get_key_state(BD3GE::KEY_CODE::E)) || (true == input->get_key_state(BD3GE::KEY_CODE::Q) && true == input->get_key_state(BD3GE::KEY_CODE::E)))
 		{
 			m_camera.set_velocity_Y(0);
@@ -129,6 +131,7 @@ namespace BD3GE
 		{
 			m_camera.set_velocity_Y(PLAYER_SPEED);
 		}
+
 		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
 			m_camera.rotate(Vector3(0, 0, 0.01));
 		}

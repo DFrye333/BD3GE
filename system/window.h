@@ -37,9 +37,9 @@ namespace BD3GE
 				uint16_t height;
 			};
 
-			virtual 										~Window() {};
-			virtual void									message_listener(void) = 0;
-			virtual void									swap_buffers(void) = 0;
+			virtual 											~Window() {};
+			virtual void										message_listener(void) = 0;
+			virtual void										swap_buffers(void) = 0;
 			virtual Message<std::pair<BD3GE::KEY_CODE, bool>>	pull_input_message(void) = 0;
 			virtual Message<std::pair<int, int>>				pull_reshape_message(void) = 0;
 
@@ -54,10 +54,10 @@ namespace BD3GE
 	{
 		public:
 
-														XWindow();
-														~XWindow(void);
-			void 										message_listener(void);
-			void 										swap_buffers(void);
+																		XWindow();
+																		~XWindow(void);
+			void 														message_listener(void);
+			void 														swap_buffers(void);
 			Message<std::pair<BD3GE::KEY_CODE, bool>>					pull_input_message(void);
 			Message<std::pair<int, int>>								pull_reshape_message(void);
 
@@ -95,10 +95,10 @@ namespace BD3GE
 				std::queue<Message<ReshapeEvent>>* reshapeQueue;
 			};
 
-													WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
-													~WinAPIWindow(void);
-			void									message_listener(void);
-			void									swap_buffers(void);
+															WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
+															~WinAPIWindow(void);
+			void											message_listener(void);
+			void											swap_buffers(void);
 			Message<std::pair<BD3GE::KEY_CODE, bool>>		pull_input_message(void);
 			Message<std::pair<int, int>>					pull_reshape_message(void);
 
