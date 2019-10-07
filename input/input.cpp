@@ -6,7 +6,7 @@ namespace BD3GE
 	 *	Input class
 	 */
 
-	void Input::handler(Message< std::pair <std::string, bool> > message)
+	void Input::handler(Message<std::pair<BD3GE::KEY_CODE, bool>> message)
 	{
 		if (message.get_data())
 		{
@@ -26,12 +26,12 @@ namespace BD3GE
 		}
 	}
 
-	void Input::set_key_state(std::string key, bool state)
+	void Input::set_key_state(BD3GE::KEY_CODE key, bool state)
 	{
 		m_keys[key] = state;
 	}
 
-	bool Input::get_key_state(const std::string key)
+	bool Input::get_key_state(BD3GE::KEY_CODE key)
 	{
 		return m_keys[key];
 	}

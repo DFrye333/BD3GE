@@ -40,8 +40,8 @@ namespace BD3GE
 			virtual 										~Window() {};
 			virtual void									message_listener(void) = 0;
 			virtual void									swap_buffers(void) = 0;
-			virtual Message<std::pair<std::string, bool>>	pull_input_message(void) = 0;
-			virtual Message<std::pair<int, int>>			pull_reshape_message(void) = 0;
+			virtual Message<std::pair<BD3GE::KEY_CODE, bool>>	pull_input_message(void) = 0;
+			virtual Message<std::pair<int, int>>				pull_reshape_message(void) = 0;
 
 		protected:
 
@@ -58,14 +58,13 @@ namespace BD3GE
 														~XWindow(void);
 			void 										message_listener(void);
 			void 										swap_buffers(void);
-			Message<std::pair<std::string, bool>>		pull_input_message(void);
-			Message<std::pair<int, int>>				pull_reshape_message(void);
+			Message<std::pair<BD3GE::KEY_CODE, bool>>					pull_input_message(void);
+			Message<std::pair<int, int>>								pull_reshape_message(void);
 
 		private:
 
-			typedef std::map<std::string, std::string>					t_key_map;
-			static t_key_map											m_key_map;
-			std::queue<Message<std::pair<std::string, bool>>>			m_input_queue;
+			static std::map<std::string, BD3GE::KEY_CODE>> t_key_map	m_key_map;
+			std::queue<Message<std::pair<BD3GE::KEY_CODE, bool>>>		m_input_queue;
 			Display* 													m_display;
 			Window 														m_window;
 			GC 															m_graphics_context;
@@ -100,8 +99,8 @@ namespace BD3GE
 													~WinAPIWindow(void);
 			void									message_listener(void);
 			void									swap_buffers(void);
-			Message<std::pair<std::string, bool>>	pull_input_message(void);
-			Message<std::pair<int, int>>			pull_reshape_message(void);
+			Message<std::pair<BD3GE::KEY_CODE, bool>>		pull_input_message(void);
+			Message<std::pair<int, int>>					pull_reshape_message(void);
 
 		private:
 

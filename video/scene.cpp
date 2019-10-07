@@ -93,52 +93,52 @@ namespace BD3GE
 
 	void Scene::tick(Input* input)
 	{
-		if ((false == input->get_key_state(KEY_W) && false == input->get_key_state(KEY_S)) || (true == input->get_key_state(KEY_W) && true == input->get_key_state(KEY_S)))
+		if ((false == input->get_key_state(BD3GE::KEY_CODE::W) && false == input->get_key_state(BD3GE::KEY_CODE::S)) || (true == input->get_key_state(BD3GE::KEY_CODE::W) && true == input->get_key_state(BD3GE::KEY_CODE::S)))
 		{
 			m_camera.set_velocity_Z(0);
 		}
-		else if (true == input->get_key_state(KEY_W))
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::W))
 		{
 			m_camera.set_velocity_Z(-PLAYER_SPEED);
 		}
-		else if (true == input->get_key_state(KEY_S))
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::S))
 		{
 			m_camera.set_velocity_Z(PLAYER_SPEED);
 		}
-		if ((false == input->get_key_state(KEY_A) && false == input->get_key_state(KEY_D)) || (true == input->get_key_state(KEY_A) && true == input->get_key_state(KEY_D)))
+		if ((false == input->get_key_state(BD3GE::KEY_CODE::A) && false == input->get_key_state(BD3GE::KEY_CODE::D)) || (true == input->get_key_state(BD3GE::KEY_CODE::A) && true == input->get_key_state(BD3GE::KEY_CODE::D)))
 		{
 			m_camera.set_velocity_X(0);
 		}
-		else if (true == input->get_key_state(KEY_A))
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::A))
 		{
 			m_camera.set_velocity_X(-PLAYER_SPEED);
 		}
-		else if (true == input->get_key_state(KEY_D))
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::D))
 		{
 			m_camera.set_velocity_X(PLAYER_SPEED);
 		}
-		if ((false == input->get_key_state(KEY_Q) && false == input->get_key_state(KEY_E)) || (true == input->get_key_state(KEY_Q) && true == input->get_key_state(KEY_E)))
+		if ((false == input->get_key_state(BD3GE::KEY_CODE::Q) && false == input->get_key_state(BD3GE::KEY_CODE::E)) || (true == input->get_key_state(BD3GE::KEY_CODE::Q) && true == input->get_key_state(BD3GE::KEY_CODE::E)))
 		{
 			m_camera.set_velocity_Y(0);
 		}
-		else if (true == input->get_key_state(KEY_Q))
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::Q))
 		{
 			m_camera.set_velocity_Y(-PLAYER_SPEED);
 		}
-		else if (true == input->get_key_state(KEY_E))
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::E))
 		{
 			m_camera.set_velocity_Y(PLAYER_SPEED);
 		}
-		if (input->get_key_state(KEY_LEFT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
 			m_camera.rotate(Vector3(0, 0, 0.01));
 		}
-		if (input->get_key_state(KEY_RIGHT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
 			m_camera.rotate(Vector3(0, 0, -0.01));
 		}
-		if (input->get_key_state(KEY_UP)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
 			m_camera.rotate(Vector3(-0.01, 0, 0));
 		}
-		if (input->get_key_state(KEY_DOWN)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
 			m_camera.rotate(Vector3(0.01, 0, 0));
 		}
 

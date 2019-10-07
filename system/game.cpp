@@ -99,7 +99,7 @@ namespace BD3GE
 			bus_messages();
 
 			// Quit the program if the Escape key is pressed.
-			if (m_input->get_key_state(KEY_ESCAPE))
+			if (m_input->get_key_state(BD3GE::KEY_CODE::ESCAPE))
 			{
 				shutdown();
 
@@ -137,7 +137,7 @@ namespace BD3GE
 		m_window->message_listener();
 
 		// Pass input events.
-		Message< std::pair<std::string, bool> > input_message = m_window->pull_input_message();
+		Message<std::pair<BD3GE::KEY_CODE, bool>> input_message = m_window->pull_input_message();
 		if (input_message.get_data())
 		{
 			m_input->handler(input_message);

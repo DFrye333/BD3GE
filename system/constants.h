@@ -40,108 +40,128 @@ namespace BD3GE
 	const int			KEY_COUNT = 128;
 
 	// Keystring mappings.
-	const std::string KEY_BACKSPACE = 		"KEY_BACKSPACE";
-	const std::string KEY_TAB =				"KEY_TAB";
-	const std::string KEY_ESCAPE = 			"KEY_ESCAPE";
-	const std::string KEY_SPACE =			"KEY_SPACE";
-	const std::string KEY_APOSTROPHE =		"KEY_APOSTROPHE";
-	const std::string KEY_COMMA =			"KEY_COMMA";
-	const std::string KEY_MINUS =			"KEY_MINUS";
-	const std::string KEY_PERIOD =			"KEY_PERIOD";
-	const std::string KEY_SLASH =			"KEY_SLASH";
-	const std::string KEY_0 =				"KEY_0";
-	const std::string KEY_1 =				"KEY_1";
-	const std::string KEY_2 =				"KEY_2";
-	const std::string KEY_3 =				"KEY_3";
-	const std::string KEY_4 =				"KEY_4";
-	const std::string KEY_5 =				"KEY_5";
-	const std::string KEY_6 =				"KEY_6";
-	const std::string KEY_7 =				"KEY_7";
-	const std::string KEY_8 =				"KEY_8";
-	const std::string KEY_9 =				"KEY_9";
-	const std::string KEY_SEMICOLON =		"KEY_SEMICOLON";
-	const std::string KEY_EQUAL =			"KEY_EQUAL";
-	const std::string KEY_BRACKETLEFT =		"KEY_BRACKETLEFT";
-	const std::string KEY_BACKSLASH =		"KEY_BACKSLASH";
-	const std::string KEY_BRACKETRIGHT =	"KEY_BRACKETRIGHT";
-	const std::string KEY_GRAVE =			"KEY_GRAVE";
-	const std::string KEY_A = 				"KEY_A";
-	const std::string KEY_B = 				"KEY_B";
-	const std::string KEY_C = 				"KEY_C";
-	const std::string KEY_D = 				"KEY_D";
-	const std::string KEY_E = 				"KEY_E";
-	const std::string KEY_F = 				"KEY_F";
-	const std::string KEY_G = 				"KEY_G";
-	const std::string KEY_H = 				"KEY_H";
-	const std::string KEY_I = 				"KEY_I";
-	const std::string KEY_J = 				"KEY_J";
-	const std::string KEY_K = 				"KEY_K";
-	const std::string KEY_L = 				"KEY_L";
-	const std::string KEY_M = 				"KEY_M";
-	const std::string KEY_N = 				"KEY_N";
-	const std::string KEY_O = 				"KEY_O";
-	const std::string KEY_P = 				"KEY_P";
-	const std::string KEY_Q = 				"KEY_Q";
-	const std::string KEY_R = 				"KEY_R";
-	const std::string KEY_S = 				"KEY_S";
-	const std::string KEY_T = 				"KEY_T";
-	const std::string KEY_U = 				"KEY_U";
-	const std::string KEY_V = 				"KEY_V";
-	const std::string KEY_W = 				"KEY_W";
-	const std::string KEY_X = 				"KEY_X";
-	const std::string KEY_Y = 				"KEY_Y";
-	const std::string KEY_Z = 				"KEY_Z";
-	const std::string KEY_RETURN =			"KEY_RETURN";
-	const std::string KEY_PRINT =			"KEY_PRINT";
-	const std::string KEY_SCROLLLOCK =		"KEY_SCROLLLOCK";
-	const std::string KEY_PAUSE =			"KEY_PAUSE";
-	const std::string KEY_INSERT =			"KEY_INSERT";
-	const std::string KEY_HOME =			"KEY_HOME";
-	const std::string KEY_PRIOR =			"KEY_PRIOR";
-	const std::string KEY_DELETE =			"KEY_DELETE";
-	const std::string KEY_END =				"KEY_END";
-	const std::string KEY_NEXT =			"KEY_NEXT";
-	const std::string KEY_UP =				"KEY_UP";
-	const std::string KEY_LEFT =			"KEY_LEFT";
-	const std::string KEY_DOWN =			"KEY_DOWN";
-	const std::string KEY_RIGHT =			"KEY_RIGHT";
-	const std::string KEY_SHIFTL =			"KEY_SHIFTL";
-	const std::string KEY_SHIFTR =			"KEY_SHIFTR";
-	const std::string KEY_CONTROLL =		"KEY_CONTROLL";
-	const std::string KEY_CONTROLR =		"KEY_CONTROLR";
-	const std::string KEY_ALTL =			"KEY_ALTL";
-	const std::string KEY_ALTR =			"KEY_ALTR";
-	const std::string KEY_SUPERL =			"KEY_SUPERL";
-	const std::string KEY_CAPSLOCK =		"KEY_CAPSLOCK";
-	const std::string KEY_NUMLOCK =			"KEY_NUMLOCK";
-	const std::string KEY_F1 =				"KEY_F1";
-	const std::string KEY_F2 =				"KEY_F2";
-	const std::string KEY_F3 =				"KEY_F3";
-	const std::string KEY_F4 =				"KEY_F4";
-	const std::string KEY_F5 =				"KEY_F5";
-	const std::string KEY_F6 =				"KEY_F6";
-	const std::string KEY_F7 =				"KEY_F7";
-	const std::string KEY_F8 =				"KEY_F8";
-	const std::string KEY_F9 =				"KEY_F9";
-	const std::string KEY_F10 =				"KEY_F10";
-	const std::string KEY_F11 =				"KEY_F11";
-	const std::string KEY_F12 =				"KEY_F12";
-	const std::string KEY_KPDIVIDE =		"KEY_KPDIVIDE";
-	const std::string KEY_KPMULTIPLY =		"KEY_KPMULTIPLY";
-	const std::string KEY_KPSUBTRACT =		"KEY_KPSUBTRACT";
-	const std::string KEY_KPADD =			"KEY_KPADD";
-	const std::string KEY_KPENTER =			"KEY_KPENTER";
-	const std::string KEY_KPDECIMAL =		"KEY_KPDECIMAL";
-	const std::string KEY_KP0 =				"KEY_KP0";
-	const std::string KEY_KP1 =				"KEY_KP1";
-	const std::string KEY_KP2 =				"KEY_KP2";
-	const std::string KEY_KP3 =				"KEY_KP3";
-	const std::string KEY_KP4 =				"KEY_KP4";
-	const std::string KEY_KP5 =				"KEY_KP5";
-	const std::string KEY_KP6 =				"KEY_KP6";
-	const std::string KEY_KP7 =				"KEY_KP7";
-	const std::string KEY_KP8 =				"KEY_KP8";
-	const std::string KEY_KP9 =				"KEY_KP9";
+	typedef enum {
+		BACKSPACE,
+		TAB,
+		ESCAPE,
+		SPACE,
+		QUOTE,
+		COMMA,
+		MINUS,
+		PERIOD,
+		SLASH,
+		NUM_0,
+		NUM_1,
+		NUM_2,
+		NUM_3,
+		NUM_4,
+		NUM_5,
+		NUM_6,
+		NUM_7,
+		NUM_8,
+		NUM_9,
+		SEMICOLON,
+		EQUAL,
+		BRACKETLEFT,
+		BACKSLASH,
+		BRACKETRIGHT,
+		GRAVE,
+		A,
+		B,
+		C,
+		D,
+		E,
+		F,
+		G,
+		H,
+		I,
+		J,
+		K,
+		L,
+		M,
+		N,
+		O,
+		P,
+		Q,
+		R,
+		S,
+		T,
+		U,
+		V,
+		W,
+		X,
+		Y,
+		Z,
+		RETURN,
+		PRINTSCREEN,
+		SCROLLLOCK,
+		PAUSE,
+		INSERT,
+		HOME,
+		PAGEUP,
+		DEL,
+		END,
+		PAGEDOWN,
+		UP,
+		LEFT,
+		DOWN,
+		RIGHT,
+		SHIFT,
+		SHIFTL,
+		SHIFTR,
+		CONTROLL,
+		CONTROLR,
+		ALTL,
+		ALTR,
+		SUPERL,
+		CAPSLOCK,
+		NUMLOCK,
+		F1,
+		F2,
+		F3,
+		F4,
+		F5,
+		F6,
+		F7,
+		F8,
+		F9,
+		F10,
+		F11,
+		F12,
+		F13,
+		F14,
+		F15,
+		F16,
+		F17,
+		F18,
+		F19,
+		F20,
+		F21,
+		F22,
+		F23,
+		F24,
+		KP_DIVIDE,
+		KP_MULTIPLY,
+		KP_SUBTRACT,
+		KP_ADD,
+		KP_ENTER,
+		KP_DECIMAL,
+		KP_0,
+		KP_1,
+		KP_2,
+		KP_3,
+		KP_4,
+		KP_5,
+		KP_6,
+		KP_7,
+		KP_8,
+		KP_9,
+		MOUSE_LEFTBUTTON,
+		MOUSE_RIGHTBUTTON,
+		MOUSE_MIDDLEBUTTON,
+		MOUSE_X1BUTTON,
+		MOUSE_X2BUTTON,
+	} KEY_CODE;
 }
 
 #endif // BD3GE_CONSTANTS_H

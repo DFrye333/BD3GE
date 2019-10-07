@@ -15,13 +15,13 @@ namespace BD3GE
 	{
 		public:
 
-			void	handler(Message< std::pair <std::string, bool> > message);
-			void	set_key_state(std::string key, bool state);
-			bool	get_key_state(std::string key);
+			void	handler(Message<std::pair<BD3GE::KEY_CODE, bool>> message);
+			void	set_key_state(BD3GE::KEY_CODE key, bool state);
+			bool	get_key_state(BD3GE::KEY_CODE key);
 
 		protected:
 
-			std::map<std::string, bool>	m_keys;
+			std::map<BD3GE::KEY_CODE, bool>	m_keys;
 	};
 }
 
