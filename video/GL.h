@@ -16,7 +16,11 @@ namespace BD3GE
 
 							GL();
 			void			reshape(int x, int y);
-			const GLubyte*	get_openGL_version(void);
+			const void print_info(void);
+			const GLubyte*	get_vendor(void);
+			const GLubyte*	get_renderer(void);
+			const GLubyte*	get_version(void);
+			const GLubyte*	get_shading_language_version(void);
 			unsigned int	get_viewport_width(void);
 			unsigned int	get_viewport_height(void);
 

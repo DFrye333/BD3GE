@@ -45,6 +45,7 @@ namespace BD3GE
 			// TODO: Consider platform independence here.
 			m_window = window;
 			m_GL = new GL();
+			m_GL->print_info();
 			m_AL = new AL();
 			m_input = new Input();
 
