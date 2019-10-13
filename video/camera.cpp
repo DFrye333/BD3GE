@@ -13,7 +13,7 @@ namespace BD3GE
 
 		m_position.v.g.x = 0.0f;
 		m_position.v.g.y = 0.0f;
-		m_position.v.g.z = 50.0f;
+		m_position.v.g.z = 10.0f;
 
 		float frustum_scale = 1.0f;
 		float z_near = 0.01f;

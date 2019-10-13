@@ -29,46 +29,15 @@ namespace BD3GE
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
-		// Cube boxanne = Cube(
-		// 		Vector3(-1.0f, 0.0f, -3.0f),
-		// 		Vector3(0.75f, 0.75f, 0.75f),
-		// 		Vector3(0.0f, 0.0f, 0.0f),
-		// 		1.0f);
-		// Cube boxanne2 = Cube(
-		// 		Vector3(1.0f, 0.0f, -3.0f),
-		// 		Vector3(1.0f, 0.0f, 0.0f),
-		// 		Vector3(0.0f, 0.0f, 0.0f),
-		// 		1.0f);
-
-		// mScene->add_object(&boxanne);
-		// mScene->add_object(&boxanne2);
-
 		// Create new objects from meshes.
 		for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
 		{
 			add_object(new Object(
-				Vector3(0.0f, 0.0f, -3.0f),
+				Vector3(0.0f, 0.0f, 0.0f),
 				Vector3(0.75f, 0.75f, 0.75f),
 				Vector3(0.0f, 0.0f, 0.0f),
 				scene->mMeshes[i]
 			));
-		}
-		add_object(new Object(
-			Vector3(-1.0f, 0.0f, -3.0f),
-			Vector3(0.75f, 0.75f, 0.75f),
-			Vector3(0.0f, 0.0f, 0.0f),
-			scene->mMeshes[0]
-		));
-		add_object(new Object(
-			Vector3(1.0f, 0.0f, -3.0f),
-			Vector3(0.75f, 0.75f, 0.75f),
-			Vector3(0.0f, 0.0f, 0.0f),
-			scene->mMeshes[0]
-		));
-
-		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i)
-		{
-			m_objects[i]->scale(0.25f);
 		}
 	}
 
@@ -144,21 +113,15 @@ namespace BD3GE
 		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
 			m_camera.rotate(Vector3(0.01, 0, 0));
 		}
-
-		static unsigned int count = 0;
-		++count;
-		m_objects[1]->set_position_X(25.0f * cos(-(count / 25.0f)));
-		m_objects[1]->set_position_Y(25.0f * sin(-(count / 25.0f)));
-		m_objects[2]->set_position_X(25.0f * cos(count / 25.0f));
-		m_objects[2]->set_position_Y(25.0f * sin(count / 25.0f));
-		// for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i)
-		// {
-		// 	m_objects[i]->scale((count % 25) / 100.0f);
-		// }
-		m_objects[0]->rotate(Vector3(0, 0, 0.1));
+		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON)) {
+			m_camera.rotate(Vector3(0, 0.01, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON)) {
+			m_camera.rotate(Vector3(0, -0.01, 0));
+		}
 
 		m_camera.move();
-		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i)
+		for (std::vector<Object*>::size_type i = 0; i < m_objects.size(); ++i)
 		{
 			m_objects[i]->move();
 		}

@@ -47,9 +47,10 @@ namespace BD3GE
 			m_AL = new AL();
 			m_input = new Input();
 
+			glewExperimental = GL_TRUE;
 			glewInit();
 			
-			m_scene = new Scene("D:/Users/David/Downloads/assimp-3.3.1/test/models/Collada/duck.dae");
+			m_scene = new Scene("resource/models/plane.dae");
 		}
 	}
 
