@@ -382,58 +382,131 @@ namespace BD3GE
 
 #elif _WIN32
 
-	// TODO: Make this a property of the BD3GE::WinAPIWindow class?
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT messageCode, WPARAM wParam, LPARAM lParam)
 	{
 		BD3GE::WinAPIWindow::WindowProcData* data;
-		LONG_PTR dataLongPtr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
-		if (dataLongPtr != 0) {
-			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(dataLongPtr);
+		LONG_PTR data_long_ptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		if (data_long_ptr != 0) {
+			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_long_ptr);
 		}
 
 		switch (messageCode)
 		{
 			case WM_CREATE:
 				{
-					CREATESTRUCT* dataCreation = reinterpret_cast<CREATESTRUCT*>(lParam);
-					data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(dataCreation->lpCreateParams);
+					CREATESTRUCT* data_creation = reinterpret_cast<CREATESTRUCT*>(lParam);
+					data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_creation->lpCreateParams);
 					SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)data);
 
-					HDC displayContext = GetDC(hwnd);
+					HDC display_context = GetDC(hwnd);
 
-					PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
-					PIXELFORMATDESCRIPTOR* pixelFormatDescriptorPointer = &pixelFormatDescriptor;
-					pixelFormatDescriptorPointer->nSize = sizeof(PIXELFORMATDESCRIPTOR);
-					pixelFormatDescriptorPointer->nVersion = 1;
-					pixelFormatDescriptorPointer->dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-					pixelFormatDescriptorPointer->iPixelType = PFD_TYPE_COLORINDEX;
-					pixelFormatDescriptorPointer->cColorBits = 8;
-					pixelFormatDescriptorPointer->cDepthBits = 16;
-					pixelFormatDescriptorPointer->cAccumBits = 0;
-					pixelFormatDescriptorPointer->cStencilBits = 0;
+					PIXELFORMATDESCRIPTOR pixel_format_descriptor;
+					pixel_format_descriptor.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+					pixel_format_descriptor.nVersion = 1;
+					pixel_format_descriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+					pixel_format_descriptor.iPixelType = PFD_TYPE_RGBA;
+					pixel_format_descriptor.cColorBits = 8;
+					pixel_format_descriptor.cDepthBits = 24;
+					pixel_format_descriptor.cAccumBits = 0;
+					pixel_format_descriptor.cStencilBits = 0;
 
-					int pixelFormat = ChoosePixelFormat(displayContext, pixelFormatDescriptorPointer);
-					SetPixelFormat(displayContext, pixelFormat, pixelFormatDescriptorPointer);
+					int pixel_format = ChoosePixelFormat(display_context, &pixel_format_descriptor);
+					SetPixelFormat(display_context, pixel_format, &pixel_format_descriptor);
 
-					HGLRC renderContext = wglCreateContext(displayContext);
-					wglMakeCurrent(displayContext, renderContext);
+					HGLRC render_context = wglCreateContext(display_context);
+					wglMakeCurrent(display_context, render_context);
+
+					ReleaseDC(hwnd, display_context);
 				}
 
 				break;
 			case WM_PAINT:
 				{
-					PAINTSTRUCT paintStruct;
-					BeginPaint(hwnd, &paintStruct);
-					EndPaint(hwnd, &paintStruct);
+					PAINTSTRUCT paint_struct;
+					BeginPaint(hwnd, &paint_struct);
+					EndPaint(hwnd, &paint_struct);
 				}
 
 				break;
-			case WM_SIZE:
-				BD3GE::Window::ReshapeEvent reshapeEvent;
-				reshapeEvent.width = LOWORD(lParam);
-				reshapeEvent.height = HIWORD(lParam);
+			case WM_KEYDOWN:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key = WinAPIWindow::key_map[wParam];
+					input_event.state = true;
+					data->input_queue->push(input_event);
+				}
 
-				data->reshapeQueue->push(BD3GE::Message(reshapeEvent));
+				break;
+			case WM_KEYUP:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key = WinAPIWindow::key_map[wParam];
+					input_event.state = false;
+					data->input_queue->push(input_event);
+				}
+
+				break;
+			case WM_LBUTTONDOWN:
+			case WM_RBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_XBUTTONDOWN:
+				{
+					BD3GE::KEY_CODE key;
+					if (wParam & MK_LBUTTON) {
+						key = BD3GE::KEY_CODE::MOUSE_LEFTBUTTON;
+					} if (wParam & MK_RBUTTON) {
+						key = BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON;
+					}
+
+					BD3GE::Window::InputEvent input_event;
+					input_event.key = key;
+					input_event.state = true;
+					data->input_queue->push(input_event);
+
+					return true;
+				}
+			case WM_LBUTTONUP:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key = BD3GE::KEY_CODE::MOUSE_LEFTBUTTON;
+					input_event.state = false;
+					data->input_queue->push(input_event);
+
+					return true;
+				}
+			case WM_RBUTTONUP:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key = BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON;
+					input_event.state = false;
+					data->input_queue->push(input_event);
+
+					return true;
+				}
+			case WM_MBUTTONUP:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key = BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON;
+					input_event.state = false;
+					data->input_queue->push(input_event);
+
+					return true;
+				}
+			case WM_XBUTTONUP:
+				{
+					/*BD3GE::Window::InputEvent input_event;
+					input_event.key = BD3GE::KEY_CODE::MOUSE_X1BUTTON;
+					input_event.state = false;
+					data->input_queue->push(input_event);
+
+					return true;*/
+				}
+			case WM_SIZE:
+				BD3GE::Window::ReshapeEvent reshape_event;
+				reshape_event.width = LOWORD(lParam);
+				reshape_event.height = HIWORD(lParam);
+
+				data->reshape_queue->push(BD3GE::Message(reshape_event));
 
 				break;
 			case WM_CLOSE:
@@ -450,6 +523,126 @@ namespace BD3GE
 
 		return 0;
 	}
+
+	std::map<int, BD3GE::KEY_CODE> WinAPIWindow::key_map =
+	{
+		{ VK_BACK, BD3GE::KEY_CODE::BACKSPACE },
+		{ VK_TAB, BD3GE::KEY_CODE::TAB },
+		{ VK_ESCAPE, BD3GE::KEY_CODE::ESCAPE },
+		{ VK_SPACE, BD3GE::KEY_CODE::SPACE },
+		{ VK_OEM_7, BD3GE::KEY_CODE::QUOTE },
+		{ VK_OEM_COMMA, BD3GE::KEY_CODE::COMMA },
+		{ VK_OEM_MINUS, BD3GE::KEY_CODE::MINUS },
+		{ VK_OEM_PERIOD, BD3GE::KEY_CODE::PERIOD },
+		{ VK_OEM_2, BD3GE::KEY_CODE::SLASH },
+		{ 0x30, BD3GE::KEY_CODE::NUM_0 },
+		{ 0x31, BD3GE::KEY_CODE::NUM_1 },
+		{ 0x32, BD3GE::KEY_CODE::NUM_2 },
+		{ 0x33, BD3GE::KEY_CODE::NUM_3 },
+		{ 0x34, BD3GE::KEY_CODE::NUM_4 },
+		{ 0x35, BD3GE::KEY_CODE::NUM_5 },
+		{ 0x36, BD3GE::KEY_CODE::NUM_6 },
+		{ 0x37, BD3GE::KEY_CODE::NUM_7 },
+		{ 0x38, BD3GE::KEY_CODE::NUM_8 },
+		{ 0x39, BD3GE::KEY_CODE::NUM_9 },
+		{ VK_OEM_1, BD3GE::KEY_CODE::SEMICOLON },
+		{ VK_OEM_PLUS, BD3GE::KEY_CODE::EQUAL },
+		{ VK_OEM_4, BD3GE::KEY_CODE::BRACKETLEFT },
+		{ VK_OEM_5, BD3GE::KEY_CODE::BACKSLASH },
+		{ VK_OEM_6, BD3GE::KEY_CODE::BRACKETRIGHT },
+		{ VK_OEM_3, BD3GE::KEY_CODE::GRAVE },
+		{ 0x41, BD3GE::KEY_CODE::A },
+		{ 0x42, BD3GE::KEY_CODE::B },
+		{ 0x43, BD3GE::KEY_CODE::C },
+		{ 0x44, BD3GE::KEY_CODE::D },
+		{ 0x45, BD3GE::KEY_CODE::E },
+		{ 0x46, BD3GE::KEY_CODE::F },
+		{ 0x47, BD3GE::KEY_CODE::G },
+		{ 0x48, BD3GE::KEY_CODE::H },
+		{ 0x49, BD3GE::KEY_CODE::I },
+		{ 0x4A, BD3GE::KEY_CODE::J },
+		{ 0x4B, BD3GE::KEY_CODE::K },
+		{ 0x4C, BD3GE::KEY_CODE::L },
+		{ 0x4D, BD3GE::KEY_CODE::M },
+		{ 0x4E, BD3GE::KEY_CODE::N },
+		{ 0x4F, BD3GE::KEY_CODE::O },
+		{ 0x50, BD3GE::KEY_CODE::P },
+		{ 0x51, BD3GE::KEY_CODE::Q },
+		{ 0x52, BD3GE::KEY_CODE::R },
+		{ 0x53, BD3GE::KEY_CODE::S },
+		{ 0x54, BD3GE::KEY_CODE::T },
+		{ 0x55, BD3GE::KEY_CODE::U },
+		{ 0x56, BD3GE::KEY_CODE::V },
+		{ 0x57, BD3GE::KEY_CODE::W },
+		{ 0x58, BD3GE::KEY_CODE::X },
+		{ 0x59, BD3GE::KEY_CODE::Y },
+		{ 0x5A, BD3GE::KEY_CODE::Z },
+		{ VK_RETURN, BD3GE::KEY_CODE::RETURN },
+		{ VK_SNAPSHOT, BD3GE::KEY_CODE::PRINTSCREEN },
+		{ VK_SCROLL, BD3GE::KEY_CODE::SCROLLLOCK },
+		{ VK_PAUSE, BD3GE::KEY_CODE::PAUSE },
+		{ VK_INSERT, BD3GE::KEY_CODE::INSERT },
+		{ VK_HOME, BD3GE::KEY_CODE::HOME },
+		{ VK_PRIOR, BD3GE::KEY_CODE::PAGEUP },
+		{ VK_DELETE, BD3GE::KEY_CODE::DEL },
+		{ VK_END, BD3GE::KEY_CODE::END },
+		{ VK_NEXT, BD3GE::KEY_CODE::PAGEDOWN },
+		{ VK_UP, BD3GE::KEY_CODE::UP },
+		{ VK_LEFT, BD3GE::KEY_CODE::LEFT },
+		{ VK_DOWN, BD3GE::KEY_CODE::DOWN },
+		{ VK_RIGHT, BD3GE::KEY_CODE::RIGHT },
+		{ VK_SHIFT, BD3GE::KEY_CODE::SHIFT },
+		{ VK_LMENU, BD3GE::KEY_CODE::ALTL },
+		{ VK_RMENU, BD3GE::KEY_CODE::ALTR },
+		{ VK_LWIN, BD3GE::KEY_CODE::SUPERL },
+		{ VK_CAPITAL, BD3GE::KEY_CODE::CAPSLOCK },
+		{ VK_NUMLOCK, BD3GE::KEY_CODE::NUMLOCK },
+		{ VK_F1, BD3GE::KEY_CODE::F1 },
+		{ VK_F2, BD3GE::KEY_CODE::F2 },
+		{ VK_F3, BD3GE::KEY_CODE::F3 },
+		{ VK_F4, BD3GE::KEY_CODE::F4 },
+		{ VK_F5, BD3GE::KEY_CODE::F5 },
+		{ VK_F6, BD3GE::KEY_CODE::F6 },
+		{ VK_F7, BD3GE::KEY_CODE::F7 },
+		{ VK_F8, BD3GE::KEY_CODE::F8 },
+		{ VK_F9, BD3GE::KEY_CODE::F9 },
+		{ VK_F10, BD3GE::KEY_CODE::F10 },
+		{ VK_F11, BD3GE::KEY_CODE::F11 },
+		{ VK_F12, BD3GE::KEY_CODE::F12 },
+		{ VK_F13, BD3GE::KEY_CODE::F13 },
+		{ VK_F14, BD3GE::KEY_CODE::F14 },
+		{ VK_F15, BD3GE::KEY_CODE::F15 },
+		{ VK_F16, BD3GE::KEY_CODE::F16 },
+		{ VK_F17, BD3GE::KEY_CODE::F17 },
+		{ VK_F18, BD3GE::KEY_CODE::F18 },
+		{ VK_F19, BD3GE::KEY_CODE::F19 },
+		{ VK_F20, BD3GE::KEY_CODE::F20 },
+		{ VK_F21, BD3GE::KEY_CODE::F21 },
+		{ VK_F22, BD3GE::KEY_CODE::F22 },
+		{ VK_F23, BD3GE::KEY_CODE::F23 },
+		{ VK_F24, BD3GE::KEY_CODE::F24 },
+		{ VK_DIVIDE, BD3GE::KEY_CODE::KP_DIVIDE },
+		{ VK_MULTIPLY, BD3GE::KEY_CODE::KP_MULTIPLY },
+		{ VK_SUBTRACT, BD3GE::KEY_CODE::KP_SUBTRACT },
+		{ VK_ADD, BD3GE::KEY_CODE::KP_ADD },
+		{ VK_RETURN, BD3GE::KEY_CODE::KP_ENTER },
+		{ VK_DECIMAL, BD3GE::KEY_CODE::KP_DECIMAL },
+		{ VK_NUMPAD0, BD3GE::KEY_CODE::KP_0 },
+		{ VK_NUMPAD1, BD3GE::KEY_CODE::KP_1 },
+		{ VK_NUMPAD2, BD3GE::KEY_CODE::KP_2 },
+		{ VK_NUMPAD3, BD3GE::KEY_CODE::KP_3 },
+		{ VK_NUMPAD4, BD3GE::KEY_CODE::KP_4 },
+		{ VK_NUMPAD5, BD3GE::KEY_CODE::KP_5 },
+		{ VK_NUMPAD6, BD3GE::KEY_CODE::KP_6 },
+		{ VK_NUMPAD7, BD3GE::KEY_CODE::KP_7 },
+		{ VK_NUMPAD8, BD3GE::KEY_CODE::KP_8 },
+		{ VK_NUMPAD9, BD3GE::KEY_CODE::KP_9 },
+		{ VK_LBUTTON, BD3GE::KEY_CODE::MOUSE_LEFTBUTTON },
+		{ VK_RBUTTON, BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON },
+		{ VK_MBUTTON, BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON },
+		{ VK_XBUTTON1, BD3GE::KEY_CODE::MOUSE_X1BUTTON },
+		{ VK_XBUTTON2, BD3GE::KEY_CODE::MOUSE_X2BUTTON },
+	};
 
 	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs)
 	{
@@ -475,29 +668,31 @@ namespace BD3GE
 			//return 0;
 		}
 
-		reshapeQueue = new std::queue<BD3GE::Message<BD3GE::Window::ReshapeEvent>>;
+		input_queue = new std::queue<BD3GE::Message<BD3GE::Window::InputEvent>>;
+		reshape_queue = new std::queue<BD3GE::Message<BD3GE::Window::ReshapeEvent>>;
 
-		windowProcData = new BD3GE::WinAPIWindow::WindowProcData;
-		windowProcData->reshapeQueue = reshapeQueue;
+		window_proc_data = new BD3GE::WinAPIWindow::WindowProcData;
+		window_proc_data->input_queue = input_queue;
+		window_proc_data->reshape_queue = reshape_queue;
 
-		windowHandle = CreateWindowEx(
+		window_handle = CreateWindowEx(
 			WS_EX_CLIENTEDGE,
 			g_szClassName,
 			BD3GE::WINDOW_TITLE.c_str(),
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT, CW_USEDEFAULT, BD3GE::WINDOW_WIDTH, BD3GE::WINDOW_HEIGHT,
 			NULL, NULL, winAPIEntryArgs.hInstance,
-			windowProcData
+			window_proc_data
 		);
 
-		if (windowHandle == NULL)
+		if (window_handle == NULL)
 		{
 			MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 			//return 0;
 		}
 
-		ShowWindow(windowHandle, winAPIEntryArgs.nCmdShow);
-		UpdateWindow(windowHandle);
+		ShowWindow(window_handle, winAPIEntryArgs.nCmdShow);
+		UpdateWindow(window_handle);
 
 		std::cout << "Command line arguments: ";
 		std::cout << winAPIEntryArgs.lpCmdLine << std::endl;
@@ -516,29 +711,41 @@ namespace BD3GE
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
-		/*std::cout << msg.message;
-		std::cout << ": (";
-		std::cout << msg.pt.x;
-		std::cout << ", ";
-		std::cout << msg.pt.y;
-		std::cout <<  +")" << std::endl;*/
 	}
 
 	void WinAPIWindow::swap_buffers(void)
 	{
-		SwapBuffers(GetDC(windowHandle));
+		display_context = GetDC(window_handle);
+		SwapBuffers(display_context);
+		ReleaseDC(window_handle, display_context);
 	}
 
 	Message<std::pair<BD3GE::KEY_CODE, bool>> WinAPIWindow::pull_input_message(void)
 	{
 		Message<std::pair<BD3GE::KEY_CODE, bool>> input_message;
+
+		if (!input_queue->empty())
+		{
+			InputEvent* input_event = input_queue->front().get_data();
+			input_message.set_data(std::make_pair(input_event->key, input_event->state));
+			input_queue->pop();
+		}
+
 		return input_message;
 	}
 
 	Message<std::pair<int, int>> WinAPIWindow::pull_reshape_message(void)
 	{
-		return Message<std::pair<int, int>> ();
+		Message<std::pair<int, int>> reshape_message;
+
+		if (!reshape_queue->empty())
+		{
+			ReshapeEvent* reshape_event = reshape_queue->front().get_data();
+			reshape_message.set_data(std::make_pair(reshape_event->width, reshape_event->height));
+			reshape_queue->pop();
+		}
+
+		return reshape_message;
 	}
 
 #endif

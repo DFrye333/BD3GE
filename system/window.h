@@ -32,10 +32,14 @@ namespace BD3GE
 	{
 		public:
 
-			struct ReshapeEvent {
+			typedef struct InputEvent {
+				BD3GE::KEY_CODE key;
+				bool state;
+			} InputEvent;
+			typedef struct ReshapeEvent {
 				uint16_t width;
 				uint16_t height;
-			};
+			} ReshapeEvent;
 
 			virtual 											~Window() {};
 			virtual void										message_listener(void) = 0;
@@ -45,7 +49,8 @@ namespace BD3GE
 
 		protected:
 
-			std::queue<Message<ReshapeEvent>>*				reshapeQueue;
+			std::queue<Message<InputEvent>>*					input_queue;
+			std::queue<Message<ReshapeEvent>>*					reshape_queue;
 	};
 
 #ifdef __linux__
@@ -92,7 +97,8 @@ namespace BD3GE
 			};
 
 			struct WindowProcData {
-				std::queue<Message<ReshapeEvent>>* reshapeQueue;
+				std::queue<Message<InputEvent>>* input_queue;
+				std::queue<Message<ReshapeEvent>>* reshape_queue;
 			};
 
 															WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
@@ -102,10 +108,13 @@ namespace BD3GE
 			Message<std::pair<BD3GE::KEY_CODE, bool>>		pull_input_message(void);
 			Message<std::pair<int, int>>					pull_reshape_message(void);
 
+			static std::map<int, BD3GE::KEY_CODE>			key_map;
+
 		private:
 
-			BD3GE::WinAPIWindow::WindowProcData* windowProcData;
-			HWND windowHandle;
+			BD3GE::WinAPIWindow::WindowProcData*			window_proc_data;
+			HWND											window_handle;
+			HDC												display_context;
 	};
 
 #endif
