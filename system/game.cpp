@@ -18,8 +18,6 @@ namespace BD3GE
 
 	void Game::startup(BD3GE::Window* window)
 	{
-		m_running = false;
-		
 		if (!m_running)
 		{
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
@@ -124,9 +122,6 @@ namespace BD3GE
 
 				// Swap the frame buffers.
 				m_window->swap_buffers();
-
-				// Display FPS.
-				// std::cout << "FPS: " << 1 / (elapsed_time / 1000.0f) << std::endl;
 			}
 		}
 		// ========================================================================
@@ -148,7 +143,6 @@ namespace BD3GE
 		Message< std::pair<int, int> > reshape_message = m_window->pull_reshape_message();
 		if (reshape_message.get_data())
 		{
-			std::cout << "Reshape" << std::endl;
 			m_GL->reshape(reshape_message.get_data()->first, reshape_message.get_data()->second);
 			m_scene->getCamera().set_viewport(m_GL->get_viewport_width(), m_GL->get_viewport_height());
 		}

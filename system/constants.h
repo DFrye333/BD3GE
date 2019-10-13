@@ -36,9 +36,6 @@ namespace BD3GE
 	// Minimum time between frames, in milliseconds.
 	const float			FRAME_TIME = (1.0f / FRAME_RATE) * 1000.0f;
 
-	// Number of keys contained within the input handler.
-	const int			KEY_COUNT = 128;
-
 	// Keystring mappings.
 	typedef enum {
 		BACKSPACE,
