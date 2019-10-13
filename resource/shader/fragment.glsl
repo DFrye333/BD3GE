@@ -1,4 +1,4 @@
-#version 440
+#version 460
 
 uniform in vec4 vertex_color;
 
