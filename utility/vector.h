@@ -34,7 +34,7 @@ namespace BD3GE {
 
 			static constexpr float EPSILON = 1.0e-12f;
 
-			union // Union allows different Vector3 notation in different contexts. {
+			union { // Union allows different Vector3 notation in different contexts.
 				struct {		// Vector3 as geometry.
 					float x;
 					float y;
