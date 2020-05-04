@@ -39,6 +39,22 @@ namespace BD3GE
 			}
 		}
 
+		setup();
+	}
+
+	Mesh::~Mesh()
+	{
+		delete[] m_vertex_position_buffer;
+		m_vertex_position_buffer = NULL;
+
+		delete[] m_index_position_buffer;
+		m_index_position_buffer = NULL;
+
+		delete m_shader;
+		m_shader = NULL;
+	}
+
+	void Mesh::setup() {
 		// Generate VAO.
 		glGenVertexArrays(1, &m_VAO);
 
@@ -63,18 +79,6 @@ namespace BD3GE
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		m_shader = new Shader;
-	}
-
-	Mesh::~Mesh()
-	{
-		delete[] m_vertex_position_buffer;
-		m_vertex_position_buffer = NULL;
-
-		delete[] m_index_position_buffer;
-		m_index_position_buffer = NULL;
-
-		delete m_shader;
-		m_shader = NULL;
 	}
 
 	void Mesh::render(Transform world_view_projection_transform)

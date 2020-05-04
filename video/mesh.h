@@ -19,6 +19,7 @@ namespace BD3GE
 
 					Mesh(const aiMesh* mesh);
 					~Mesh();
+			void	setup();
 			void	render(Transform world_view_projection_transform);
 
 		private:
