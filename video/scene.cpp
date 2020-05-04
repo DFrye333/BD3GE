@@ -1,7 +1,6 @@
 #include "scene.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 	/*
 	 *	Scene class
 	 */
@@ -20,12 +19,10 @@ namespace BD3GE
 		const aiScene* scene = importer.ReadFile(file_path, importer_options);
 
 		// Ensure that asset importing succeeded.
-		if (scene)
-		{
+		if (scene) {
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Assimp scene loading succeeded!");
 		}
-		else
-		{
+		else {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
@@ -41,63 +38,49 @@ namespace BD3GE
 		}
 	}
 
-	Scene::Scene(std::vector<Object*> objects)
-	{
+	Scene::Scene(std::vector<Object*> objects) {
 		m_objects = objects;
 	}
 
-	Scene::~Scene()
-	{
-		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i)
-		{
+	Scene::~Scene() {
+		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i) {
 			delete m_objects[i];
 			m_objects[i] = NULL;
 		}
 	}
 
-	void Scene::add_object(Object* object)
-	{
+	void Scene::add_object(Object* object) {
 		m_objects.push_back(object);
 	}
 
-	void Scene::tick(Input* input)
-	{
-		if ((false == input->get_key_state(BD3GE::KEY_CODE::W) && false == input->get_key_state(BD3GE::KEY_CODE::S)) || (true == input->get_key_state(BD3GE::KEY_CODE::W) && true == input->get_key_state(BD3GE::KEY_CODE::S)))
-		{
+	void Scene::tick(Input* input) {
+		if ((false == input->get_key_state(BD3GE::KEY_CODE::W) && false == input->get_key_state(BD3GE::KEY_CODE::S)) || (true == input->get_key_state(BD3GE::KEY_CODE::W) && true == input->get_key_state(BD3GE::KEY_CODE::S))) {
 			m_camera.set_velocity_Z(0);
 		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::W))
-		{
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::W)) {
 			m_camera.set_velocity_Z(-PLAYER_SPEED);
 		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::S))
-		{
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::S)) {
 			m_camera.set_velocity_Z(PLAYER_SPEED);
 		}
 
-		if ((false == input->get_key_state(BD3GE::KEY_CODE::A) && false == input->get_key_state(BD3GE::KEY_CODE::D)) || (true == input->get_key_state(BD3GE::KEY_CODE::A) && true == input->get_key_state(BD3GE::KEY_CODE::D)))
-		{
+		if ((false == input->get_key_state(BD3GE::KEY_CODE::A) && false == input->get_key_state(BD3GE::KEY_CODE::D)) || (true == input->get_key_state(BD3GE::KEY_CODE::A) && true == input->get_key_state(BD3GE::KEY_CODE::D))) {
 			m_camera.set_velocity_X(0);
 		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::A))
-		{
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::A)) {
 			m_camera.set_velocity_X(-PLAYER_SPEED);
 		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::D))
-		{
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::D)) {
 			m_camera.set_velocity_X(PLAYER_SPEED);
 		}
 
-		if ((false == input->get_key_state(BD3GE::KEY_CODE::Q) && false == input->get_key_state(BD3GE::KEY_CODE::E)) || (true == input->get_key_state(BD3GE::KEY_CODE::Q) && true == input->get_key_state(BD3GE::KEY_CODE::E)))
-		{
+		if ((false == input->get_key_state(BD3GE::KEY_CODE::Q) && false == input->get_key_state(BD3GE::KEY_CODE::E)) || (true == input->get_key_state(BD3GE::KEY_CODE::Q) && true == input->get_key_state(BD3GE::KEY_CODE::E))) {
 			m_camera.set_velocity_Y(0);
 		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::Q))
-		{
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::Q)) {
 			m_camera.set_velocity_Y(-PLAYER_SPEED);
 		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::E))
-		{
+		else if (true == input->get_key_state(BD3GE::KEY_CODE::E)) {
 			m_camera.set_velocity_Y(PLAYER_SPEED);
 		}
 
@@ -121,25 +104,21 @@ namespace BD3GE
 		}
 
 		m_camera.move();
-		for (std::vector<Object*>::size_type i = 0; i < m_objects.size(); ++i)
-		{
+		for (std::vector<Object*>::size_type i = 0; i < m_objects.size(); ++i) {
 			m_objects[i]->move();
 		}
 	}
 
-	void Scene::render(void)
-	{
+	void Scene::render(void) {
 		// Clear the color buffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i)
-		{
+		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i) {
 			m_objects[i]->render(m_camera.get_view_projection_transform());
 		}
 	}
 
-	Camera& Scene::getCamera(void)
-	{
+	Camera& Scene::getCamera(void) {
 		return m_camera;
 	}
 }

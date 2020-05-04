@@ -9,10 +9,8 @@
 #include "../system/globals.h"
 #include "../utility/message.h"
 
-namespace BD3GE
-{
-	class Input
-	{
+namespace BD3GE {
+	class Input {
 		public:
 
 			void	handler(Message<std::pair<BD3GE::KEY_CODE, bool>> message);

@@ -6,10 +6,8 @@
 #include "../utility/matrix.h"
 #include "../utility/vector.h"
 
-namespace BD3GE
-{
-	class Transform
-	{
+namespace BD3GE {
+	class Transform {
 		public:
 
 								Transform();

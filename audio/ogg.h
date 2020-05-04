@@ -12,10 +12,8 @@
 #include "../system/constants.h"
 #include "../system/globals.h"
 
-namespace BD3GE
-{
-	class Ogg
-	{
+namespace BD3GE {
+	class Ogg {
 		public:
 								Ogg();
 								Ogg(std::string file_name);

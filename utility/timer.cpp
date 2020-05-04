@@ -10,18 +10,14 @@ namespace BD3GE
 	 * 	Parameter: name - Descriptive name for the timer.
 	 * 	Parameter: timer_frequency_Hz - The time timer_frequency_Hz between timer due times.
 	 */
-	Timer::Timer(std::string name, uint64_t timer_frequency_Hz)
-	{
+	Timer::Timer(std::string name, uint64_t timer_frequency_Hz) {
 		this->name = name;
 		this->timer_frequency_Hz = timer_frequency_Hz;
 	}
 
-	Timer::~Timer()
-	{
-	}
+	Timer::~Timer() {}
 
-	void Timer::start(void)
-	{
+	void Timer::start(void) {
 #ifdef __linux__
 #elif _WIN32
 		LARGE_INTEGER frequency;
@@ -35,8 +31,7 @@ namespace BD3GE
 #endif
 	}
 
-	bool Timer::is_due()
-	{
+	bool Timer::is_due() {
 		bool is_due = false;
 
 #ifdef __linux__
@@ -63,8 +58,7 @@ namespace BD3GE
 		QueryPerformanceCounter(&current_count);
 		uint64_t current_stamp = (current_count.QuadPart * 1000) / system_frequency_Hz;
 
-		if ((current_stamp - start_stamp) >= ((1.0f/ timer_frequency_Hz) * 1000))
-		{
+		if ((current_stamp - start_stamp) >= ((1.0f/ timer_frequency_Hz) * 1000)) {
 			start_stamp = current_stamp;
 			is_due = true;
 		}

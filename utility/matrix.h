@@ -3,10 +3,8 @@
 
 #include <iostream>
 
-namespace BD3GE
-{
-	class Matrix4
-	{
+namespace BD3GE {
+	class Matrix4 {
 		public:
 
 			static Matrix4 identity(void);

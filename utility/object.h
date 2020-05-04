@@ -14,10 +14,8 @@
 #include "../video/mesh.h"
 #include "../video/shader.h"
 
-namespace BD3GE
-{
-	class Object
-	{
+namespace BD3GE {
+	class Object {
 		public:
 
 							Object();

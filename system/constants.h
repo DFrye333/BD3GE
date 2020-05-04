@@ -3,8 +3,7 @@
 
 #include <string>
 
-namespace BD3GE
-{
+namespace BD3GE {
 	const std::string 	WINDOW_TITLE = 	"BD3GE";
 
 	const std::string	DEFAULT_SYSTEM_DIRECTORY	=	"/home/david/.local/share/BD3GE/";
@@ -20,8 +19,7 @@ namespace BD3GE
 
 	const float			PLAYER_SPEED = 0.1f;
 
-	typedef enum
-	{
+	typedef enum {
 		INFO,
 		ERR,
 	} LOG_TYPE;

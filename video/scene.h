@@ -18,10 +18,8 @@
 #include <cmath>
 
 
-namespace BD3GE
-{
-	class Scene
-	{
+namespace BD3GE {
+	class Scene {
 		public:
 
 							Scene(const std::string file_path);

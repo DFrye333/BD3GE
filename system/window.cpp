@@ -1,7 +1,6 @@
 #include "window.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 
 #ifdef __linux__
 
@@ -9,8 +8,7 @@ namespace BD3GE
 	 *	XWindow class
 	 */
 
-	std::map<std::string, BD3GE::KEY_CODE> XWindow::m_key_map =
-	{
+	std::map<std::string, BD3GE::KEY_CODE> XWindow::m_key_map = {
 		{ "BackSpace", BD3GE::KEY_CODE::BACKSPACE },
 		{ "Tab", BD3GE::KEY_CODE::TAB },
 		{ "Escape", BD3GE::KEY_CODE::ESCAPE },
@@ -113,8 +111,7 @@ namespace BD3GE
 		{ "KP_9", BD3GE::KEY_CODE::KP_9 },
 	};
 
-	XWindow::XWindow()
-	{
+	XWindow::XWindow() {
 		m_graphics_context 			= 	NULL;
 		m_framebuffer_configuration = 	NULL;
 		m_visual_information 		= 	NULL;
@@ -157,8 +154,7 @@ namespace BD3GE
 
 		// Initialize the display.
 		m_display = XOpenDisplay(NULL);
-		if (NULL == m_display)
-		{
+		if (NULL == m_display) {
 			g_log.write("Null display", BD3GE::LOG_TYPE::ERR);
 			exit(1);
 		}
@@ -169,8 +165,7 @@ namespace BD3GE
 
 		// Get frame buffer configurations.
 		m_framebuffer_configuration = glXChooseFBConfig(m_display, DefaultScreen(m_display), m_doublebuffered_attributes, &configuration_return);
-		if (!m_framebuffer_configuration)
-		{
+		if (!m_framebuffer_configuration) {
 			m_framebuffer_configuration = glXChooseFBConfig(m_display, DefaultScreen(m_display), m_singlebuffered_attributes, &configuration_return);
 			m_doublebuffered_flag = false;
 		}
@@ -209,13 +204,11 @@ namespace BD3GE
 
 		// Wait on the MapNotify event.
 		XEvent event;
-		while (true)
-		{
+		while (true) {
 			g_log.write("Waiting on MapNotify XEvent...", BD3GE::LOG_TYPE::INFO);
 
 			XNextEvent(m_display, &event);
-			if (event.type == MapNotify)
-			{
+			if (event.type == MapNotify) {
 				g_log.write("Found MapNotify XEvent!", BD3GE::LOG_TYPE::INFO);
 				
 				break;
@@ -229,13 +222,10 @@ namespace BD3GE
 		XFlush(m_display);
 	}
 
-	XWindow::~XWindow()
-	{
+	XWindow::~XWindow() {
 		// Destroy the graphics context, window, and display.
-		if (m_GLX_context)
-		{
-			if (!glXMakeCurrent(m_display, None, NULL))
-			{
+		if (m_GLX_context) {
+			if (!glXMakeCurrent(m_display, None, NULL)) {
 				g_log.write("Could not release X context!", BD3GE::LOG_TYPE::ERR);
 			}
 			glXDestroyContext(m_display, m_GLX_context);
@@ -246,11 +236,9 @@ namespace BD3GE
 		XCloseDisplay(m_display);
 	}
 
-	void XWindow::message_listener(void)
-	{
+	void XWindow::message_listener(void) {
 		// If there is a pending message, handle it.
-		if (XPending(m_display))
-		{
+		if (XPending(m_display)) {
 			// Grab the next event message.
 			XEvent event;
 			XNextEvent(m_display, &event);
@@ -258,8 +246,7 @@ namespace BD3GE
 			// Determine the type of the event.
 			KeySym keysym;
 			char* key_string = NULL;
-			switch (event.type)
-			{
+			switch (event.type) {
 				// A keyboard key has been pressed.
 				case KeyPress:
 				{
@@ -278,14 +265,12 @@ namespace BD3GE
 				{
 					// Make sure there are events in the queue to prevent XPeekEvent from blocking execution.
 					XEvent bug_event;
-					if (XPending(m_display))
-					{
+					if (XPending(m_display)) {
 						XPeekEvent(m_display, &bug_event);
 					}
 
 					// Check for X11 auto-repeat and dispose of false releases/presses.
-					if (KeyPress == bug_event.type && bug_event.xkey.keycode == event.xkey.keycode && bug_event.xkey.time == event.xkey.time)
-					{
+					if (KeyPress == bug_event.type && bug_event.xkey.keycode == event.xkey.keycode && bug_event.xkey.time == event.xkey.time) {
 						g_log.write("Extra key release, discarding.", BD3GE::LOG_TYPE::INFO);
 
 						XNextEvent(m_display, &bug_event);
@@ -347,17 +332,14 @@ namespace BD3GE
 		}
 	}
 
-	void XWindow::swap_buffers(void)
-	{
+	void XWindow::swap_buffers(void) {
 		glXSwapBuffers(m_display, m_GLX_window);
 	}
 
-	Message<std::pair<BD3GE::KEY_CODE, bool>> XWindow::pull_input_message(void)
-	{
+	Message<std::pair<BD3GE::KEY_CODE, bool>> XWindow::pull_input_message(void) {
 		Message<std::pair<BD3GE::KEY_CODE, bool>> input_event;
 
-		if (!m_input_queue.empty())
-		{
+		if (!m_input_queue.empty()) {
 			input_event = m_input_queue.front();
 
 			m_input_queue.pop();
@@ -366,12 +348,10 @@ namespace BD3GE
 		return input_event;
 	}
 
-	Message<std::pair<int, int>> XWindow::pull_reshape_message(void)
-	{
+	Message<std::pair<int, int>> XWindow::pull_reshape_message(void) {
 		Message<std::pair<int, int>> reshape_event;
 
-		if (!reshapeQueue.empty())
-		{
+		if (!reshapeQueue.empty()) {
 			reshape_event = reshapeQueue.front();
 
 			reshapeQueue.pop();
@@ -382,16 +362,14 @@ namespace BD3GE
 
 #elif _WIN32
 
-	LRESULT CALLBACK WindowProc(HWND hwnd, UINT messageCode, WPARAM wParam, LPARAM lParam)
-	{
+	LRESULT CALLBACK WindowProc(HWND hwnd, UINT messageCode, WPARAM wParam, LPARAM lParam) {
 		BD3GE::WinAPIWindow::WindowProcData* data;
 		LONG_PTR data_long_ptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data_long_ptr != 0) {
 			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_long_ptr);
 		}
 
-		switch (messageCode)
-		{
+		switch (messageCode) {
 			case WM_CREATE:
 				{
 					CREATESTRUCT* data_creation = reinterpret_cast<CREATESTRUCT*>(lParam);
@@ -524,8 +502,7 @@ namespace BD3GE
 		return 0;
 	}
 
-	std::map<int, BD3GE::KEY_CODE> WinAPIWindow::key_map =
-	{
+	std::map<int, BD3GE::KEY_CODE> WinAPIWindow::key_map = {
 		{ VK_BACK, BD3GE::KEY_CODE::BACKSPACE },
 		{ VK_TAB, BD3GE::KEY_CODE::TAB },
 		{ VK_ESCAPE, BD3GE::KEY_CODE::ESCAPE },
@@ -644,8 +621,7 @@ namespace BD3GE
 		{ VK_XBUTTON2, BD3GE::KEY_CODE::MOUSE_X2BUTTON },
 	};
 
-	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs)
-	{
+	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs) {
 		WNDCLASSEX wc;
 		const char g_szClassName[] = "BD3GEWindowClass";
 
@@ -662,8 +638,7 @@ namespace BD3GE
 		wc.lpszClassName = g_szClassName;
 		wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
-		if (!RegisterClassEx(&wc))
-		{
+		if (!RegisterClassEx(&wc)) {
 			MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 			//return 0;
 		}
@@ -685,8 +660,7 @@ namespace BD3GE
 			window_proc_data
 		);
 
-		if (window_handle == NULL)
-		{
+		if (window_handle == NULL) {
 			MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 			//return 0;
 		}
@@ -698,34 +672,26 @@ namespace BD3GE
 		std::cout << winAPIEntryArgs.lpCmdLine << std::endl;
 	}
 
-	WinAPIWindow::~WinAPIWindow()
-	{
+	WinAPIWindow::~WinAPIWindow() {}
 
-	}
-
-	void WinAPIWindow::message_listener(void)
-	{
+	void WinAPIWindow::message_listener(void) {
 		MSG msg;
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 	}
 
-	void WinAPIWindow::swap_buffers(void)
-	{
+	void WinAPIWindow::swap_buffers(void) {
 		display_context = GetDC(window_handle);
 		SwapBuffers(display_context);
 		ReleaseDC(window_handle, display_context);
 	}
 
-	Message<std::pair<BD3GE::KEY_CODE, bool>> WinAPIWindow::pull_input_message(void)
-	{
+	Message<std::pair<BD3GE::KEY_CODE, bool>> WinAPIWindow::pull_input_message(void) {
 		Message<std::pair<BD3GE::KEY_CODE, bool>> input_message;
 
-		if (!input_queue->empty())
-		{
+		if (!input_queue->empty()) {
 			InputEvent* input_event = input_queue->front().get_data();
 			input_message.set_data(std::make_pair(input_event->key, input_event->state));
 			input_queue->pop();
@@ -734,12 +700,10 @@ namespace BD3GE
 		return input_message;
 	}
 
-	Message<std::pair<int, int>> WinAPIWindow::pull_reshape_message(void)
-	{
+	Message<std::pair<int, int>> WinAPIWindow::pull_reshape_message(void) {
 		Message<std::pair<int, int>> reshape_message;
 
-		if (!reshape_queue->empty())
-		{
+		if (!reshape_queue->empty()) {
 			ReshapeEvent* reshape_event = reshape_queue->front().get_data();
 			reshape_message.set_data(std::make_pair(reshape_event->width, reshape_event->height));
 			reshape_queue->pop();

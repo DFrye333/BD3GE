@@ -5,10 +5,8 @@
 
 #include "../system/globals.h"
 
-namespace BD3GE
-{
-	class Vector3
-	{
+namespace BD3GE {
+	class Vector3 {
 		public:
 
 			Vector3(void);
@@ -36,17 +34,14 @@ namespace BD3GE
 
 			static constexpr float EPSILON = 1.0e-12f;
 
-			union // Union allows different Vector3 notation in different contexts.
-			{
-				struct			// Vector3 as geometry.
-				{
+			union // Union allows different Vector3 notation in different contexts. {
+				struct {		// Vector3 as geometry.
 					float x;
 					float y;
 					float z;
 				} g;
 
-				struct			// Vector3 as color.
-				{
+				struct {		// Vector3 as color.
 					float r;
 					float g;
 					float b;

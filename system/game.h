@@ -16,10 +16,8 @@
 #include "constants.h"
 #include "globals.h"
 
-namespace BD3GE
-{
-	class Game
-	{
+namespace BD3GE {
+	class Game {
 		public:
 
 					Game(BD3GE::Window* window);

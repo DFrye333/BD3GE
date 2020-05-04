@@ -6,10 +6,8 @@
 #include <al.h>
 #include <alc.h>
 
-namespace BD3GE
-{
-	class AL
-	{
+namespace BD3GE {
+	class AL {
 		public:
 
 			AL();

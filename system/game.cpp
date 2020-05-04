@@ -1,39 +1,32 @@
 #include "game.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 	/*
 	 *	Game class
 	 */
 
-	Game::Game(BD3GE::Window* window)
-	{
+	Game::Game(BD3GE::Window* window) {
 		startup(window);
 	}
 
-	Game::~Game()
-	{
+	Game::~Game() {
 		shutdown();
 	}
 
-	void Game::startup(BD3GE::Window* window)
-	{
-		if (!m_running)
-		{
+	void Game::startup(BD3GE::Window* window) {
+		if (!m_running) {
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
 
 			m_running = true;
 
 			DIR* default_system_directory_stream = opendir(DEFAULT_SYSTEM_DIRECTORY.c_str());
-			if (!default_system_directory_stream)
-			{
+			if (!default_system_directory_stream) {
 // TODO: Ugly! Create a class to handle filesystem stuff.
 #ifdef __linux__
-				if (-1 == mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH))
+				if (-1 == mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH)) {
 #elif _WIN32
-				if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str()))
+				if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str())) {
 #endif
-				{
 					g_log.write(BD3GE::LOG_TYPE::ERR, "System directory creation failure.");
 				}
 			}
@@ -54,10 +47,8 @@ namespace BD3GE
 		}
 	}
 
-	void Game::shutdown(void)
-	{
-		if (m_running)
-		{
+	void Game::shutdown(void) {
+		if (m_running) {
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Shutting down BD3GE now...");
 
 			m_running = false;
@@ -79,8 +70,7 @@ namespace BD3GE
 		m_scene = NULL;
 	}
 
-	void Game::run(void)
-	{
+	void Game::run(void) {
 		//    Main game loop
 		// ========================================================================
 
@@ -91,31 +81,27 @@ namespace BD3GE
 		logic_timer.start();
 
 		// Iterate endlessly (unless halted elsewhere).
-		while (m_running)
-		{
+		while (m_running) {
 			//std::cout << "Main game loop!" << std::endl;
 
 			// Handle subsystem communication.
 			bus_messages();
 
 			// Quit the program if the Escape key is pressed.
-			if (m_input->get_key_state(BD3GE::KEY_CODE::ESCAPE))
-			{
+			if (m_input->get_key_state(BD3GE::KEY_CODE::ESCAPE)) {
 				shutdown();
 
 				continue;
 			}
 
 			// Check logic timer.
-			if (logic_timer.is_due())
-			{
+			if (logic_timer.is_due()) {
 				// Process a logic tick.
 				m_scene->tick(m_input);
 			}
 
 			// Check render timer.
-			if (render_timer.is_due())
-			{
+			if (render_timer.is_due()) {
 				//std::cout << "FRAME" << std::endl;
 
 				// Process a rendering frame.
@@ -128,22 +114,19 @@ namespace BD3GE
 		// ========================================================================
 	}
 
-	void Game::bus_messages(void)
-	{
+	void Game::bus_messages(void) {
 		// Listen for window messages.
 		m_window->message_listener();
 
 		// Pass input events.
 		Message<std::pair<BD3GE::KEY_CODE, bool>> input_message = m_window->pull_input_message();
-		if (input_message.get_data())
-		{
+		if (input_message.get_data()) {
 			m_input->handler(input_message);
 		}
 
 		// Pass reshape events.
 		Message< std::pair<int, int> > reshape_message = m_window->pull_reshape_message();
-		if (reshape_message.get_data())
-		{
+		if (reshape_message.get_data()) {
 			m_GL->reshape(reshape_message.get_data()->first, reshape_message.get_data()->second);
 			m_scene->getCamera().set_viewport(m_GL->get_viewport_width(), m_GL->get_viewport_height());
 		}

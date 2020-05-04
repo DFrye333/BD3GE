@@ -8,10 +8,8 @@
 #include <Windows.h>
 #endif
 
-namespace BD3GE
-{
-	class Timer
-	{
+namespace BD3GE {
+	class Timer {
 		public:
 
 			Timer(std::string name, uint64_t timer_frequency_Hz);

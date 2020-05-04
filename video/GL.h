@@ -8,10 +8,8 @@
 #include "../system/constants.h"
 #include "../utility/vector.h"
 
-namespace BD3GE
-{
-	class GL
-	{
+namespace BD3GE {
+	class GL {
 		public:
 
 							GL();

@@ -3,8 +3,7 @@
 
 #include "../utility/log.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 	extern Log g_log;
 }
 

@@ -1,13 +1,11 @@
 #include "camera.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 	/*
 	 *	Camera Class
 	 */
 
-	Camera::Camera()
-	{
+	Camera::Camera() {
 		m_viewport_width = WINDOW_WIDTH;
 		m_viewport_height = WINDOW_HEIGHT;
 
@@ -34,28 +32,21 @@ namespace BD3GE
 		));
 	}
 
-	Camera::~Camera()
-	{
+	Camera::~Camera() {}
 
-	}
-
-	const Transform& Camera::get_projection_transform() const
-	{
+	const Transform& Camera::get_projection_transform() const {
 		return m_projection_transform;
 	}
 
-	const Transform Camera::get_view_transform() const
-	{
+	const Transform Camera::get_view_transform() const {
 		return this->m_world_transform.inverse();
 	}
 
-	const Transform Camera::get_view_projection_transform() const
-	{
+	const Transform Camera::get_view_projection_transform() const {
 		return this->get_projection_transform() * this->get_view_transform();
 	}
 
-	void Camera::set_viewport(const unsigned int viewport_width, const unsigned int viewport_height)
-	{
+	void Camera::set_viewport(const unsigned int viewport_width, const unsigned int viewport_height) {
 		this->m_viewport_width = m_viewport_width;
 		this->m_viewport_height = m_viewport_height;
 	}

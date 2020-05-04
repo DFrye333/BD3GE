@@ -1,30 +1,24 @@
 #include "shader.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 	/*
 	 * 	Shader class
 	 */
 
-	BD3GE::Shader::Shader()
-	{
+	BD3GE::Shader::Shader() {
 		m_program_ID = create_program();
 	}
 
-	BD3GE::Shader::~Shader()
-	{
-	}
+	BD3GE::Shader::~Shader() {}
 
 	// Create a shader program composed of shader objects.
-	GLuint BD3GE::Shader::create_program(void)
-	{
+	GLuint BD3GE::Shader::create_program(void) {
 		m_shader_objects.push_back(create_shader(GL_VERTEX_SHADER, "resource/shader/vertex.glsl"));
 		m_shader_objects.push_back(create_shader(GL_FRAGMENT_SHADER, "resource/shader/fragment.glsl"));
 
 		GLuint program_ID = glCreateProgram();
 
-		for (size_t i = 0; i < m_shader_objects.size(); ++i)
-		{
+		for (size_t i = 0; i < m_shader_objects.size(); ++i) {
 			glAttachShader(program_ID, m_shader_objects[i]);
 		}
 
@@ -32,8 +26,7 @@ namespace BD3GE
 
 		GLint status = GL_TRUE;
 		glGetShaderiv(program_ID, GL_LINK_STATUS, &status);
-		if (status == GL_FALSE)
-		{
+		if (status == GL_FALSE) {
 			GLint information_log_length;
 			glGetProgramiv(program_ID, GL_INFO_LOG_LENGTH, &information_log_length);
 
@@ -43,8 +36,7 @@ namespace BD3GE
 			delete[] information_log_string;
 		}
 
-		for (size_t i = 0; i < m_shader_objects.size(); ++i)
-		{
+		for (size_t i = 0; i < m_shader_objects.size(); ++i) {
 			glDetachShader(program_ID, m_shader_objects[i]);
 		}
 
@@ -54,8 +46,7 @@ namespace BD3GE
 	}
 
 	// Create an individual shader object.
-	GLuint BD3GE::Shader::create_shader(GLenum shaderType, const std::string filePath)
-	{
+	GLuint BD3GE::Shader::create_shader(GLenum shaderType, const std::string filePath) {
 		GLuint shader_ID = glCreateShader(shaderType);
 
 		std::string shader_string;
@@ -69,8 +60,7 @@ namespace BD3GE
 
 		GLint status = GL_TRUE;
 		glGetShaderiv(shader_ID, GL_COMPILE_STATUS, &status);
-		if (status == GL_FALSE)
-		{
+		if (status == GL_FALSE) {
 			GLint information_log_length;
 			glGetShaderiv(shader_ID, GL_INFO_LOG_LENGTH, &information_log_length);
 
@@ -78,8 +68,7 @@ namespace BD3GE
 			glGetShaderInfoLog(shader_ID, information_log_length, NULL, information_log_string);
 
 			const char* strShaderType = NULL;
-			switch (shaderType)
-			{
+			switch (shaderType) {
 				case GL_VERTEX_SHADER:
 					strShaderType = "vertex";
 					break;
@@ -99,14 +88,12 @@ namespace BD3GE
 	}
 
 	// Read shader program text from a file.
-	void BD3GE::Shader::read_file(const std::string filePath, std::string* shaderText)
-	{
+	void BD3GE::Shader::read_file(const std::string filePath, std::string* shaderText) {
 		// Open shader file stream.
 		std::ifstream infile(filePath.c_str());
 
 		// Ensure that the shader file was opened successfully.
-		if (!infile)
-		{
+		if (!infile) {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open shader file path " + filePath + " for reading!");
 			return;
 		}
@@ -117,8 +104,7 @@ namespace BD3GE
 		infile.close();
 	}
 
-	GLuint BD3GE::Shader::get_program_ID(void)
-	{
+	GLuint BD3GE::Shader::get_program_ID(void) {
 		return m_program_ID;
 	}
 }

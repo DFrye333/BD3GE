@@ -26,10 +26,8 @@
 #include "../system/globals.h"
 #include "../utility/message.h"
 
-namespace BD3GE
-{
-	class Window
-	{
+namespace BD3GE {
+	class Window {
 		public:
 
 			typedef struct InputEvent {
@@ -55,8 +53,7 @@ namespace BD3GE
 
 #ifdef __linux__
 
-	class XWindow : public Window
-	{
+	class XWindow : public Window {
 		public:
 
 																		XWindow();
@@ -85,8 +82,7 @@ namespace BD3GE
 
 #elif _WIN32
 
-	class WinAPIWindow : public Window
-	{
+	class WinAPIWindow : public Window {
 		public:
 
 			struct WinAPIEntryArgs {

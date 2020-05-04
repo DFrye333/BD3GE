@@ -1,41 +1,32 @@
 #ifndef BD3GE_MESSAGE_H
 #define BD3GE_MESSAGE_H
 
-namespace BD3GE
-{
+namespace BD3GE {
 	template<class T>
-	class Message
-	{
+	class Message {
 		public:
 
-			Message()
-			{
+			Message() {
 				m_data = NULL;
 			}
 
-			Message(T data)
-			{
+			Message(T data) {
 				m_data = new T(data);
 			}
 
-			Message(const Message& source)
-			{
-				if (source.m_data)
-				{
+			Message(const Message& source) {
+				if (source.m_data) {
 					m_data = new T(*(source.m_data));
 				}
 			}
 
-			~Message()
-			{
+			~Message() {
 				delete m_data;
 				m_data = NULL;
 			}
 
-			Message& operator=(const Message& source)
-			{
-				if (this != &source)
-				{
+			Message& operator=(const Message& source) {
+				if (this != &source) {
 					delete m_data;
 					m_data = NULL;
 
@@ -45,25 +36,20 @@ namespace BD3GE
 				return *this;
 			}
 
-			bool operator==(const Message& other)
-			{
+			bool operator==(const Message& other) {
 				return (*m_data == other.m_data);
 			}
 
-			bool operator!=(const Message& other)
-			{
+			bool operator!=(const Message& other) {
 				return !(this == other);
 			}
 
-			T* get_data(void) const
-			{
+			T* get_data(void) const {
 				return m_data;
 			}
 
-			void set_data(T data)
-			{
-				if (!m_data)
-				{
+			void set_data(T data) {
+				if (!m_data) {
 					m_data = new T;
 				}
 

@@ -11,10 +11,8 @@
 #include "../system/constants.h"
 #include "../system/globals.h"
 
-namespace BD3GE
-{
-	class Shader
-	{
+namespace BD3GE {
+	class Shader {
 		public:
 
 					Shader();

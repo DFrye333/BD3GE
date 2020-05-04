@@ -17,11 +17,9 @@
 
 #include "../system/constants.h"
 
-namespace BD3GE
-{
+namespace BD3GE {
 	// Logs all output to log files, and standard streams if appropriate.
-	class Log
-	{
+	class Log {
 		public:
 
 					Log(std::string custom_log_directory = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY);

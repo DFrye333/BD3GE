@@ -11,10 +11,8 @@
 #include "../utility/transform.h"
 #include "../video/shader.h"
 
-namespace BD3GE
-{
-	class Mesh
-	{
+namespace BD3GE {
+	class Mesh {
 		public:
 
 					Mesh(const aiMesh* mesh);

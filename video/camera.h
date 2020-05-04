@@ -8,10 +8,8 @@
 #include "../utility/transform.h"
 #include "../utility/vector.h"
 
-namespace BD3GE
-{
-	class Camera : public Object
-	{
+namespace BD3GE {
+	class Camera : public Object {
 		public:
 
 								Camera();
