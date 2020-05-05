@@ -1,4 +1,4 @@
-Game Prototype 0
+BD3GE
 ===
 
 Let's build a game from the ground up. Rendering, physics, audio - all of that good stuff.
