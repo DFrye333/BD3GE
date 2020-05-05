@@ -34,7 +34,7 @@ namespace BD3GE {
 		int bitStream = 0;
 		long bytes = 0;
 		char tempBuffer[32768];
-		bool success;
+		int success;
 
 		if (true == m_loaded) {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "File object already loaded.");
