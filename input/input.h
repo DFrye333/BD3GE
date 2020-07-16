@@ -7,13 +7,14 @@
 
 #include "../system/constants.h"
 #include "../system/globals.h"
+#include "../system/window.h"
 #include "../utility/message.h"
 
 namespace BD3GE {
 	class Input {
 		public:
 
-			void	handler(Message<std::pair<BD3GE::KEY_CODE, bool>> message);
+			void	handler(BD3GE::Window::InputEvent input_event);
 			void	set_key_state(BD3GE::KEY_CODE key, bool state);
 			bool	get_key_state(BD3GE::KEY_CODE key);
 

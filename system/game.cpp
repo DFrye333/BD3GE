@@ -119,10 +119,8 @@ namespace BD3GE {
 		m_window->message_listener();
 
 		// Pass input events.
-		Message<std::pair<BD3GE::KEY_CODE, bool>> input_message = m_window->pull_input_message();
-		if (input_message.get_data()) {
-			m_input->handler(input_message);
-		}
+		BD3GE::Window::InputEvent input_event = m_window->pull_input_event();
+		m_input->handler(input_event);
 
 		// Pass reshape events.
 		Message< std::pair<int, int> > reshape_message = m_window->pull_reshape_message();

@@ -8,7 +8,7 @@ namespace BD3GE {
 	 *	XWindow class
 	 */
 
-	std::map<std::string, BD3GE::KEY_CODE> XWindow::m_key_map = {
+	std::map<std::string, BD3GE::KEY_CODE> XWindow::m_key_code_map = {
 		{ "BackSpace", BD3GE::KEY_CODE::BACKSPACE },
 		{ "Tab", BD3GE::KEY_CODE::TAB },
 		{ "Escape", BD3GE::KEY_CODE::ESCAPE },
@@ -255,7 +255,7 @@ namespace BD3GE {
 					XLookupString(&event.xkey, key_string, 32, &keysym, NULL);
 					key_string = XKeysymToString(keysym);
 
-					m_input_queue.push(std::make_pair(m_key_map[std::string(key_string)], true));
+					m_input_queue.push(std::make_pair(m_key_code_map[std::string(key_string)], true));
 
 					break;
 				}
@@ -282,7 +282,7 @@ namespace BD3GE {
 					XLookupString(&event.xkey, key_string, 32, &keysym, NULL);
 					key_string = XKeysymToString(keysym);
 
-					m_input_queue.push(std::make_pair(m_key_map[std::string(key_string)], false));
+					m_input_queue.push(std::make_pair(m_key_code_map[std::string(key_string)], false));
 
 					break;
 				}
@@ -336,7 +336,7 @@ namespace BD3GE {
 		glXSwapBuffers(m_display, m_GLX_window);
 	}
 
-	Message<std::pair<BD3GE::KEY_CODE, bool>> XWindow::pull_input_message(void) {
+	Message<std::pair<BD3GE::KEY_CODE, bool>> XWindow::pull_input_event(void) {
 		Message<std::pair<BD3GE::KEY_CODE, bool>> input_event;
 
 		if (!m_input_queue.empty()) {
@@ -409,8 +409,7 @@ namespace BD3GE {
 			case WM_KEYDOWN:
 				{
 					BD3GE::Window::InputEvent input_event;
-					input_event.key = WinAPIWindow::key_map[wParam];
-					input_event.state = true;
+					input_event.key_state_map.insert({ WinAPIWindow::key_code_map[wParam], true });
 					data->input_queue->push(input_event);
 				}
 
@@ -418,36 +417,47 @@ namespace BD3GE {
 			case WM_KEYUP:
 				{
 					BD3GE::Window::InputEvent input_event;
-					input_event.key = WinAPIWindow::key_map[wParam];
-					input_event.state = false;
+					input_event.key_state_map.insert({ WinAPIWindow::key_code_map[wParam], false });
 					data->input_queue->push(input_event);
 				}
 
 				break;
 			case WM_LBUTTONDOWN:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, true });
+					data->input_queue->push(input_event);
+
+					return true;
+				}
 			case WM_RBUTTONDOWN:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, true });
+					data->input_queue->push(input_event);
+
+					return true;
+				}
 			case WM_MBUTTONDOWN:
+				{
+					BD3GE::Window::InputEvent input_event;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true });
+					data->input_queue->push(input_event);
+
+					return true;
+				}
 			case WM_XBUTTONDOWN:
 				{
-					BD3GE::KEY_CODE key;
-					if (wParam & MK_LBUTTON) {
-						key = BD3GE::KEY_CODE::MOUSE_LEFTBUTTON;
-					} if (wParam & MK_RBUTTON) {
-						key = BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON;
-					}
-
-					BD3GE::Window::InputEvent input_event;
-					input_event.key = key;
-					input_event.state = true;
-					data->input_queue->push(input_event);
+					/*BD3GE::Window::InputEvent input_event;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true });
+					data->input_queue->push(input_event);*/
 
 					return true;
 				}
 			case WM_LBUTTONUP:
 				{
 					BD3GE::Window::InputEvent input_event;
-					input_event.key = BD3GE::KEY_CODE::MOUSE_LEFTBUTTON;
-					input_event.state = false;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, false });
 					data->input_queue->push(input_event);
 
 					return true;
@@ -455,8 +465,7 @@ namespace BD3GE {
 			case WM_RBUTTONUP:
 				{
 					BD3GE::Window::InputEvent input_event;
-					input_event.key = BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON;
-					input_event.state = false;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, false });
 					data->input_queue->push(input_event);
 
 					return true;
@@ -464,8 +473,7 @@ namespace BD3GE {
 			case WM_MBUTTONUP:
 				{
 					BD3GE::Window::InputEvent input_event;
-					input_event.key = BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON;
-					input_event.state = false;
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, false });
 					data->input_queue->push(input_event);
 
 					return true;
@@ -473,11 +481,10 @@ namespace BD3GE {
 			case WM_XBUTTONUP:
 				{
 					/*BD3GE::Window::InputEvent input_event;
-					input_event.key = BD3GE::KEY_CODE::MOUSE_X1BUTTON;
-					input_event.state = false;
-					data->input_queue->push(input_event);
+					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_X1BUTTON, false });
+					data->input_queue->push(input_event);*/
 
-					return true;*/
+					return true;
 				}
 			case WM_SIZE:
 				BD3GE::Window::ReshapeEvent reshape_event;
@@ -502,7 +509,7 @@ namespace BD3GE {
 		return 0;
 	}
 
-	std::map<int, BD3GE::KEY_CODE> WinAPIWindow::key_map = {
+	std::map<int, BD3GE::KEY_CODE> WinAPIWindow::key_code_map = {
 		{ VK_BACK, BD3GE::KEY_CODE::BACKSPACE },
 		{ VK_TAB, BD3GE::KEY_CODE::TAB },
 		{ VK_ESCAPE, BD3GE::KEY_CODE::ESCAPE },
@@ -688,16 +695,16 @@ namespace BD3GE {
 		ReleaseDC(window_handle, display_context);
 	}
 
-	Message<std::pair<BD3GE::KEY_CODE, bool>> WinAPIWindow::pull_input_message(void) {
-		Message<std::pair<BD3GE::KEY_CODE, bool>> input_message;
+	BD3GE::Window::InputEvent WinAPIWindow::pull_input_event(void) {
+		InputEvent input_event;
 
 		if (!input_queue->empty()) {
-			InputEvent* input_event = input_queue->front().get_data();
-			input_message.set_data(std::make_pair(input_event->key, input_event->state));
+			InputEvent* ie = input_queue->front().get_data();
+			input_event.key_state_map = ie->key_state_map;
 			input_queue->pop();
 		}
 
-		return input_message;
+		return input_event;
 	}
 
 	Message<std::pair<int, int>> WinAPIWindow::pull_reshape_message(void) {

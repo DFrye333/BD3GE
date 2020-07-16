@@ -31,8 +31,7 @@ namespace BD3GE {
 		public:
 
 			typedef struct InputEvent {
-				BD3GE::KEY_CODE key;
-				bool state;
+				std::map<BD3GE::KEY_CODE, bool> key_state_map;
 			} InputEvent;
 			typedef struct ReshapeEvent {
 				uint16_t width;
@@ -42,7 +41,7 @@ namespace BD3GE {
 			virtual 											~Window() {};
 			virtual void										message_listener(void) = 0;
 			virtual void										swap_buffers(void) = 0;
-			virtual Message<std::pair<BD3GE::KEY_CODE, bool>>	pull_input_message(void) = 0;
+			virtual InputEvent									pull_input_event(void) = 0;
 			virtual Message<std::pair<int, int>>				pull_reshape_message(void) = 0;
 
 		protected:
@@ -60,7 +59,7 @@ namespace BD3GE {
 																		~XWindow(void);
 			void 														message_listener(void);
 			void 														swap_buffers(void);
-			Message<std::pair<BD3GE::KEY_CODE, bool>>					pull_input_message(void);
+			Message<std::pair<BD3GE::KEY_CODE, bool>>					pull_input_event(void);
 			Message<std::pair<int, int>>								pull_reshape_message(void);
 
 		private:
@@ -101,10 +100,10 @@ namespace BD3GE {
 															~WinAPIWindow(void);
 			void											message_listener(void);
 			void											swap_buffers(void);
-			Message<std::pair<BD3GE::KEY_CODE, bool>>		pull_input_message(void);
+			Window::InputEvent								pull_input_event(void);
 			Message<std::pair<int, int>>					pull_reshape_message(void);
 
-			static std::map<int, BD3GE::KEY_CODE>			key_map;
+			static std::map<int, BD3GE::KEY_CODE>			key_code_map;
 
 		private:
 

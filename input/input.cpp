@@ -6,18 +6,16 @@ namespace BD3GE
 	 *	Input class
 	 */
 
-	void Input::handler(Message<std::pair<BD3GE::KEY_CODE, bool>> message) {
-		if (message.get_data()) {
-			set_key_state(message.get_data()->first, message.get_data()->second);
+	void Input::handler(BD3GE::Window::InputEvent input_event) {
+		for (const auto& [key, state] : input_event.key_state_map) {
+			set_key_state(key, state);
 
-			if (message.get_data()->second == true) {
+			if (state == true) {
 				// TODO: Write conversion utility between key code enum and string.
-				//g_log.write("'" + std::string(message.get_data()->first) + "' key pressed.", BD3GE::LOG_TYPE::INFO);
-			}
-
-			else if (message.get_data()->second == false) {
+				//g_log.write("'" + std::string(input_event.get_data()->first) + "' key pressed.", BD3GE::LOG_TYPE::INFO);
+			} else {
 				// TODO: Write conversion utility between key code enum and string.
-				//g_log.write("'" + std::string(message.get_data()->first) + "' key released.", BD3GE::LOG_TYPE::INFO);
+				//g_log.write("'" + std::string(input_event.get_data()->first) + "' key released.", BD3GE::LOG_TYPE::INFO);
 			}
 		}
 	}

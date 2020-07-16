@@ -35,7 +35,7 @@ namespace BD3GE {
 	const float			FRAME_TIME = (1.0f / FRAME_RATE) * 1000.0f;
 
 	// Keystring mappings.
-	typedef enum {
+	enum class KEY_CODE {
 		BACKSPACE,
 		TAB,
 		ESCAPE,
@@ -156,7 +156,7 @@ namespace BD3GE {
 		MOUSE_MIDDLEBUTTON,
 		MOUSE_X1BUTTON,
 		MOUSE_X2BUTTON,
-	} KEY_CODE;
+	};
 }
 
 #endif // BD3GE_CONSTANTS_H
