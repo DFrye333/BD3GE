@@ -15,22 +15,14 @@ namespace BD3GE {
 	class Mesh {
 		public:
 
-					Mesh(const aiMesh* mesh);
-					~Mesh();
-			void	setup();
-			void	render(Transform world_view_projection_transform);
+						Mesh(Vector3* positions);
+						Mesh(const aiMesh* mesh);
+						~Mesh();
 
-		private:
-
-			Transform	m_model_transform;
-			GLuint		m_VBO_position;
-			GLuint		m_IBO_position;
-			GLuint		m_VAO;
 			GLfloat*	m_vertex_position_buffer;
 			GLuint*		m_index_position_buffer;
 			GLuint		m_num_vertices;
 			GLuint		m_num_indices;
-			Shader*		m_shader;
 	};
 }
 

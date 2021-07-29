@@ -34,6 +34,7 @@ namespace BD3GE {
 
 			std::vector<Object*>	m_objects;
 			Camera					m_camera;
+			Object*					player;
 	};
 }
 

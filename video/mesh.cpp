@@ -32,8 +32,6 @@ namespace BD3GE {
 				m_index_position_buffer[(mesh->mFaces[i].mNumIndices * i) + j] = mesh->mFaces[i].mIndices[j];
 			}
 		}
-
-		setup();
 	}
 
 	Mesh::~Mesh() {
@@ -42,58 +40,5 @@ namespace BD3GE {
 
 		delete[] m_index_position_buffer;
 		m_index_position_buffer = NULL;
-
-		delete m_shader;
-		m_shader = NULL;
-	}
-
-	void Mesh::setup() {
-		// Generate VAO.
-		glGenVertexArrays(1, &m_VAO);
-
-		// Generate VBOs.
-		glGenBuffers(1, &m_VBO_position);
-		glGenBuffers(1, &m_IBO_position);
-
-		// Setup for VAO.
-		glBindVertexArray(m_VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_position);
-		glBufferData(GL_ARRAY_BUFFER, 4 * m_num_vertices * sizeof(GLfloat), m_vertex_position_buffer, GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO_position);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_num_indices * sizeof(GLuint), m_index_position_buffer, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(0);
-
-		// Cleanup for VAO.
-		glBindVertexArray(0);
-		glDisableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		m_shader = new Shader;
-	}
-
-	void Mesh::render(Transform world_view_projection_transform) {
-		// Setup for shader program.
-		glUseProgram(m_shader->get_program_ID());
-
-		GLfloat transformation_array[16];
-		world_view_projection_transform.to_float_array(transformation_array);
-
-		glUniformMatrix4fv(glGetUniformLocation(m_shader->get_program_ID(), "transformation_matrix"), 1, GL_TRUE, transformation_array);
-
-		// Update position.
-		glUniform3f(glGetUniformLocation(m_shader->get_program_ID(), "offset"), world_view_projection_transform(3, 0), world_view_projection_transform(3, 1), world_view_projection_transform(3, 2));
-
-		glUniform4f(glGetUniformLocation(m_shader->get_program_ID(), "in_color"), 0.0f, 1.0f, 0.0f, 1.0f);
-
-		// Draw mesh using its VAO.
-		glBindVertexArray(m_VAO);
-		glDrawElements(GL_TRIANGLES, m_num_indices, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-
-		// Cleanup.
-		glUseProgram(0);
 	}
 }

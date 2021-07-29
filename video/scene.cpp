@@ -27,8 +27,7 @@ namespace BD3GE {
 		}
 
 		// Create new objects from meshes.
-		for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
-		{
+		/*for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
 			add_object(new Object(
 				Vector3(0.0f, 0.0f, 0.0f),
 				Vector3(0.75f, 0.75f, 0.75f),
