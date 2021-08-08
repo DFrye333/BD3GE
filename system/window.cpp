@@ -369,6 +369,7 @@ namespace BD3GE {
 			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_long_ptr);
 		}
 
+		BD3GE::Window::InputEvent input_event;
 		switch (messageCode) {
 			case WM_CREATE:
 				{
@@ -399,114 +400,44 @@ namespace BD3GE {
 
 				break;
 			case WM_PAINT:
-				{
-					PAINTSTRUCT paint_struct;
-					BeginPaint(hwnd, &paint_struct);
-					EndPaint(hwnd, &paint_struct);
-				}
-
+				PAINTSTRUCT paint_struct;
+				BeginPaint(hwnd, &paint_struct);
+				EndPaint(hwnd, &paint_struct);
 				break;
-			case WM_KEYDOWN:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ WinAPIWindow::key_code_map[wParam], true });
-					data->input_queue->push(input_event);
-				}
-
-				break;
-			case WM_KEYUP:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ WinAPIWindow::key_code_map[wParam], false });
-					data->input_queue->push(input_event);
-				}
-
-				break;
-			case WM_LBUTTONDOWN:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, true });
-					data->input_queue->push(input_event);
-
-					return true;
-				}
-			case WM_RBUTTONDOWN:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, true });
-					data->input_queue->push(input_event);
-
-					return true;
-				}
-			case WM_MBUTTONDOWN:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true });
-					data->input_queue->push(input_event);
-
-					return true;
-				}
+			case WM_KEYDOWN: input_event.key_state_map.insert({ WinAPIWindow::key_code_map[wParam], true }); break;
+			case WM_KEYUP: input_event.key_state_map.insert({ WinAPIWindow::key_code_map[wParam], false }); break;
+			case WM_LBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, true }); break;
+			case WM_RBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, true }); break;
+			case WM_MBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true }); break;
 			case WM_XBUTTONDOWN:
-				{
-					/*BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true });
-					data->input_queue->push(input_event);*/
-
-					return true;
-				}
-			case WM_LBUTTONUP:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, false });
-					data->input_queue->push(input_event);
-
-					return true;
-				}
-			case WM_RBUTTONUP:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, false });
-					data->input_queue->push(input_event);
-
-					return true;
-				}
-			case WM_MBUTTONUP:
-				{
-					BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, false });
-					data->input_queue->push(input_event);
-
-					return true;
-				}
+				// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
+				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
+				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, true }); break;
+			case WM_LBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, false }); break;
+			case WM_RBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, false }); break;
+			case WM_MBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, false }); break;
 			case WM_XBUTTONUP:
-				{
-					/*BD3GE::Window::InputEvent input_event;
-					input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_X1BUTTON, false });
-					data->input_queue->push(input_event);*/
-
-					return true;
-				}
+				// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
+				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
+				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
+			case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
 			case WM_SIZE:
 				BD3GE::Window::ReshapeEvent reshape_event;
 				reshape_event.width = LOWORD(lParam);
 				reshape_event.height = HIWORD(lParam);
 
 				data->reshape_queue->push(BD3GE::Message(reshape_event));
-
 				break;
-			case WM_CLOSE:
-				DestroyWindow(hwnd);
-
-				break;
-			case WM_DESTROY:
-				PostQuitMessage(0);
-
-				break;
-			default:
-				return DefWindowProc(hwnd, messageCode, wParam, lParam);
+			case WM_CLOSE: DestroyWindow(hwnd); break;
+			case WM_DESTROY: PostQuitMessage(0); break;
+			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
 		}
 
-		return 0;
+		if (!input_event.key_state_map.empty()) {
+			data->input_queue->push(input_event);
+		}
+
+		return EXIT_SUCCESS;
 	}
 
 	std::map<int, BD3GE::KEY_CODE> WinAPIWindow::key_code_map = {
@@ -647,7 +578,7 @@ namespace BD3GE {
 
 		if (!RegisterClassEx(&wc)) {
 			MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-			//return 0;
+			return;
 		}
 
 		input_queue = new std::queue<BD3GE::Message<BD3GE::Window::InputEvent>>;
@@ -669,7 +600,7 @@ namespace BD3GE {
 
 		if (window_handle == NULL) {
 			MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-			//return 0;
+			return;
 		}
 
 		ShowWindow(window_handle, winAPIEntryArgs.nCmdShow);

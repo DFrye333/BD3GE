@@ -7,8 +7,8 @@ namespace BD3GE {
 
 	GL::GL() {
 		// Set the clear color of the screen.
-		Vector3 cornflower_blue(0.39f, 0.58f, 0.93f);
-		glClearColor(cornflower_blue.v.c.r, cornflower_blue.v.c.g, cornflower_blue.v.c.b, 1.0f);
+		Vector3 dark(0.25f, 0.25f, 0.25f);
+		glClearColor(dark.v.c.r, dark.v.c.g, dark.v.c.b, 1.0f);
 
 		// Enable depth testing.
 		glClearDepth(1.0f);
@@ -21,6 +21,10 @@ namespace BD3GE {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glFrontFace(GL_CW);
+
+		// Enable alpha blending.
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
 
 		// Set the window shape.
 		reshape(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -37,11 +41,13 @@ namespace BD3GE {
 	}
 
 	const void GL::print_info(void) {
-		g_log.write(BD3GE::LOG_TYPE::INFO,
-					"Vendor: " + std::string((char*)get_vendor()) + "\n" +
-					"Renderer: " + std::string((char*)get_renderer()) + "\n" +
-					"Version: " + std::string((char*)get_version()) + "\n" +
-					"Shading Language Version: " + std::string((char*)get_shading_language_version()));
+		g_log.write(
+			BD3GE::LOG_TYPE::INFO,
+			"Vendor: " + std::string((char*)get_vendor()) + "\n" +
+			"Renderer: " + std::string((char*)get_renderer()) + "\n" +
+			"Version: " + std::string((char*)get_version()) + "\n" +
+			"Shading Language Version: " + std::string((char*)get_shading_language_version())
+		);
 	}
 
 	const GLubyte* GL::get_vendor(void) {

@@ -6,7 +6,6 @@ int main() {
 	BD3GE::Game game();
 	game.startup();
 	game.run();
-	game.shutdown();
 
 	return 0;
 }
@@ -26,12 +25,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	winAPIEntryArgs.hPrevInstance = hPrevInstance;
 	winAPIEntryArgs.lpCmdLine = lpCmdLine;
 	winAPIEntryArgs.nCmdShow = nCmdShow;
+	BD3GE::Window* window = new BD3GE::WinAPIWindow(winAPIEntryArgs);
+	if (window == NULL) {
+		return EXIT_FAILURE;
+	}
 
-	BD3GE::Game game(new BD3GE::WinAPIWindow(winAPIEntryArgs));
+	BD3GE::Game game(window);
 	game.run();
-	game.shutdown();
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 #endif

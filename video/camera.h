@@ -12,6 +12,7 @@ namespace BD3GE {
 	class Camera : public Object {
 		public:
 
+								Camera(Vector3 position);
 								Camera();
 								~Camera();
 			const Transform&	get_projection_transform(void) const;

@@ -10,49 +10,7 @@ namespace BD3GE {
 	}
 
 	Game::~Game() {
-		shutdown();
-	}
-
-	void Game::startup(BD3GE::Window* window) {
-		if (!m_running) {
-			g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
-
-			m_running = true;
-
-			DIR* default_system_directory_stream = opendir(DEFAULT_SYSTEM_DIRECTORY.c_str());
-			if (!default_system_directory_stream) {
-// TODO: Ugly! Create a class to handle filesystem stuff.
-#ifdef __linux__
-				if (-1 == mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH)) {
-#elif _WIN32
-				if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str())) {
-#endif
-					g_log.write(BD3GE::LOG_TYPE::ERR, "System directory creation failure.");
-				}
-			}
-			closedir(default_system_directory_stream);
-
-			// The below initialization order matters! For instance, if m_XWindow is placed after (and therefore initialized after) m_GL, the OpenGL context is not properly set up.
-			// TODO: Consider platform independence here.
-			m_window = window;
-			m_GL = new GL();
-			m_GL->print_info();
-			m_AL = new AL();
-			m_input = new Input();
-
-			glewExperimental = GL_TRUE;
-			glewInit();
-			
-			m_scene = new Scene("resource/models/plane.dae");
-		}
-	}
-
-	void Game::shutdown(void) {
-		if (m_running) {
-			g_log.write(BD3GE::LOG_TYPE::INFO, "Shutting down BD3GE now...");
-
-			m_running = false;
-		}
+		g_log.write(BD3GE::LOG_TYPE::INFO, "Shutting down BD3GE now...");
 
 		delete m_window;
 		m_window = NULL;
@@ -70,6 +28,36 @@ namespace BD3GE {
 		m_scene = NULL;
 	}
 
+	void Game::startup(BD3GE::Window* window) {
+		g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
+
+		DIR* default_system_directory_stream = opendir(DEFAULT_SYSTEM_DIRECTORY.c_str());
+		if (!default_system_directory_stream) {
+// TODO: Ugly! Create a class to handle filesystem stuff.
+#ifdef __linux__
+			if (-1 == mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH)) {
+#elif _WIN32
+			if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str())) {
+#endif
+				g_log.write(BD3GE::LOG_TYPE::ERR, "System directory creation failure.");
+			}
+		}
+		closedir(default_system_directory_stream);
+
+		// The below initialization order matters! For instance, if m_XWindow is placed after (and therefore initialized after) m_GL, the OpenGL context is not properly set up.
+		// TODO: Consider platform independence here.
+		m_window = window;
+		m_GL = new GL();
+		m_GL->print_info();
+		m_AL = new AL();
+		m_input = new Input();
+
+		glewExperimental = GL_TRUE;
+		glewInit();
+			
+		m_scene = new Scene("resource/models/");
+	}
+
 	void Game::run(void) {
 		//    Main game loop
 		// ========================================================================
@@ -81,17 +69,13 @@ namespace BD3GE {
 		logic_timer.start();
 
 		// Iterate endlessly (unless halted elsewhere).
-		while (m_running) {
-			//std::cout << "Main game loop!" << std::endl;
-
+		while (true) {
 			// Handle subsystem communication.
 			bus_messages();
 
 			// Quit the program if the Escape key is pressed.
 			if (m_input->get_key_state(BD3GE::KEY_CODE::ESCAPE)) {
-				shutdown();
-
-				continue;
+				return;
 			}
 
 			// Check logic timer.
@@ -126,7 +110,7 @@ namespace BD3GE {
 		Message< std::pair<int, int> > reshape_message = m_window->pull_reshape_message();
 		if (reshape_message.get_data()) {
 			m_GL->reshape(reshape_message.get_data()->first, reshape_message.get_data()->second);
-			m_scene->getCamera().set_viewport(m_GL->get_viewport_width(), m_GL->get_viewport_height());
+			m_scene->getCamera()->set_viewport(m_GL->get_viewport_width(), m_GL->get_viewport_height());
 		}
 	}
 }

@@ -5,8 +5,6 @@ namespace BD3GE {
 	 * 	Vector3 class
 	 */
 
-	static float EPSILON = 1.0e-12;
-
 	Vector3::Vector3(void) {
 		v.a[0] = 0.0f;
 		v.a[1] = 0.0f;
@@ -59,12 +57,9 @@ namespace BD3GE {
 
 	const Vector3& Vector3::normalize(void) {
 		float magnitude = get_magnitude();
-		if (magnitude > EPSILON)
-		{
+		if (magnitude > EPSILON) {
 			return *this /= magnitude;
-		}
-		else
-		{
+		} else {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
@@ -147,5 +142,9 @@ namespace BD3GE {
 
 	const Vector3 Vector3::operator/(const float other) {
 		return Vector3(*this) /= other;
+	}
+
+	std::ostream& operator<<(std::ostream& out, const Vector3& vec) {
+		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ", " << vec.v.a[2] << ")";
 	}
 }

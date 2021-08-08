@@ -11,7 +11,9 @@
 
 // TODO: Can I eliminate this dependency on input.h?
 #include "../input/input.h"
+#include "../utility/color.h"
 #include "../utility/object.h"
+#include "../video/brush.h"
 #include "../video/camera.h"
 
 
@@ -22,18 +24,18 @@ namespace BD3GE {
 	class Scene {
 		public:
 
-							Scene(const std::string file_path);
+							Scene(const std::string modelsDirectory);
 							~Scene();
 							Scene(std::vector<Object*> objects);
 			void 			add_object(Object* object);
 			void			tick(Input* input);
 			void 			render(void);
-			Camera& 		getCamera(void);
+			Camera* 		getCamera(void);
 
 		private:
 
-			std::vector<Object*>	m_objects;
-			Camera					m_camera;
+			std::vector<Object*>	objects;
+			Camera*					camera;
 			Object*					player;
 	};
 }

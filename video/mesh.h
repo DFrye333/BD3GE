@@ -9,20 +9,17 @@
 #include "../system/globals.h"
 #include "../utility/matrix.h"
 #include "../utility/transform.h"
+#include "../utility/vector.h"
 #include "../video/shader.h"
+#include "../video/drawable.h"
 
 namespace BD3GE {
-	class Mesh {
+	class Mesh : public Drawable {
 		public:
 
-						Mesh(Vector3* positions);
-						Mesh(const aiMesh* mesh);
-						~Mesh();
+			Mesh(const aiMesh* mesh, Vector3 scale);
 
-			GLfloat*	m_vertex_position_buffer;
-			GLuint*		m_index_position_buffer;
-			GLuint		m_num_vertices;
-			GLuint		m_num_indices;
+			GLfloat	scale;
 	};
 }
 

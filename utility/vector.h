@@ -2,6 +2,7 @@
 #define BD3GE_VECTOR_H
 
 #include <cmath>
+#include <iostream>
 
 #include "../system/globals.h"
 
@@ -31,9 +32,9 @@ namespace BD3GE {
 			const Vector3 operator/(const Vector3& other);
 			const Vector3& operator/=(const float other);
 			const Vector3 operator/(const float other);
+			friend std::ostream& operator<<(std::ostream& out, const Vector3& vec);
 
 			static constexpr float EPSILON = 1.0e-12f;
-
 			union { // Union allows different Vector3 notation in different contexts.
 				struct {		// Vector3 as geometry.
 					float x;

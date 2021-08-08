@@ -11,5 +11,5 @@ void main(void)
 {
 	gl_Position = transformation_matrix * in_position;
 
-	vertex_color = vec4(in_position.z, in_color.y, in_color.z, 1.0f);
+	vertex_color = vec4(in_color.x, in_color.y, in_color.z, in_color.w);
 }

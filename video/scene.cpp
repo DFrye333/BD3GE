@@ -5,9 +5,10 @@ namespace BD3GE {
 	 *	Scene class
 	 */
 
-	Scene::Scene(const std::string file_path)
+	Scene::Scene(const std::string modelsDirectory)
 	{
-		Assimp::Importer importer;
+		Assimp::Importer planeImporter;
+		Assimp::Importer duckImporter;
 
 		// Import asset residing at given file path.
 		unsigned int importer_options = 
@@ -16,95 +17,128 @@ namespace BD3GE {
 			aiProcess_Triangulate | 
 			aiProcess_SortByPType | 
 			aiProcess_FlipWindingOrder;
-		const aiScene* scene = importer.ReadFile(file_path, importer_options);
+
+		const aiScene* plane = planeImporter.ReadFile(modelsDirectory + "plane.dae", importer_options);
+		const aiScene* duck = duckImporter.ReadFile(modelsDirectory + "duck.dae", importer_options);
 
 		// Ensure that asset importing succeeded.
-		if (scene) {
+		if (plane && duck) {
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Assimp scene loading succeeded!");
 		}
 		else {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
-		// Create new objects from meshes.
-		/*for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
+		// Scary duck
+		/*add_object(new Object(
+			Vector3(0, 0, -500),
+			Color(Vector3(0, 0, 0), 0.75f),
+			Vector3(0, 0, 0),
+			new Mesh(duck->mMeshes[0], Vector3(1, 1, 1))
+		));*/
+
+		// Floor
+		add_object(new Object(
+			Vector3(-50, 50, 0),
+			Color(Vector3(0, 0.33f, 0)),
+			Vector3(0, 0, 0),
+			new SquareBrush(100, 100)
+		));
+
+		// Pillars
+		for (unsigned int i = 0; i < 121; ++i) {
 			add_object(new Object(
-				Vector3(0.0f, 0.0f, 0.0f),
-				Vector3(0.75f, 0.75f, 0.75f),
-				Vector3(0.0f, 0.0f, 0.0f),
-				scene->mMeshes[i]
+				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
+				Color(Vector3(0, 0, 0.75f)),
+				Vector3(0, 0, 0),
+				new Mesh(plane->mMeshes[0], Vector3(1, 1, 1))
 			));
 		}
+
+		player = new Object(
+			Vector3(5.0f, 5.0f, 0),
+			Color(Vector3(0, 0.66f, 0.33f)),
+			Vector3(0, 0, 0),
+			new CircularBrush(3, 5)
+		);
+		add_object(player);
+
+		camera = new Camera(Vector3(0, 0, 60));
 	}
 
 	Scene::Scene(std::vector<Object*> objects) {
-		m_objects = objects;
+		objects = objects;
 	}
 
 	Scene::~Scene() {
-		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i) {
-			delete m_objects[i];
-			m_objects[i] = NULL;
+		delete camera;
+		camera = NULL;
+
+		for (std::vector<Object*>::size_type i = 0; i != objects.size(); ++i) {
+			delete objects[i];
+			objects[i] = NULL;
 		}
 	}
 
 	void Scene::add_object(Object* object) {
-		m_objects.push_back(object);
+		objects.push_back(object);
 	}
 
 	void Scene::tick(Input* input) {
-		if ((false == input->get_key_state(BD3GE::KEY_CODE::W) && false == input->get_key_state(BD3GE::KEY_CODE::S)) || (true == input->get_key_state(BD3GE::KEY_CODE::W) && true == input->get_key_state(BD3GE::KEY_CODE::S))) {
-			m_camera.set_velocity_Z(0);
-		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::W)) {
-			m_camera.set_velocity_Z(-PLAYER_SPEED);
-		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::S)) {
-			m_camera.set_velocity_Z(PLAYER_SPEED);
+		if ((!input->get_key_state(BD3GE::KEY_CODE::W) && !input->get_key_state(BD3GE::KEY_CODE::S)) || (input->get_key_state(BD3GE::KEY_CODE::W) && input->get_key_state(BD3GE::KEY_CODE::S))) {
+			player->set_velocity_Y(0);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::W)) {
+			player->set_velocity_Y(PLAYER_SPEED);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::S)) {
+			player->set_velocity_Y(-PLAYER_SPEED);
 		}
 
-		if ((false == input->get_key_state(BD3GE::KEY_CODE::A) && false == input->get_key_state(BD3GE::KEY_CODE::D)) || (true == input->get_key_state(BD3GE::KEY_CODE::A) && true == input->get_key_state(BD3GE::KEY_CODE::D))) {
-			m_camera.set_velocity_X(0);
-		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::A)) {
-			m_camera.set_velocity_X(-PLAYER_SPEED);
-		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::D)) {
-			m_camera.set_velocity_X(PLAYER_SPEED);
+		if ((!input->get_key_state(BD3GE::KEY_CODE::A) && !input->get_key_state(BD3GE::KEY_CODE::D)) || (input->get_key_state(BD3GE::KEY_CODE::A) && input->get_key_state(BD3GE::KEY_CODE::D))) {
+			player->set_velocity_X(0);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::A)) {
+			player->set_velocity_X(-PLAYER_SPEED);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::D)) {
+			player->set_velocity_X(PLAYER_SPEED);
 		}
 
-		if ((false == input->get_key_state(BD3GE::KEY_CODE::Q) && false == input->get_key_state(BD3GE::KEY_CODE::E)) || (true == input->get_key_state(BD3GE::KEY_CODE::Q) && true == input->get_key_state(BD3GE::KEY_CODE::E))) {
-			m_camera.set_velocity_Y(0);
-		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::Q)) {
-			m_camera.set_velocity_Y(-PLAYER_SPEED);
-		}
-		else if (true == input->get_key_state(BD3GE::KEY_CODE::E)) {
-			m_camera.set_velocity_Y(PLAYER_SPEED);
+		if ((!input->get_key_state(BD3GE::KEY_CODE::Q) && !input->get_key_state(BD3GE::KEY_CODE::E)) || (input->get_key_state(BD3GE::KEY_CODE::Q) && input->get_key_state(BD3GE::KEY_CODE::E))) {
+			player->set_velocity_Z(0);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::Q)) {
+			player->set_velocity_Z(-PLAYER_SPEED);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::E)) {
+			player->set_velocity_Z(PLAYER_SPEED);
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
-			m_camera.rotate(Vector3(0, 0, 0.01));
+			player->rotate(Vector3(0, 0, 0.01));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
-			m_camera.rotate(Vector3(0, 0, -0.01));
+			player->rotate(Vector3(0, 0, -0.01));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
-			m_camera.rotate(Vector3(-0.01, 0, 0));
+			player->rotate(Vector3(-0.01, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
-			m_camera.rotate(Vector3(0.01, 0, 0));
+			player->rotate(Vector3(0.01, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON)) {
-			m_camera.rotate(Vector3(0, 0.01, 0));
+			player->rotate(Vector3(0, 0.01, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON)) {
-			m_camera.rotate(Vector3(0, -0.01, 0));
+			player->rotate(Vector3(0, -0.01, 0));
 		}
 
-		m_camera.move();
-		for (std::vector<Object*>::size_type i = 0; i < m_objects.size(); ++i) {
-			m_objects[i]->move();
+		if (!input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELDOWN) && !input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELUP)) {
+			camera->set_velocity_Z(0);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELUP)) {
+			camera->set_velocity_Z(-PLAYER_SPEED);
+		} else if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELDOWN)) {
+			camera->set_velocity_Z(PLAYER_SPEED);
+		}
+
+		camera->move();
+		for (std::vector<Object*>::size_type i = 0; i < objects.size(); ++i) {
+			objects[i]->move();
 		}
 	}
 
@@ -112,12 +146,12 @@ namespace BD3GE {
 		// Clear the color buffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (std::vector<Object*>::size_type i = 0; i != m_objects.size(); ++i) {
-			m_objects[i]->render(m_camera.get_view_projection_transform());
+		for (std::vector<Object*>::size_type i = 0; i != objects.size(); ++i) {
+			objects[i]->render(camera->get_view_projection_transform());
 		}
 	}
 
-	Camera& Scene::getCamera(void) {
-		return m_camera;
+	Camera* Scene::getCamera(void) {
+		return camera;
 	}
 }

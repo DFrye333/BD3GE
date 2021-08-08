@@ -23,13 +23,11 @@ namespace BD3GE {
 					Game(BD3GE::Window* window);
 					~Game();
 			void	startup(BD3GE::Window* window);
-			void	shutdown(void);
 			void 	run(void);
 			void	bus_messages(void);
 
 		private:
 
-			bool				m_running;
 			Window*				m_window;
 			Scene*				m_scene;
 			GL*					m_GL;

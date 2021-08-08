@@ -7,27 +7,22 @@ namespace BD3GE {
 
 	Object::Object() {}
 
-	Object::Object(const Vector3 position, const Vector3 color, const Vector3 velocity, const aiMesh* mesh) {
-		// Initialize position attributes.
-		m_position.v.g.x = position.v.g.x;
-		m_position.v.g.y = position.v.g.y;
-		m_position.v.g.z = position.v.g.z;
+	Object::Object(const Vector3 position, const Color color, const Vector3 velocity, const Drawable* drawable) {
+		this->position.v.g.x = position.v.g.x;
+		this->position.v.g.y = position.v.g.y;
+		this->position.v.g.z = position.v.g.z;
 
-		// Initialize color attributes.
-		m_color.v.c.r = color.v.c.r;
-		m_color.v.c.g = color.v.c.g;
-		m_color.v.c.b = color.v.c.b;
+		this->color = color;
 
-		// Initialize velocity attributes.
-		m_velocity.v.g.x = velocity.v.g.x;
-		m_velocity.v.g.y = velocity.v.g.y;
-		m_velocity.v.g.z = velocity.v.g.z;
+		this->velocity.v.g.x = velocity.v.g.x;
+		this->velocity.v.g.y = velocity.v.g.y;
+		this->velocity.v.g.z = velocity.v.g.z;
 
-		m_angle = 0.0;
+		angle = 0.0;
 
-		m_world_transform.translate(m_position);
+		worldTransform.translate(this->position);
 
-		this->mesh = new Mesh(mesh);
+		this->drawable = drawable;
 
 		// TODO: Revisit audio stuff later!
 		// std::string fileName = std::string("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/audio/DH.ogg");
@@ -40,8 +35,8 @@ namespace BD3GE {
 	}
 
 	Object::~Object() {
-		delete mesh;
-		mesh = NULL;
+		delete drawable;
+		drawable = NULL;
 
 		delete shader;
 		shader = NULL;
@@ -59,9 +54,9 @@ namespace BD3GE {
 		glBindVertexArray(vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vboPosition);
-		glBufferData(GL_ARRAY_BUFFER, 4 * mesh->m_num_vertices * sizeof(GLfloat), mesh->m_vertex_position_buffer, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 4 * drawable->numVertices * sizeof(GLfloat), drawable->vertexPositionBuffer, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboPosition);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->m_num_indices * sizeof(GLuint), mesh->m_index_position_buffer, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, drawable->numIndices * sizeof(GLuint), drawable->indexPositionBuffer, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(0);
 
@@ -73,19 +68,19 @@ namespace BD3GE {
 	}
 
 	void Object::move(void) {
-		m_position.v.g.x += m_velocity.v.g.x;
-		m_position.v.g.y += m_velocity.v.g.y;
-		m_position.v.g.z += m_velocity.v.g.z;
+		position.v.g.x += velocity.v.g.x;
+		position.v.g.y += velocity.v.g.y;
+		position.v.g.z += velocity.v.g.z;
 
-		m_world_transform.translate(m_position);
+		worldTransform.translate(position);
 	}
 
 	void Object::scale(float scaler) {
-		m_world_transform.scale(scaler);
+		worldTransform.scale(scaler);
 	}
 
 	void Object::rotate(Vector3 rotation) {
-		m_world_transform.rotate(rotation);
+		worldTransform.rotate(rotation);
 	}
 
 	void Object::render(Transform view_projection_transform) {
@@ -93,7 +88,7 @@ namespace BD3GE {
 		glUseProgram(shader->get_program_ID());
 
 		GLfloat transformation_array[16];
-		Transform worldViewProjectionTransform = view_projection_transform * m_world_transform;
+		Transform worldViewProjectionTransform = view_projection_transform * worldTransform;
 		worldViewProjectionTransform.to_float_array(transformation_array);
 
 		glUniformMatrix4fv(glGetUniformLocation(shader->get_program_ID(), "transformation_matrix"), 1, GL_TRUE, transformation_array);
@@ -101,11 +96,11 @@ namespace BD3GE {
 		// Update position.
 		glUniform3f(glGetUniformLocation(shader->get_program_ID(), "offset"), worldViewProjectionTransform(3, 0), worldViewProjectionTransform(3, 1), worldViewProjectionTransform(3, 2));
 
-		glUniform4f(glGetUniformLocation(shader->get_program_ID(), "in_color"), m_color.v.c.r, m_color.v.c.g, m_color.v.c.b, 1.0f);
+		glUniform4f(glGetUniformLocation(shader->get_program_ID(), "in_color"), color.rgb.v.c.r, color.rgb.v.c.g, color.rgb.v.c.b, color.a);
 
 		// Draw mesh using its VAO.
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, mesh->m_num_indices, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, drawable->numIndices, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		// Cleanup.
@@ -113,15 +108,15 @@ namespace BD3GE {
 	}
 
 	void Object::set_velocity_X(float x) {
-		m_velocity.v.g.x = x;
+		velocity.v.g.x = x;
 	}
 
 	void Object::set_velocity_Y(float y) {
-		m_velocity.v.g.y = y;
+		velocity.v.g.y = y;
 	}
 
 	void Object::set_velocity_Z(float z) {
-		m_velocity.v.g.z = z;
+		velocity.v.g.z = z;
 	}
 
 	void Object::set_velocity(float x, float y, float z) {
@@ -131,22 +126,22 @@ namespace BD3GE {
 	}
 
 	void Object::set_velocity(Vector3 velocity) {
-		m_velocity = velocity;
+		velocity = velocity;
 	}
 
 	void Object::add_velocity_X(float x) {
-		if (PLAYER_SPEED >= m_velocity.v.g.x && -PLAYER_SPEED <= m_velocity.v.g.x) {
-			m_velocity.v.g.x += x;
+		if (PLAYER_SPEED >= velocity.v.g.x && -PLAYER_SPEED <= velocity.v.g.x) {
+			velocity.v.g.x += x;
 		}
 	}
 
 	void Object::add_velocity_Y(float y) {
-		if (PLAYER_SPEED >= m_velocity.v.g.y && -PLAYER_SPEED <= m_velocity.v.g.y) {
-			m_velocity.v.g.y += y;
+		if (PLAYER_SPEED >= velocity.v.g.y && -PLAYER_SPEED <= velocity.v.g.y) {
+			velocity.v.g.y += y;
 		}
 	}
 
 	void Object::add_velocity_Z(float z) {
-		m_velocity.v.g.z += z;
+		velocity.v.g.z += z;
 	}
 }

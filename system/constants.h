@@ -17,7 +17,7 @@ namespace BD3GE {
 	const int			WINDOW_WIDTH =	1920;
 	const int			WINDOW_HEIGHT =	1080;
 
-	const float			PLAYER_SPEED = 0.1f;
+	const float			PLAYER_SPEED = 0.25f;
 
 	typedef enum {
 		INFO,
@@ -156,6 +156,8 @@ namespace BD3GE {
 		MOUSE_MIDDLEBUTTON,
 		MOUSE_X1BUTTON,
 		MOUSE_X2BUTTON,
+		MOUSE_WHEELUP,
+		MOUSE_WHEELDOWN
 	};
 }
 
