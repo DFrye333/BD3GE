@@ -39,69 +39,70 @@ namespace BD3GE {
 			} ReshapeEvent;
 
 			virtual 											~Window() {};
-			virtual void										message_listener(void) = 0;
-			virtual void										swap_buffers(void) = 0;
-			virtual InputEvent									pull_input_event(void) = 0;
-			virtual Message<std::pair<int, int>>				pull_reshape_message(void) = 0;
+			virtual void										message_listener() = 0;
+			virtual void										swap_buffers() = 0;
+			virtual InputEvent									pull_input_event() = 0;
+			virtual Message<std::pair<int, int>>				pull_reshape_message() = 0;
+			virtual void										set_mouse_cursor_visibility(bool shouldBeVisible) = 0;
 
-		protected:
+	//protected:
 
-			std::queue<Message<InputEvent>>*					input_queue;
-			std::queue<Message<ReshapeEvent>>*					reshape_queue;
+		std::queue<Message<InputEvent>>* input_queue;
+		std::queue<Message<ReshapeEvent>>* reshape_queue;
 	};
 
 #ifdef __linux__
 
 	class XWindow : public Window {
-		public:
+	public:
 
-																		XWindow();
-																		~XWindow(void);
-			void 														message_listener(void);
-			void 														swap_buffers(void);
-			Message<std::pair<BD3GE::KEY_CODE, bool>>					pull_input_event(void);
-			Message<std::pair<int, int>>								pull_reshape_message(void);
+		XWindow();
+		~XWindow();
+		void 														message_listener();
+		void 														swap_buffers();
+		Message<std::pair<BD3GE::KEY_CODE, bool>>					pull_input_event();
+		Message<std::pair<int, int>>								pull_reshape_message();
 
-		private:
+	private:
 
-			static std::map<std::string, BD3GE::KEY_CODE>> t_key_map	m_key_map;
-			std::queue<Message<std::pair<BD3GE::KEY_CODE, bool>>>		m_input_queue;
-			Display* 													m_display;
-			Window 														m_window;
-			GC 															m_graphics_context;
-			GLXFBConfig* 												m_framebuffer_configuration;
-			XVisualInfo* 												m_visual_information;
-			XSetWindowAttributes										m_window_attributes;
-			GLXContext 													m_GLX_context;
-			GLXWindow 													m_GLX_window;
-			bool 														m_doublebuffered_flag;
-			int															m_singlebuffered_attributes[16];
-			int															m_doublebuffered_attributes[16];
+		static std::map<std::string, BD3GE::KEY_CODE >> t_key_map	m_key_map;
+		std::queue<Message<std::pair<BD3GE::KEY_CODE, bool>>>		m_input_queue;
+		Display* m_display;
+		Window 														m_window;
+		GC 															m_graphics_context;
+		GLXFBConfig* m_framebuffer_configuration;
+		XVisualInfo* m_visual_information;
+		XSetWindowAttributes										m_window_attributes;
+		GLXContext 													m_GLX_context;
+		GLXWindow 													m_GLX_window;
+		bool 														m_doublebuffered_flag;
+		int															m_singlebuffered_attributes[16];
+		int															m_doublebuffered_attributes[16];
 	};
 
 #elif _WIN32
 
 	class WinAPIWindow : public Window {
-		public:
+	public:
 
-			struct WinAPIEntryArgs {
-				HINSTANCE hInstance;
-				HINSTANCE hPrevInstance;
-				LPSTR lpCmdLine;
-				int nCmdShow;
-			};
+		struct WinAPIEntryArgs {
+			HINSTANCE hInstance;
+			HINSTANCE hPrevInstance;
+			LPSTR lpCmdLine;
+			int nCmdShow;
+		};
 
-			struct WindowProcData {
-				std::queue<Message<InputEvent>>* input_queue;
-				std::queue<Message<ReshapeEvent>>* reshape_queue;
-			};
+		struct WindowProcData {
+			WinAPIWindow* window;
+		};
 
-															WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
-															~WinAPIWindow(void);
-			void											message_listener(void);
-			void											swap_buffers(void);
-			Window::InputEvent								pull_input_event(void);
-			Message<std::pair<int, int>>					pull_reshape_message(void);
+		WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
+		~WinAPIWindow();
+		void											message_listener();
+		void											swap_buffers();
+		Window::InputEvent								pull_input_event();
+		Message<std::pair<int, int>>					pull_reshape_message();
+		void											set_mouse_cursor_visibility(bool shouldBeVisible);
 
 			static std::map<int, BD3GE::KEY_CODE>			key_code_map;
 

@@ -421,12 +421,14 @@ namespace BD3GE {
 				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
 				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
 			case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
+			//case WM_MOUSEMOVE: data->window->set_mouse_cursor_visibility(false); break;
+			//case WM_MOUSEMOVE: RECT window; GetWindowRect(hwnd, &window); SetCursorPos((window.right - window.left) / 2, (window.bottom - window.top) / 2); break;
 			case WM_SIZE:
 				BD3GE::Window::ReshapeEvent reshape_event;
 				reshape_event.width = LOWORD(lParam);
 				reshape_event.height = HIWORD(lParam);
 
-				data->reshape_queue->push(BD3GE::Message(reshape_event));
+				data->window->reshape_queue->push(BD3GE::Message(reshape_event));
 				break;
 			case WM_CLOSE: DestroyWindow(hwnd); break;
 			case WM_DESTROY: PostQuitMessage(0); break;
@@ -434,7 +436,7 @@ namespace BD3GE {
 		}
 
 		if (!input_event.key_state_map.empty()) {
-			data->input_queue->push(input_event);
+			data->window->input_queue->push(input_event);
 		}
 
 		return EXIT_SUCCESS;
@@ -585,8 +587,7 @@ namespace BD3GE {
 		reshape_queue = new std::queue<BD3GE::Message<BD3GE::Window::ReshapeEvent>>;
 
 		window_proc_data = new BD3GE::WinAPIWindow::WindowProcData;
-		window_proc_data->input_queue = input_queue;
-		window_proc_data->reshape_queue = reshape_queue;
+		window_proc_data->window = this;
 
 		window_handle = CreateWindowEx(
 			WS_EX_CLIENTEDGE,
@@ -648,6 +649,17 @@ namespace BD3GE {
 		}
 
 		return reshape_message;
+	}
+
+	void WinAPIWindow::set_mouse_cursor_visibility(bool shouldBeVisible) {
+		CURSORINFO mouseCursorInfo;
+		mouseCursorInfo.cbSize = sizeof(CURSORINFO);
+		GetCursorInfo(&mouseCursorInfo);
+		if (shouldBeVisible && !(mouseCursorInfo.flags & CURSOR_SHOWING)) {
+			ShowCursor(true);
+		} else if (!shouldBeVisible && (mouseCursorInfo.flags & CURSOR_SHOWING)) {
+			ShowCursor(false);
+		}
 	}
 
 #endif
