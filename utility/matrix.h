@@ -32,11 +32,11 @@ namespace BD3GE {
 
 			const float compute_determinant(void) const;
 
-			static const short m_NUMBER_ROWS = 4;
-			static const short m_NUMBER_COLUMNS = 4;
-			static const short m_NUMBER_ELEMENTS = m_NUMBER_ROWS * m_NUMBER_COLUMNS;
+			static const short NUMBER_ROWS = 4;
+			static const short NUMBER_COLUMNS = 4;
+			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
 
-			float m_elements[m_NUMBER_ELEMENTS];
+			float m_elements[NUMBER_ELEMENTS];
 	};
 }
 

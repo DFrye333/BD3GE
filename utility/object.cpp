@@ -68,9 +68,9 @@ namespace BD3GE {
 	}
 
 	void Object::move(void) {
-		position.v.g.x += velocity.v.g.x;
-		position.v.g.y += velocity.v.g.y;
-		position.v.g.z += velocity.v.g.z;
+		this->position.v.g.x += velocity.v.g.x;
+		this->position.v.g.y += velocity.v.g.y;
+		this->position.v.g.z += velocity.v.g.z;
 
 		worldTransform.translate(position);
 	}

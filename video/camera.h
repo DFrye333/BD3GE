@@ -22,11 +22,11 @@ namespace BD3GE {
 
 		private:
 
-			Vector3 m_orientation;
-			Transform m_projection_transform;
-			Transform m_view_transform;
-			unsigned int m_viewport_width;
-			unsigned int m_viewport_height;
+			Vector3 orientation;
+			Transform projectionTransform;
+			Transform viewTransform;
+			unsigned int viewportWidth;
+			unsigned int viewportHeight;
 	};
 }
 

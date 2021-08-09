@@ -9,19 +9,19 @@ namespace BD3GE {
 		alGenBuffers(1, &m_ID_buffer);
 		alGenSources(1, &m_ID_sources);
 		alSource3f(m_ID_sources, AL_POSITION, 0.0f, 0.0f, 0.0f);
-		m_info = NULL;
-		m_format = 0;
-		m_frequency = 0;
-		m_loaded = false;
+		info = NULL;
+		format = 0;
+		frequency = 0;
+		loaded = false;
 	}
 
 	Ogg::Ogg(std::string file_name) {
 		alGenBuffers(1, &m_ID_buffer);
 		alGenSources(1, &m_ID_sources);
 		alSource3f(m_ID_sources, AL_POSITION, 0.0f, 0.0f, 0.0f);
-		m_loaded = false;
+		loaded = false;
 		load_OGG_file(file_name);
-		m_loaded = true;
+		loaded = true;
 	}
 
 	Ogg::~Ogg() {
@@ -36,13 +36,13 @@ namespace BD3GE {
 		char tempBuffer[32768];
 		int success;
 
-		if (true == m_loaded) {
+		if (true == loaded) {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "File object already loaded.");
 			return;
 		}
 
 		infile = fopen(file_name.c_str(), "rb");
-		success = ov_open(infile, &m_file, NULL, 0);
+		success = ov_open(infile, &file, NULL, 0);
 
 		switch (success) {
 			case OV_EREAD:
@@ -67,31 +67,31 @@ namespace BD3GE {
 				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - Unknown Ogg error.");
 		}
 
-		m_info = ov_info(&m_file, -1);
-		switch (m_info->channels) {
+		info = ov_info(&file, -1);
+		switch (info->channels) {
 			case 1:
-				m_format = AL_FORMAT_MONO16;
+				format = AL_FORMAT_MONO16;
 				g_log.write(BD3GE::LOG_TYPE::INFO, "Format is mono-16.");
 				break;
 			case 2:
 				g_log.write(BD3GE::LOG_TYPE::INFO, "Format is stereo-16.");
-				m_format = AL_FORMAT_STEREO16;
+				format = AL_FORMAT_STEREO16;
 				break;
 		}
 
-		m_frequency = m_info->rate;
+		frequency = info->rate;
 		do {
-			bytes = ov_read(&m_file, tempBuffer, 32768, 0, 2, 1, &bitStream);
-			m_buffer.insert(m_buffer.end(), tempBuffer, tempBuffer + bytes);
+			bytes = ov_read(&file, tempBuffer, 32768, 0, 2, 1, &bitStream);
+			buffer.insert(buffer.end(), tempBuffer, tempBuffer + bytes);
 		} while (bytes > 0);
 
-		ov_clear(&m_file);
+		ov_clear(&file);
 	}
 
 	void Ogg::play(void) {
 	//	ALint state = 0;
 
-		alBufferData(m_ID_buffer, m_format, &m_buffer[0], m_buffer.size(), m_frequency);
+		alBufferData(m_ID_buffer, format, &buffer[0], buffer.size(), frequency);
 		alSourcei(m_ID_sources, AL_BUFFER, m_ID_buffer);
 		alSourcePlay(m_ID_sources);
 	/*	do {

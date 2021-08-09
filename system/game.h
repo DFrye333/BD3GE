@@ -22,17 +22,16 @@ namespace BD3GE {
 
 					Game(BD3GE::Window* window);
 					~Game();
-			void	startup(BD3GE::Window* window);
-			void 	run(void);
-			void	bus_messages(void);
+			void 	run();
+			void	bus_messages();
 
 		private:
 
-			Window*				m_window;
-			Scene*				m_scene;
-			GL*					m_GL;
-			AL*					m_AL;
-			Input*				m_input;
+			Window*				window;
+			Scene*				scene;
+			GL*					gl;
+			AL*					al;
+			Input*				input;
 	};
 }
 

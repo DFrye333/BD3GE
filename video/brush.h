@@ -14,8 +14,8 @@ namespace BD3GE {
 	};
 
 	class CircularBrush : public Drawable {
-	public:
-		CircularBrush(float radius, int resolution);
+		public:
+			CircularBrush(float radius, int resolution);
 	};
 }
 

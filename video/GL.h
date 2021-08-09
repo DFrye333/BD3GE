@@ -1,5 +1,5 @@
-#ifndef GL_H
-#define GL_H
+#ifndef BD3GE_GL_H
+#define BD3GE_GL_H
 
 #include <iostream>
 
@@ -24,9 +24,9 @@ namespace BD3GE {
 
 		private:
 
-			unsigned int	m_viewport_width;
-			unsigned int	m_viewport_height;
+			unsigned int	viewportWidth;
+			unsigned int	viewportHeight;
 	};
 }
 
-#endif // GL_H
+#endif // BD3GE_GL_H

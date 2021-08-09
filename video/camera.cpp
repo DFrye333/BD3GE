@@ -6,8 +6,8 @@ namespace BD3GE {
 	 */
 
 	Camera::Camera(Vector3 position) {
-		m_viewport_width = WINDOW_WIDTH;
-		m_viewport_height = WINDOW_HEIGHT;
+		viewportWidth = WINDOW_WIDTH;
+		viewportHeight = WINDOW_HEIGHT;
 
 		this->position.v.g.x = position.v.g.x;
 		this->position.v.g.y = position.v.g.y;
@@ -17,8 +17,8 @@ namespace BD3GE {
 		float z_near = 0.01f;
 		float z_far = 1000.0f;
 
-		m_projection_transform = Matrix4(
-			frustum_scale / ((GLfloat)m_viewport_width / (GLfloat)m_viewport_height), 0, 0, 0,
+		projectionTransform = Matrix4(
+			frustum_scale / ((GLfloat)viewportWidth / (GLfloat)viewportHeight), 0, 0, 0,
 			0.0f, frustum_scale, 0.0f, 0.0f,
 			0.0f, 0.0f, ((z_near + z_far) / (z_near - z_far)), ((2 * z_near * z_far) / (z_near - z_far)),
 			0.0f, 0.0f, -1.0f, 0.0f
@@ -37,7 +37,7 @@ namespace BD3GE {
 	Camera::~Camera() {}
 
 	const Transform& Camera::get_projection_transform() const {
-		return m_projection_transform;
+		return projectionTransform;
 	}
 
 	const Transform Camera::get_view_transform() const {
@@ -49,7 +49,7 @@ namespace BD3GE {
 	}
 
 	void Camera::set_viewport(const unsigned int viewport_width, const unsigned int viewport_height) {
-		this->m_viewport_width = m_viewport_width;
-		this->m_viewport_height = m_viewport_height;
+		this->viewportWidth = viewportWidth;
+		this->viewportHeight = viewportHeight;
 	}
 }

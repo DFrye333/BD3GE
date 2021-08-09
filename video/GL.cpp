@@ -34,9 +34,9 @@ namespace BD3GE {
 
 	void GL::reshape(GLsizei width, GLsizei height) {
 		if (width > 0 && width < SCREEN_WIDTH && height > 0 && height < SCREEN_HEIGHT) {
-			m_viewport_width = width;
-			m_viewport_height = height;
-			glViewport(0, 0, m_viewport_width, m_viewport_height);
+			viewportWidth = width;
+			viewportHeight = height;
+			glViewport(0, 0, viewportWidth, viewportHeight);
 		}
 	}
 
@@ -67,10 +67,10 @@ namespace BD3GE {
 	}
 
 	unsigned int GL::get_viewport_width(void) {
-		return m_viewport_width;
+		return viewportWidth;
 	}
 
 	unsigned int GL::get_viewport_height(void) {
-		return m_viewport_height;
+		return viewportHeight;
 	}
 }
