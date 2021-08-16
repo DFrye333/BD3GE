@@ -10,16 +10,18 @@
 #include "../utility/matrix.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"
+#include "../video/renderable.h"
 #include "../video/shader.h"
-#include "../video/drawable.h"
+#include "../video/texture.h"
 
 namespace BD3GE {
-	class Mesh : public Drawable {
+	class Mesh : public Renderable {
 		public:
+			Mesh(const aiMesh* mesh, Texture* texture, Shader* shader, Vector3 scale);
+			~Mesh();
+			void setup();
 
-			Mesh(const aiMesh* mesh, Vector3 scale);
-
-			GLfloat	scale;
+			Texture* texture;
 	};
 }
 

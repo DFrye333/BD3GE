@@ -34,36 +34,37 @@ namespace BD3GE {
 			Vector3(0, 0, -500),
 			Color(Vector3(0, 0, 0), 0.75f),
 			Vector3(0, 0, 0),
-			new Mesh(duck->mMeshes[0], Vector3(1, 1, 1))
+			new Mesh(duck->mMeshes[0], Vector3(1, 1, 1)),
+			NULL
 		));*/
 
 		// Floor
+		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
+		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
 		add_object(new Object(
-			Vector3(-50, 50, 0),
-			Color(Vector3(0, 0.33f, 0)),
 			Vector3(0, 0, 0),
-			new SquareBrush(100, 100)
+			Vector3(0, 0, 0),
+			new Mesh(plane->mMeshes[0], wallTexture, textureShader, Vector3(50, 50, 1))
 		));
 
 		// Pillars
 		for (unsigned int i = 0; i < 121; ++i) {
 			add_object(new Object(
 				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
-				Color(Vector3(0, 0, 0.75f)),
 				Vector3(0, 0, 0),
-				new Mesh(plane->mMeshes[0], Vector3(1, 1, 1))
+				new SquareBrush(2, 2, Color(Vector3(0, 0.33f, 0)))
 			));
 		}
 
-		player = new Object(
+		this->player = new Object(
 			Vector3(5.0f, 5.0f, 0),
-			Color(Vector3(0, 0.66f, 0.33f)),
 			Vector3(0, 0, 0),
-			new CircularBrush(3, 5)
+			new CircularBrush(2.5, 10, Color(Vector3(0, 0.66f, 0.33f)))
 		);
 		add_object(player);
 
-		camera = new Camera(Vector3(0, 0, 60));
+		this->camera = new Camera(Vector3(0, 0, 60));
+		//camera->rotate(Vector3(-30, 0, 0));
 	}
 
 	Scene::Scene(std::vector<Object*> objects) {

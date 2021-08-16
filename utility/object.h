@@ -13,27 +13,27 @@
 #include "../utility/transform.h"
 #include "../utility/vector.h"
 #include "../video/mesh.h"
+#include "../video/renderable.h"
 #include "../video/shader.h"
+#include "../video/texture.h"
 
 namespace BD3GE {
 	class Object {
 		public:
 
 							Object();
-							Object(const Vector3 position, const Color color, const Vector3 velocity, const Drawable* drawable);
+							Object(const Vector3 position, const Vector3 velocity, Renderable* renderable);
 			virtual			~Object();
-			void			setup();
 			void			move();
 			void			scale(float scaler);
 			void			rotate(Vector3 angle);
-			virtual void	render(Transform view_projection_transform);
+			virtual void	render(Transform viewProjectionTransform);
 			void			set_position_X(float x)		{ position.v.g.x = x; }
 			void			set_position_Y(float y)		{ position.v.g.y = y; }
 			void			set_position_Z(float z)		{ position.v.g.z = z; }
 			float			get_position_X()		{ return position.v.g.x; }
 			float			get_position_Y()		{ return position.v.g.y; }
 			float			get_position_Z()		{ return position.v.g.z; }
-			Color&			get_color()				{ return color; }
 			void			set_velocity_X(float x);
 			void			set_velocity_Y(float y);
 			void			set_velocity_Z(float z);
@@ -49,16 +49,10 @@ namespace BD3GE {
 		protected:
 
 			Transform worldTransform;
-			Vector3	 position;
-			Color color;
+			Vector3	position;
 			Vector3 velocity;
-			float angle;
-			const Drawable* drawable;
-			Ogg* m_OGG;	// TODO: Encapsulate OGG-specific stuff inside a class (i.e. "Audio" object).
-			GLuint vao;
-			GLuint vboPosition;
-			GLuint iboPosition;
-			Shader* shader;
+			Ogg* ogg;	// TODO: Encapsulate OGG-specific stuff inside a class (i.e. "Audio" object).
+			Renderable* renderable;
 	};
 }
 

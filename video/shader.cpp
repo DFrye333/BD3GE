@@ -5,21 +5,21 @@ namespace BD3GE {
 	 * 	Shader class
 	 */
 
-	BD3GE::Shader::Shader() {
-		m_program_ID = create_program();
+	BD3GE::Shader::Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
+		programID = create_program(vertexShaderFilePath, fragmentShaderFilePath);
 	}
 
 	BD3GE::Shader::~Shader() {}
 
 	// Create a shader program composed of shader objects.
-	GLuint BD3GE::Shader::create_program(void) {
-		m_shader_objects.push_back(create_shader(GL_VERTEX_SHADER, "resource/shader/vertex.glsl"));
-		m_shader_objects.push_back(create_shader(GL_FRAGMENT_SHADER, "resource/shader/fragment.glsl"));
+	GLuint BD3GE::Shader::create_program(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
+		shaderObjects.push_back(create_shader(GL_VERTEX_SHADER, vertexShaderFilePath));
+		shaderObjects.push_back(create_shader(GL_FRAGMENT_SHADER, fragmentShaderFilePath));
 
 		GLuint program_ID = glCreateProgram();
 
-		for (size_t i = 0; i < m_shader_objects.size(); ++i) {
-			glAttachShader(program_ID, m_shader_objects[i]);
+		for (size_t i = 0; i < shaderObjects.size(); ++i) {
+			glAttachShader(program_ID, shaderObjects[i]);
 		}
 
 		glLinkProgram(program_ID);
@@ -36,11 +36,11 @@ namespace BD3GE {
 			delete[] information_log_string;
 		}
 
-		for (size_t i = 0; i < m_shader_objects.size(); ++i) {
-			glDetachShader(program_ID, m_shader_objects[i]);
+		for (size_t i = 0; i < shaderObjects.size(); ++i) {
+			glDetachShader(program_ID, shaderObjects[i]);
 		}
 
-		std::for_each(m_shader_objects.begin(), m_shader_objects.end(), glDeleteShader);
+		std::for_each(shaderObjects.begin(), shaderObjects.end(), glDeleteShader);
 
 		return program_ID;
 	}
@@ -105,6 +105,6 @@ namespace BD3GE {
 	}
 
 	GLuint BD3GE::Shader::get_program_ID(void) {
-		return m_program_ID;
+		return programID;
 	}
 }

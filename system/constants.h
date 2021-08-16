@@ -6,9 +6,16 @@
 namespace BD3GE {
 	const std::string 	WINDOW_TITLE = 	"BD3GE";
 
+#ifdef __linux__
+	// TODO: Come up with a more permanent location for this
 	const std::string	DEFAULT_SYSTEM_DIRECTORY	=	"/home/david/.local/share/BD3GE/";
+#elif _WIN32
+	// TODO: Come up with a more permanent location for this
+	const std::string	DEFAULT_SYSTEM_DIRECTORY	=	"./";
+#endif
 	const std::string	DEFAULT_LOG_DIRECTORY		=	"log/";
 	const std::string	DEFAULT_LOG_FILE			=	"BD3GE.log";
+	const std::string	DEFAULT_RESOURCE_DIRECTORY	=	"resources/";
 	const std::string	LOG_PRINT_INFORMATION		=	"(BD3GE | Information): ";
 	const std::string	LOG_PRINT_ERROR				=	"(BD3GE | Error): ";
 

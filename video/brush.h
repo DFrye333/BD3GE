@@ -4,19 +4,26 @@
 #include <cmath>
 #include <numbers>
 
+#include "../utility/color.h"
 #include "../utility/vector.h"
-#include "../video/drawable.h"
+#include "../video/renderable.h"
 
 namespace BD3GE {
-	class SquareBrush : public Drawable {
+	class Brush : public Renderable {
 		public:
-			SquareBrush(float width, float height);
+			Brush();
+			virtual void setup();
 	};
 
-	class CircularBrush : public Drawable {
+	class SquareBrush : public Brush {
 		public:
-			CircularBrush(float radius, int resolution);
+			SquareBrush(float width, float height, Color color);
+	};
+
+	class CircularBrush : public Brush {
+		public:
+			CircularBrush(float radius, int resolution, Color color);
 	};
 }
 
-#endif
+#endif // BD3GE_BRUSH_H

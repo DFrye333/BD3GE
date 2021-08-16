@@ -22,13 +22,13 @@ namespace BD3GE {
 	class Log {
 		public:
 
-					Log(std::string custom_log_directory = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY);
+					Log(std::string logFilePath = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY + DEFAULT_LOG_FILE);
 					~Log();
 			void	write(BD3GE::LOG_TYPE outputMode, std::string entry);
 
 		private:
 
-			std::ofstream	m_log_stream;
+			std::ofstream	log;
 	};
 }
 

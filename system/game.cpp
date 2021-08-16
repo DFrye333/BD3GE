@@ -33,7 +33,7 @@ namespace BD3GE {
 		glewExperimental = GL_TRUE;
 		glewInit();
 
-		this->scene = new Scene("resource/models/");
+		this->scene = new Scene(DEFAULT_RESOURCE_DIRECTORY + "models/");
 	}
 
 	Game::~Game() {
