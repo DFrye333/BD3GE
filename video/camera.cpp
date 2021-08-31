@@ -1,10 +1,6 @@
 #include "camera.h"
 
 namespace BD3GE {
-	/*
-	 *	Camera Class
-	 */
-
 	Camera::Camera(Vector3 position) {
 		viewportWidth = WINDOW_WIDTH;
 		viewportHeight = WINDOW_HEIGHT;
