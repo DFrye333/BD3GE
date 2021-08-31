@@ -7,7 +7,7 @@ namespace BD3GE {
 		public:
 
 			Message() {
-				m_data = NULL;
+				m_data = nullptr;
 			}
 
 			Message(T data) {
@@ -22,13 +22,13 @@ namespace BD3GE {
 
 			~Message() {
 				delete m_data;
-				m_data = NULL;
+				m_data = nullptr;
 			}
 
 			Message& operator=(const Message& source) {
 				if (this != &source) {
 					delete m_data;
-					m_data = NULL;
+					m_data = nullptr;
 
 					m_data = new T(*(source.m_data));
 				}

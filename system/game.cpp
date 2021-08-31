@@ -40,19 +40,19 @@ namespace BD3GE {
 		g_log.write(BD3GE::LOG_TYPE::INFO, "Shutting down BD3GE now...");
 
 		delete window;
-		window = NULL;
+		window = nullptr;
 
 		delete gl;
-		gl = NULL;
+		gl = nullptr;
 
 		delete al;
-		al = NULL;
+		al = nullptr;
 
 		delete input;
-		input = NULL;
+		input = nullptr;
 
 		delete scene;
-		scene = NULL;
+		scene = nullptr;
 	}
 
 	void Game::run() {

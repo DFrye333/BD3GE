@@ -11,13 +11,13 @@ namespace BD3GE {
 
 	Renderable::~Renderable() {
 		delete shader;
-		shader = NULL;
+		shader = nullptr;
 
 		delete[] vbo;
-		vbo = NULL;
+		vbo = nullptr;
 
 		delete[] ibo;
-		ibo = NULL;
+		ibo = nullptr;
 	}
 
 	void Renderable::render(Transform worldViewProjectionTransform) {

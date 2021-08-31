@@ -73,11 +73,11 @@ namespace BD3GE {
 
 	Scene::~Scene() {
 		delete camera;
-		camera = NULL;
+		camera = nullptr;
 
 		for (std::vector<Object*>::size_type i = 0; i != objects.size(); ++i) {
 			delete objects[i];
-			objects[i] = NULL;
+			objects[i] = nullptr;
 		}
 	}
 

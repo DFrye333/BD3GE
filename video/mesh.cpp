@@ -43,8 +43,9 @@ namespace BD3GE {
 	}
 
 	Mesh::~Mesh() {
-		delete texture;
-		texture = NULL;
+		// TODO: This is an aiMesh*, which is owned by an aiScene*
+		/*delete texture;
+		texture = nullptr;*/
 	}
 
 	void Mesh::setup() {
