@@ -13,7 +13,7 @@ namespace BD3GE {
 			Renderable();
 			Renderable(Shader* shader);
 			virtual ~Renderable();
-			virtual void render(Transform worldViewProjectionTransform);
+			virtual void render(Transform worldTransform, Transform viewProjectionTransform);
 
 			Shader* shader;
 			GLuint vaoHandle;

@@ -18,14 +18,15 @@ namespace BD3GE {
 		ibo = nullptr;
 	}
 
-	void Renderable::render(Transform worldViewProjectionTransform) {
+	void Renderable::render(Transform worldTransform, Transform viewProjectionTransform) {
 		// Setup for shader program.
 		glUseProgram(shader->get_program_ID());
 
 		GLfloat transformation_array[16];
-		worldViewProjectionTransform.to_float_array(transformation_array);
-
-		glUniformMatrix4fv(glGetUniformLocation(shader->get_program_ID(), "transformation_matrix"), 1, GL_TRUE, transformation_array);
+		worldTransform.to_float_array(transformation_array);
+		glUniformMatrix4fv(glGetUniformLocation(shader->get_program_ID(), "world_transform"), 1, GL_TRUE, transformation_array);
+		viewProjectionTransform.to_float_array(transformation_array);
+		glUniformMatrix4fv(glGetUniformLocation(shader->get_program_ID(), "view_projection_transform"), 1, GL_TRUE, transformation_array);
 
 		// Draw mesh using its VAO.
 		glBindTexture(GL_TEXTURE_2D, tboHandle);
