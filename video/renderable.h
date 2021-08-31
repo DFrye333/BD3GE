@@ -13,10 +13,8 @@ namespace BD3GE {
 			Renderable();
 			Renderable(Shader* shader);
 			virtual ~Renderable();
-			virtual void setup() = 0;
 			virtual void render(Transform worldViewProjectionTransform);
 
-		//protected:
 			Shader* shader;
 			GLuint vaoHandle;
 			GLuint tboHandle;
@@ -25,6 +23,9 @@ namespace BD3GE {
 			GLuint numVertices;
 			GLuint numIndices;
 			GLuint sizePerVertex;
+
+		protected:
+			virtual void setup() = 0;
 	};
 }
 

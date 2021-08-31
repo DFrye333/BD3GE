@@ -5,7 +5,7 @@ namespace BD3GE {
 		this->shader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
 	}
 
-	Renderable::Renderable(Shader* shader) {
+	Renderable::Renderable(Shader* shader) : vaoHandle(0), tboHandle(0), vbo(nullptr), ibo(nullptr), numVertices(0), numIndices(0), sizePerVertex(0) {
 		this->shader = shader;
 	}
 

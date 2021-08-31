@@ -3,6 +3,7 @@
 
 #include <assimp/Importer.hpp>
 #include <assimp/mesh.h>
+#include <assimp/texture.h>
 #include <assimp/vector3.h>
 #include <GL/glew.h>
 
@@ -17,11 +18,11 @@
 namespace BD3GE {
 	class Mesh : public Renderable {
 		public:
-			Mesh(const aiMesh* mesh, Texture* texture, Shader* shader, Vector3 scale);
+			Mesh(const aiMesh* mesh, aiTexture* texture, Shader* shader, Vector3 scale);
 			~Mesh();
 			void setup();
 
-			Texture* texture;
+			aiTexture* texture;
 	};
 }
 

@@ -1,7 +1,7 @@
 #include "mesh.h"
 
 namespace BD3GE {
-	Mesh::Mesh(const aiMesh* mesh, Texture* texture, Shader* shader, Vector3 scale) : Renderable(shader) {
+	Mesh::Mesh(const aiMesh* mesh, aiTexture* texture, Shader* shader, Vector3 scale) : Renderable(shader) {
 		g_log.write(BD3GE::LOG_TYPE::INFO, "Loading mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces...");
 
 		// Fill the VBO.
@@ -12,17 +12,9 @@ namespace BD3GE {
 			vbo[(sizePerVertex * i) + 0] = (GLfloat)(mesh->mVertices[i].x * scale.v.g.x);
 			vbo[(sizePerVertex * i) + 1] = (GLfloat)(mesh->mVertices[i].y * scale.v.g.y);
 			vbo[(sizePerVertex * i) + 2] = (GLfloat)(mesh->mVertices[i].z * scale.v.g.z);
+			vbo[(sizePerVertex * i) + 3] = (GLfloat)(mesh->mTextureCoords[0][i].x);
+			vbo[(sizePerVertex * i) + 4] = (GLfloat)(mesh->mTextureCoords[0][i].y);
 		}
-
-		// Temporary - only works for squares!
-		vbo[3] = 1.0f;
-		vbo[4] = 0.0f;
-		vbo[8] = 0.0f;
-		vbo[9] = 1.0f;
-		vbo[13] = 0.0f;
-		vbo[14] = 0.0f;
-		vbo[18] = 1.0f;
-		vbo[19] = 1.0f;
 
 		// Determines the total number of indices.
 		const unsigned int num_faces = mesh->mNumFaces;
@@ -39,7 +31,7 @@ namespace BD3GE {
 			}
 		}
 
-		this->texture = texture;
+		setup();
 	}
 
 	Mesh::~Mesh() {
@@ -64,11 +56,13 @@ namespace BD3GE {
 		glBufferData(GL_ARRAY_BUFFER, sizePerVertex * numVertices * sizeof(GLfloat), vbo, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboHandle);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), ibo, GL_STATIC_DRAW);
+
+		// Positions
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), 0);
 		glEnableVertexAttribArray(0);
 
-		// Texture setup.
-		if (texture != NULL && texture->data != NULL) {
+		// Textures
+		/*if (texture != NULL && texture->pcData != NULL) {
 			glGenTextures(1, &tboHandle);
 
 			glActiveTexture(GL_TEXTURE0);
@@ -79,17 +73,17 @@ namespace BD3GE {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->width, texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->mWidth, texture->mHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->pcData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 			glEnableVertexAttribArray(2);
-		}
+		}*/
 
 		// Cleanup for VAO.
-		//glBindVertexArray(0);
-		//glDisableVertexAttribArray(0);
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		/*glBindVertexArray(0);
+		glDisableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 	}
 }

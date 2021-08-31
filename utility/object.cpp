@@ -1,9 +1,10 @@
 #include "object.h"
 
 namespace BD3GE {
-	Object::Object() {}
+	Object::Object() : renderable(nullptr), ogg(nullptr) {}
 
 	Object::Object(const Vector3 position, const Vector3 velocity, Renderable* renderable) {
+	Object::Object(const Vector3 position, const Vector3 velocity, Renderable* renderable) : ogg(nullptr) {
 		this->position.v.g.x = position.v.g.x;
 		this->position.v.g.y = position.v.g.y;
 		this->position.v.g.z = position.v.g.z;
@@ -15,18 +16,19 @@ namespace BD3GE {
 		worldTransform.translate(this->position);
 
 		this->renderable = renderable;
-		renderable->setup();
 
 		// TODO: Revisit audio stuff later!
 		// std::string fileName = std::string("/home/david/Development/Eclipse Workspace/Game Prototype 0/resource/audio/DH.ogg");
 		// ogg = new Ogg(fileName);
 		// ogg->play();
-
 	}
 
 	Object::~Object() {
 		delete renderable;
-		renderable = NULL;
+		renderable = nullptr;
+
+		delete ogg;
+		ogg = nullptr;
 	}
 
 	void Object::move(void) {

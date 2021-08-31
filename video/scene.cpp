@@ -5,8 +5,7 @@ namespace BD3GE {
 	 *	Scene class
 	 */
 
-	Scene::Scene(const std::string modelsDirectory)
-	{
+	Scene::Scene(const std::string modelsDirectory) {
 		Assimp::Importer planeImporter;
 		Assimp::Importer duckImporter;
 
@@ -19,6 +18,7 @@ namespace BD3GE {
 			aiProcess_FlipWindingOrder;
 
 		const aiScene* plane = planeImporter.ReadFile(modelsDirectory + "plane.dae", importer_options);
+		const aiScene* cube = planeImporter.ReadFile(modelsDirectory + "cube.dae", importer_options);
 		const aiScene* duck = duckImporter.ReadFile(modelsDirectory + "duck.dae", importer_options);
 
 		// Ensure that asset importing succeeded.
@@ -29,22 +29,30 @@ namespace BD3GE {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
+		// TODO: These should be owned by renderables.
+		Shader* defaultShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
+		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
+		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
+
 		// Scary duck
-		/*add_object(new Object(
+		this->scaryDuck = add_object(new Object(
 			Vector3(0, 0, -500),
-			Color(Vector3(0, 0, 0), 0.75f),
 			Vector3(0, 0, 0),
-			new Mesh(duck->mMeshes[0], Vector3(1, 1, 1)),
-			NULL
-		));*/
+			new Mesh(duck->mMeshes[0], nullptr, defaultShader, Vector3(1, 1, 1))
+		));
+
+		// Cube
+		add_object(new Object(
+			Vector3(-60, 0, 0),
+			Vector3(0, 0, 0),
+			new Mesh(cube->mMeshes[0], nullptr, defaultShader, Vector3(1, 1, 1))
+		));
 
 		// Floor
-		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
-		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
 		add_object(new Object(
+			Vector3(-10, 10, 0),
 			Vector3(0, 0, 0),
-			Vector3(0, 0, 0),
-			new Mesh(plane->mMeshes[0], wallTexture, textureShader, Vector3(50, 50, 1))
+			new SquareBrush(20, 20, textureShader, wallTexture)
 		));
 
 		// Pillars
@@ -52,16 +60,15 @@ namespace BD3GE {
 			add_object(new Object(
 				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
 				Vector3(0, 0, 0),
-				new SquareBrush(2, 2, Color(Vector3(0, 0.33f, 0)))
+				new SquareBrush(2, 2, Color(Vector3(0.0f, 0.5f, 0.0f)))
 			));
 		}
 
-		this->player = new Object(
+		this->player = add_object(new Object(
 			Vector3(5.0f, 5.0f, 0),
 			Vector3(0, 0, 0),
 			new CircularBrush(2.5, 10, Color(Vector3(0, 0.66f, 0.33f)))
-		);
-		add_object(player);
+		));
 
 		this->camera = new Camera(Vector3(0, 0, 60));
 		//camera->rotate(Vector3(-30, 0, 0));
@@ -81,8 +88,9 @@ namespace BD3GE {
 		}
 	}
 
-	void Scene::add_object(Object* object) {
+	Object* Scene::add_object(Object* object) {
 		objects.push_back(object);
+		return object;
 	}
 
 	void Scene::tick(Input* input) {
@@ -141,6 +149,8 @@ namespace BD3GE {
 		for (std::vector<Object*>::size_type i = 0; i < objects.size(); ++i) {
 			objects[i]->move();
 		}
+
+		scaryDuck->rotate(Vector3(0, 0.001, 0));
 	}
 
 	void Scene::render(void) {

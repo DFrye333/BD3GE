@@ -7,17 +7,24 @@
 #include "../utility/color.h"
 #include "../utility/vector.h"
 #include "../video/renderable.h"
+#include "../video/shader.h"
+#include "../video/texture.h"
 
 namespace BD3GE {
 	class Brush : public Renderable {
 		public:
 			Brush();
+			virtual ~Brush();
+
+			Texture* texture;
+		protected:
 			virtual void setup();
 	};
 
 	class SquareBrush : public Brush {
 		public:
 			SquareBrush(float width, float height, Color color);
+			SquareBrush(float width, float height, Shader* shader, Texture* texture);
 	};
 
 	class CircularBrush : public Brush {

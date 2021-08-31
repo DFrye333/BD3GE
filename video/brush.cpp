@@ -1,9 +1,13 @@
 #include "brush.h"
 
 namespace BD3GE {
-	Brush::Brush() {
-		sizePerVertex = 6;
+	Brush::Brush() : texture(nullptr) {}
+
+	Brush::~Brush() {
+		delete texture;
+		texture = nullptr;
 	}
+
 	void Brush::setup() {
 		// Generate VAO.
 		glGenVertexArrays(1, &vaoHandle);
@@ -24,13 +28,10 @@ namespace BD3GE {
 		// Positions
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), 0);
 		glEnableVertexAttribArray(0);
-
-		// Colors
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
 	}
 
 	SquareBrush::SquareBrush(float width, float height, Color color) {
+		sizePerVertex = 6;
 		numVertices = 4;
 		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
 
@@ -71,9 +72,80 @@ namespace BD3GE {
 		ibo[3] = (GLuint)0;
 		ibo[4] = (GLuint)2;
 		ibo[5] = (GLuint)3;
+
+		setup();
+
+		// Colors
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
+	}
+
+	SquareBrush::SquareBrush(float width, float height, Shader* shader, Texture* texture) {
+		sizePerVertex = 5;
+		numVertices = 4;
+		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
+
+		vbo[0] = (GLfloat)0;
+		vbo[1] = (GLfloat)0;
+		vbo[2] = (GLfloat)0;
+		vbo[3] = 0.0f;
+		vbo[4] = 1.0f;
+
+		vbo[5] = (GLfloat)width;
+		vbo[6] = (GLfloat)0;
+		vbo[7] = (GLfloat)0;
+		vbo[8] = 1.0f;
+		vbo[9] = 1.0f;
+
+		vbo[10] = (GLfloat)width;
+		vbo[11] = (GLfloat)(-height);
+		vbo[12] = (GLfloat)0;
+		vbo[13] = 1.0f;
+		vbo[14] = 0.0f;
+
+		vbo[15] = (GLfloat)0;
+		vbo[16] = (GLfloat)(-height);
+		vbo[17] = (GLfloat)0;
+		vbo[18] = 0.0f;
+		vbo[19] = 0.0f;
+
+		numIndices = 6;
+		ibo = new GLuint[(GLuint)numIndices];
+
+		ibo[0] = (GLuint)0;
+		ibo[1] = (GLuint)1;
+		ibo[2] = (GLuint)2;
+		ibo[3] = (GLuint)0;
+		ibo[4] = (GLuint)2;
+		ibo[5] = (GLuint)3;
+
+		this->shader = shader;
+		this->texture = texture;
+
+		setup();
+
+		// Textures
+		if (texture != NULL && texture->data != NULL) {
+			glGenTextures(1, &tboHandle);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tboHandle);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->width, texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture->data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(2);
+		}
 	}
 
 	CircularBrush::CircularBrush(float radius, int resolution, Color color) {
+		sizePerVertex = 6;
 		numVertices = (4 * resolution) + 1;
 		vbo = new GLfloat[sizePerVertex * GLuint(numVertices)];
 
@@ -105,5 +177,13 @@ namespace BD3GE {
 			ibo[(3 * i) + 1] = (GLuint)(numVertices - i);
 			ibo[(3 * i) + 2] = (GLuint)(numVertices - i - 1);
 		}
+
+		this->shader = shader;
+
+		setup();
+
+		// Colors
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
 	}
 }

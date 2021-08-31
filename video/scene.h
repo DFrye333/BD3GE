@@ -23,20 +23,20 @@
 namespace BD3GE {
 	class Scene {
 		public:
-
-							Scene(const std::string modelsDirectory);
-							~Scene();
-							Scene(std::vector<Object*> objects);
-			void 			add_object(Object* object);
-			void			tick(Input* input);
-			void 			render(void);
-			Camera* 		getCamera(void);
+			Scene(const std::string modelsDirectory);
+			~Scene();
+			Scene(std::vector<Object*> objects);
+			Object* add_object(Object* object);
+			void tick(Input* input);
+			void render(void);
+			Camera* getCamera(void);
 
 		private:
 
-			std::vector<Object*>	objects;
-			Camera*					camera;
-			Object*					player;
+			std::vector<Object*> objects;
+			Camera* camera;
+			Object* player;
+			Object* scaryDuck;
 	};
 }
 
