@@ -26,6 +26,7 @@ namespace BD3GE {
 			virtual			~Object();
 			void			move();
 			void			scale(float scaler);
+			void			translate(Vector3 translation);
 			void			rotate(Vector3 angle);
 			virtual void	render(Transform viewProjectionTransform);
 			void			set_position_X(float x)		{ position.v.g.x = x; }

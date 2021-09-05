@@ -17,10 +17,11 @@ namespace BD3GE {
 			void	handler(BD3GE::Window::InputEvent input_event);
 			void	set_key_state(BD3GE::KEY_CODE key, bool state);
 			bool	get_key_state(BD3GE::KEY_CODE key);
+			bool	consume_input(BD3GE::KEY_CODE key);
 
 		protected:
 
-			std::map<BD3GE::KEY_CODE, bool>	m_keys;
+			std::map<BD3GE::KEY_CODE, bool>	keys;
 	};
 }
 

@@ -118,16 +118,16 @@ namespace BD3GE {
 			player->set_velocity_Z(PLAYER_SPEED);
 		}
 
-		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::J)) {
 			player->rotate(Vector3(0, 0, 0.01));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::L)) {
 			player->rotate(Vector3(0, 0, -0.01));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::I)) {
 			player->rotate(Vector3(-0.01, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::K)) {
 			player->rotate(Vector3(0.01, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON)) {
@@ -137,12 +137,25 @@ namespace BD3GE {
 			player->rotate(Vector3(0, -0.01, 0));
 		}
 
-		if (!input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELDOWN) && !input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELUP)) {
-			camera->set_velocity_Z(0);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELUP)) {
-			camera->set_velocity_Z(-PLAYER_SPEED);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_WHEELDOWN)) {
-			camera->set_velocity_Z(PLAYER_SPEED);
+		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
+			camera->translate(Vector3(-CAMERA_SPEED, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
+			camera->translate(Vector3(CAMERA_SPEED, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
+			camera->translate(Vector3(0, CAMERA_SPEED, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
+			camera->translate(Vector3(0, -CAMERA_SPEED, 0));
+		}
+		bool mouseWheelUp = input->consume_input(BD3GE::KEY_CODE::MOUSE_WHEELUP);
+		bool mouseWheelDown = input->consume_input(BD3GE::KEY_CODE::MOUSE_WHEELDOWN);
+		if (mouseWheelUp) {
+			camera->translate(Vector3(0, 0, 2 * -CAMERA_SPEED));
+		}
+		else if (mouseWheelDown) {
+			camera->translate(Vector3(0, 0, 2 * CAMERA_SPEED));
 		}
 
 		camera->move();

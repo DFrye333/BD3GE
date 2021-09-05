@@ -1,11 +1,6 @@
 #include "input.h"
 
-namespace BD3GE
-{
-	/*
-	 *	Input class
-	 */
-
+namespace BD3GE {
 	void Input::handler(BD3GE::Window::InputEvent input_event) {
 		for (const auto& [key, state] : input_event.key_state_map) {
 			set_key_state(key, state);
@@ -21,10 +16,16 @@ namespace BD3GE
 	}
 
 	void Input::set_key_state(BD3GE::KEY_CODE key, bool state) {
-		m_keys[key] = state;
+		keys[key] = state;
 	}
 
 	bool Input::get_key_state(BD3GE::KEY_CODE key) {
-		return m_keys[key];
+		return keys[key];
+	}
+
+	bool Input::consume_input(BD3GE::KEY_CODE key) {
+		bool key_state = keys[key];
+		keys[key] = false;
+		return key_state;
 	}
 }
