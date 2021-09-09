@@ -45,7 +45,7 @@ namespace BD3GE {
 	}
 
 	void Camera::set_viewport(const unsigned int viewport_width, const unsigned int viewport_height) {
-		this->viewportWidth = viewportWidth;
-		this->viewportHeight = viewportHeight;
+		this->viewport_width = viewport_width;
+		this->viewport_height = viewport_height;
 	}
 }
