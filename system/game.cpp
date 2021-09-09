@@ -18,7 +18,7 @@ namespace BD3GE {
 #endif
 				g_log.write(BD3GE::LOG_TYPE::ERR, "System directory creation failure.");
 			}
-			}
+		}
 		closedir(default_system_directory_stream);
 
 		// The below initialization order matters! For instance, if m_XWindow is placed after (and therefore initialized after) GL, the OpenGL context is not properly set up.
@@ -104,7 +104,7 @@ namespace BD3GE {
 		input->handler(input_event);
 
 		// Pass reshape events.
-		Message< std::pair<int, int> > reshape_message = window->pull_reshape_message();
+		Message<std::pair<int, int>> reshape_message = window->pull_reshape_message();
 		if (reshape_message.get_data()) {
 			gl->reshape(reshape_message.get_data()->first, reshape_message.get_data()->second);
 			scene->getCamera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());

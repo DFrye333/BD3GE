@@ -39,13 +39,13 @@ namespace BD3GE {
 		worldTransform.translate(position);
 	}
 
-	void Object::scale(float scaler) {
 	void Object::translate(Vector3 translation) {
 		this->position.v.g.x += translation.v.g.x;
 		this->position.v.g.y += translation.v.g.y;
 		this->position.v.g.z += translation.v.g.z;
 	}
 
+	void Object::scale(Vector3 scaler) {
 		worldTransform.scale(scaler);
 	}
 

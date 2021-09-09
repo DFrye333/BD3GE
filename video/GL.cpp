@@ -1,10 +1,6 @@
 #include "GL.h"
 
 namespace BD3GE {
-	/*
-	 * 	GL class
-	 */
-
 	GL::GL() {
 		// Set the clear color of the screen.
 		Vector3 dark(0.25f, 0.25f, 0.25f);
@@ -34,9 +30,9 @@ namespace BD3GE {
 
 	void GL::reshape(GLsizei width, GLsizei height) {
 		if (width > 0 && width < SCREEN_WIDTH && height > 0 && height < SCREEN_HEIGHT) {
-			viewportWidth = width;
-			viewportHeight = height;
-			glViewport(0, 0, viewportWidth, viewportHeight);
+			viewport_width = width;
+			viewport_height = height;
+			glViewport(0, 0, viewport_width, viewport_height);
 		}
 	}
 
@@ -67,10 +63,10 @@ namespace BD3GE {
 	}
 
 	unsigned int GL::get_viewport_width(void) {
-		return viewportWidth;
+		return viewport_width;
 	}
 
 	unsigned int GL::get_viewport_height(void) {
-		return viewportHeight;
+		return viewport_height;
 	}
 }

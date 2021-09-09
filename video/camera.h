@@ -22,9 +22,6 @@ namespace BD3GE {
 
 		private:
 
-			Vector3 orientation;
-			Transform projectionTransform;
-			Transform viewTransform;
 			unsigned int viewport_width;
 			unsigned int viewport_height;
 	};

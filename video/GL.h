@@ -14,7 +14,7 @@ namespace BD3GE {
 
 							GL();
 			void			reshape(int x, int y);
-			const void print_info(void);
+			const void		print_info(void);
 			const GLubyte*	get_vendor(void);
 			const GLubyte*	get_renderer(void);
 			const GLubyte*	get_version(void);
@@ -24,8 +24,8 @@ namespace BD3GE {
 
 		private:
 
-			unsigned int	viewportWidth;
-			unsigned int	viewportHeight;
+			unsigned int	viewport_width;
+			unsigned int	viewport_height;
 	};
 }
 

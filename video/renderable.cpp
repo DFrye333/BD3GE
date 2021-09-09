@@ -18,7 +18,7 @@ namespace BD3GE {
 		ibo = nullptr;
 	}
 
-	void Renderable::render(Transform worldTransform, Transform viewProjectionTransform) {
+	void Renderable::render(Transform worldTransform, Transform viewProjectionTransform) const {
 		// Setup for shader program.
 		glUseProgram(shader->get_program_ID());
 
