@@ -3,7 +3,8 @@
 namespace BD3GE {
 	Object::Object() : renderable(nullptr), ogg(nullptr) {}
 
-	Object::Object(const Vector3 position, const Vector3 velocity, Renderable* renderable) {
+	Object::Object(const Vector3 position, const Vector3 velocity) : Object(position, velocity, nullptr) {}
+
 	Object::Object(const Vector3 position, const Vector3 velocity, Renderable* renderable) : ogg(nullptr) {
 		this->position.v.g.x = position.v.g.x;
 		this->position.v.g.y = position.v.g.y;

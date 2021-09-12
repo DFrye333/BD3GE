@@ -22,6 +22,7 @@ namespace BD3GE {
 		public:
 
 							Object();
+							Object(const Vector3 position, const Vector3 velocity);
 							Object(const Vector3 position, const Vector3 velocity, Renderable* renderable);
 			virtual			~Object();
 			void			move();
@@ -29,9 +30,11 @@ namespace BD3GE {
 			void			scale(Vector3 scaler);
 			void			rotate(Vector3 angle);
 			virtual void	render(Transform viewProjectionTransform);
+			void			set_position(Vector3 position)	{ this->position = position; }
 			void			set_position_X(float x)			{ position.v.g.x = x; }
 			void			set_position_Y(float y)			{ position.v.g.y = y; }
 			void			set_position_Z(float z)			{ position.v.g.z = z; }
+			Vector3			get_position()			{ return position; }
 			float			get_position_X()		{ return position.v.g.x; }
 			float			get_position_Y()		{ return position.v.g.y; }
 			float			get_position_Z()		{ return position.v.g.z; }
