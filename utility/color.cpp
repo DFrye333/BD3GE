@@ -19,4 +19,8 @@ namespace BD3GE {
 	}
 
 	Color::Color(int red, int green, int blue) : Color(red, green, blue, 1.0f) {}
+
+	std::ostream& operator<<(std::ostream& out, const Color& color) {
+		return out << "(" << color.rgb.v.c.r << ", " << color.rgb.v.c.g << ", " << color.rgb.v.c.b << ", " << color.a << ")";
+	}
 }

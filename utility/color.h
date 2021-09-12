@@ -13,6 +13,7 @@ namespace BD3GE {
 			Color(Vector3 rgb);
 			Color(int red, int green, int blue, float alpha);
 			Color(int red, int green, int blue);
+			friend std::ostream& operator<<(std::ostream& out, const Color& color);
 
 			Vector3 rgb;
 			float a;
