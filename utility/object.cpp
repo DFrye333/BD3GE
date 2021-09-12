@@ -54,7 +54,9 @@ namespace BD3GE {
 	}
 
 	void Object::render(Transform viewProjectionTransform) {
-		renderable->render(viewProjectionTransform * worldTransform);
+		if (renderable != nullptr) {
+			renderable->render(worldTransform, viewProjectionTransform);
+		}
 	}
 
 	void Object::set_velocity_X(float x) {
