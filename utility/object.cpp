@@ -44,6 +44,8 @@ namespace BD3GE {
 		this->position.v.g.x += translation.v.g.x;
 		this->position.v.g.y += translation.v.g.y;
 		this->position.v.g.z += translation.v.g.z;
+
+		worldTransform.translate(position);
 	}
 
 	void Object::scale(Vector3 scaler) {
