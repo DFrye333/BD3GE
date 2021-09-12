@@ -144,6 +144,10 @@ namespace BD3GE {
 		return Vector3(*this) /= other;
 	}
 
+	const Vector3 Vector3::operator-() {
+		return Vector3(*this) *= -1;
+	}
+
 	std::ostream& operator<<(std::ostream& out, const Vector3& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ", " << vec.v.a[2] << ")";
 	}
