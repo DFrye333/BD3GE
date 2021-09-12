@@ -130,10 +130,10 @@ namespace BD3GE {
 		if (input->get_key_state(BD3GE::KEY_CODE::K)) {
 			player->rotate(Vector3(0.01, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::U)) {
 			player->rotate(Vector3(0, 0.01, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::O)) {
 			player->rotate(Vector3(0, -0.01, 0));
 		}
 
@@ -149,13 +149,27 @@ namespace BD3GE {
 		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
 			camera->translate(Vector3(0, -CAMERA_SPEED, 0));
 		}
-		bool mouseWheelUp = input->consume_input(BD3GE::KEY_CODE::MOUSE_WHEELUP);
-		bool mouseWheelDown = input->consume_input(BD3GE::KEY_CODE::MOUSE_WHEELDOWN);
+		bool mouseWheelUp = input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELUP);
+		bool mouseWheelDown = input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELDOWN);
 		if (mouseWheelUp) {
 			camera->translate(Vector3(0, 0, 2 * -CAMERA_SPEED));
 		}
 		else if (mouseWheelDown) {
 			camera->translate(Vector3(0, 0, 2 * CAMERA_SPEED));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON) && input->is_mouse_position_fresh) {
+			std::pair<short, short> currentMousePosition = input->get_current_mouse_position();
+			std::pair<short, short> previousMousePosition = input->get_previous_mouse_position();
+			Vector3 currentMouseVector = Vector3(-currentMousePosition.first, currentMousePosition.second, 0);
+			Vector3 previousMouseVector = Vector3(-previousMousePosition.first, previousMousePosition.second, 0);
+			Vector3 mouseTranslation = currentMouseVector - previousMouseVector;
+			if (mouseTranslation.get_magnitude() < 10) {
+				camera->translate(mouseTranslation * 0.1);
+			}
+		}
+
+		if (input->get_key_state(BD3GE::KEY_CODE::R)) {
+			camera->set_position(Vector3(0, 0, 60));
 		}
 
 		camera->move();

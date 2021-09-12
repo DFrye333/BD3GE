@@ -2,6 +2,7 @@
 #define BD3GE_SCENE_H
 
 #include <deque>
+#include <utility>
 #include <vector>
 
 #include <assimp/mesh.h>
