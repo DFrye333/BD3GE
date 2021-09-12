@@ -173,8 +173,9 @@ namespace BD3GE {
 		}
 
 		camera->move();
-		for (std::vector<Object*>::size_type i = 0; i < objects.size(); ++i) {
-			objects[i]->move();
+		for (auto& object : objects) {
+			object->move();
+		}
 		}
 
 		scaryDuck->rotate(Vector3(0, 0.001, 0));
@@ -184,8 +185,9 @@ namespace BD3GE {
 		// Clear the color buffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (std::vector<Object*>::size_type i = 0; i != objects.size(); ++i) {
-			objects[i]->render(camera->get_view_projection_transform());
+		for (auto& object : objects) {
+			object->render(camera->get_view_projection_transform());
+		}
 		}
 	}
 
