@@ -421,8 +421,12 @@ namespace BD3GE {
 				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
 				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
 			case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
-			//case WM_MOUSEMOVE: data->window->set_mouse_cursor_visibility(false); break;
-			//case WM_MOUSEMOVE: RECT window; GetWindowRect(hwnd, &window); SetCursorPos((window.right - window.left) / 2, (window.bottom - window.top) / 2); break;
+			case WM_MOUSEMOVE:
+				{
+					input_event.mouse_position.first = LOWORD(lParam); // X
+					input_event.mouse_position.second = HIWORD(lParam); // Y
+				}
+				break;
 			case WM_SIZE:
 				BD3GE::Window::ReshapeEvent reshape_event;
 				reshape_event.width = LOWORD(lParam);
@@ -435,9 +439,7 @@ namespace BD3GE {
 			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
 		}
 
-		if (!input_event.key_state_map.empty()) {
-			data->window->input_queue->push(input_event);
-		}
+		data->window->input_queue->push(input_event);
 
 		return EXIT_SUCCESS;
 	}
@@ -627,12 +629,11 @@ namespace BD3GE {
 		ReleaseDC(window_handle, display_context);
 	}
 
-	BD3GE::Window::InputEvent WinAPIWindow::pull_input_event(void) {
-		InputEvent input_event;
+	BD3GE::Window::InputEvent* WinAPIWindow::pull_input_event(void) {
+		InputEvent* input_event = NULL;
 
 		if (!input_queue->empty()) {
-			InputEvent* ie = input_queue->front().get_data();
-			input_event.key_state_map = ie->key_state_map;
+			input_event = input_queue->front().get_data();
 			input_queue->pop();
 		}
 

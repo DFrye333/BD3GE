@@ -21,7 +21,6 @@ namespace BD3GE {
 		}
 		closedir(default_system_directory_stream);
 
-		// The below initialization order matters! For instance, if m_XWindow is placed after (and therefore initialized after) GL, the OpenGL context is not properly set up.
 		// TODO: Consider platform independence here.
 		this->window = window;
 		window->set_mouse_cursor_visibility(false);
@@ -100,8 +99,10 @@ namespace BD3GE {
 		window->message_listener();
 
 		// Pass input events.
-		BD3GE::Window::InputEvent input_event = window->pull_input_event();
-		input->handler(input_event);
+		BD3GE::Window::InputEvent* input_event = window->pull_input_event();
+		if (input_event != NULL) {
+			input->handle(input_event);
+		}
 
 		// Pass reshape events.
 		Message<std::pair<int, int>> reshape_message = window->pull_reshape_message();

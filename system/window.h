@@ -3,10 +3,10 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <string>
-#include <queue>
-#include <utility>
 #include <map>
+#include <queue>
+#include <string>
+#include <utility>
 
 #include <GL/glew.h>
 
@@ -31,7 +31,9 @@ namespace BD3GE {
 		public:
 
 			typedef struct InputEvent {
+				// TODO: Make this a set?
 				std::map<BD3GE::KEY_CODE, bool> key_state_map;
+				std::pair<short, short> mouse_position;
 			} InputEvent;
 			typedef struct ReshapeEvent {
 				uint16_t width;
@@ -41,12 +43,13 @@ namespace BD3GE {
 			virtual 											~Window() {};
 			virtual void										message_listener() = 0;
 			virtual void										swap_buffers() = 0;
-			virtual InputEvent									pull_input_event() = 0;
+			virtual InputEvent*									pull_input_event() = 0;
 			virtual Message<std::pair<int, int>>				pull_reshape_message() = 0;
 			virtual void										set_mouse_cursor_visibility(bool shouldBeVisible) = 0;
 
 	//protected:
 
+		// TODO: Should the input class own this queue?
 		std::queue<Message<InputEvent>>* input_queue;
 		std::queue<Message<ReshapeEvent>>* reshape_queue;
 	};
@@ -100,7 +103,7 @@ namespace BD3GE {
 		~WinAPIWindow();
 		void											message_listener();
 		void											swap_buffers();
-		Window::InputEvent								pull_input_event();
+		Window::InputEvent*								pull_input_event();
 		Message<std::pair<int, int>>					pull_reshape_message();
 		void											set_mouse_cursor_visibility(bool shouldBeVisible);
 
