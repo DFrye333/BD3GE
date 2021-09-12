@@ -21,11 +21,14 @@ namespace BD3GE {
 			const GLubyte*	get_shading_language_version();
 			unsigned int	get_viewport_width();
 			unsigned int	get_viewport_height();
+			void			set_wireframe_mode(bool should_enable_wireframe_mode);
+			void			toggle_wireframe_mode();
 
 		private:
 
 			unsigned int	viewport_width;
 			unsigned int	viewport_height;
+			bool			is_wireframe_mode_enabled;
 	};
 }
 

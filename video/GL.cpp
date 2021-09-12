@@ -1,7 +1,7 @@
 #include "GL.h"
 
 namespace BD3GE {
-	GL::GL() {
+	GL::GL() : is_wireframe_mode_enabled(false) {
 		// Set the clear color of the screen.
 		Vector3 dark(0.25f, 0.25f, 0.25f);
 		glClearColor(dark.v.c.r, dark.v.c.g, dark.v.c.b, 1.0f);
@@ -68,5 +68,17 @@ namespace BD3GE {
 
 	unsigned int GL::get_viewport_height(void) {
 		return viewport_height;
+	}
+
+	void GL::set_wireframe_mode(bool should_enable_wireframe_mode) {
+		glPolygonMode(GL_FRONT, should_enable_wireframe_mode ? GL_LINE : GL_FILL);
+		glPolygonMode(GL_BACK, should_enable_wireframe_mode ? GL_LINE : GL_FILL);
+
+		is_wireframe_mode_enabled = should_enable_wireframe_mode;
+	}
+
+	void GL::toggle_wireframe_mode() {
+		is_wireframe_mode_enabled = !is_wireframe_mode_enabled;
+		set_wireframe_mode(is_wireframe_mode_enabled);
 	}
 }
