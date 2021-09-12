@@ -74,6 +74,11 @@ namespace BD3GE {
 				return;
 			}
 
+			// Enables toggling of wireframe mode.
+			if (input->consume_key_input(BD3GE::KEY_CODE::F3)) {
+				gl->toggle_wireframe_mode();
+			}
+
 			// Check logic timer.
 			if (logic_timer.is_due()) {
 				// Process a logic tick.
