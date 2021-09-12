@@ -31,7 +31,7 @@ namespace BD3GE {
 
 		private:
 
-			Matrix4 m_matrix;
+			Matrix4 matrix;
 	};
 }
 
