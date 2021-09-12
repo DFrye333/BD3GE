@@ -35,3 +35,7 @@ Debug/*
 #=== Custom entries ===#
 x64/*
 Release/*
+resources/models
+resources/textures
+log
+libraries
