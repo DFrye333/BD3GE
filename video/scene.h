@@ -28,16 +28,20 @@ namespace BD3GE {
 			~Scene();
 			Scene(std::vector<Object*> objects);
 			Object* add_object(Object* object);
+			Object* add_light(Object* light);
 			void tick(Input* input);
 			void render(void);
 			Camera* getCamera(void);
 
 		private:
 
+			Shader* lightingShader;
 			std::vector<Object*> objects;
+			std::vector<Object*> lights;
 			Camera* camera;
 			Object* player;
 			Object* scaryDuck;
+			Object* light;
 	};
 }
 

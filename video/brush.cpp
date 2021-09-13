@@ -30,38 +30,58 @@ namespace BD3GE {
 		glEnableVertexAttribArray(0);
 	}
 
-	SquareBrush::SquareBrush(float width, float height, Color color) {
-		sizePerVertex = 6;
+	SquareBrush::SquareBrush(float width, float height, Shader* shader, Color color) {
+		sizePerVertex = 10;
 		numVertices = 4;
 		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
 
-		vbo[0] = (GLfloat)0;
-		vbo[1] = (GLfloat)0;
+		// Top-left
+		vbo[0] = (GLfloat)(-width / 2);
+		vbo[1] = (GLfloat)(height / 2);
 		vbo[2] = (GLfloat)0;
 		vbo[3] = (GLfloat)color.rgb.v.c.r;
 		vbo[4] = (GLfloat)color.rgb.v.c.g;
 		vbo[5] = (GLfloat)color.rgb.v.c.b;
+		vbo[6] = (GLfloat)color.a;
+		vbo[7] = 0;
+		vbo[8] = 0;
+		vbo[9] = 1;
 
-		vbo[6] = (GLfloat)width;
-		vbo[7] = (GLfloat)0;
-		vbo[8] = (GLfloat)0;
-		vbo[9] = (GLfloat)color.rgb.v.c.r;
-		vbo[10] = (GLfloat)color.rgb.v.c.g;
-		vbo[11] = (GLfloat)color.rgb.v.c.b;
+		// Top-right
+		vbo[10] = (GLfloat)(width / 2);
+		vbo[11] = (GLfloat)(height / 2);
+		vbo[12] = (GLfloat)0;
+		vbo[13] = (GLfloat)color.rgb.v.c.r;
+		vbo[14] = (GLfloat)color.rgb.v.c.g;
+		vbo[15] = (GLfloat)color.rgb.v.c.b;
+		vbo[16] = (GLfloat)color.a;
+		vbo[17] = 0;
+		vbo[18] = 0;
+		vbo[19] = 1;
 
-		vbo[12] = (GLfloat)width;
-		vbo[13] = (GLfloat)(-height);
-		vbo[14] = (GLfloat)0;
-		vbo[15] = (GLfloat)color.rgb.v.c.r;
-		vbo[16] = (GLfloat)color.rgb.v.c.g;
-		vbo[17] = (GLfloat)color.rgb.v.c.b;
+		// Bottom-right
+		vbo[20] = (GLfloat)(width / 2);
+		vbo[21] = (GLfloat)(-height / 2);
+		vbo[22] = (GLfloat)0;
+		vbo[23] = (GLfloat)color.rgb.v.c.r;
+		vbo[24] = (GLfloat)color.rgb.v.c.g;
+		vbo[25] = (GLfloat)color.rgb.v.c.b;
+		vbo[26] = (GLfloat)color.a;
+		vbo[27] = 0;
+		vbo[28] = 0;
+		vbo[29] = 1;
 
-		vbo[18] = (GLfloat)0;
-		vbo[19] = (GLfloat)(-height);
-		vbo[20] = (GLfloat)0;
-		vbo[21] = (GLfloat)color.rgb.v.c.r;
-		vbo[22] = (GLfloat)color.rgb.v.c.g;
-		vbo[23] = (GLfloat)color.rgb.v.c.b;
+		// Bottom-left
+		vbo[30] = (GLfloat)(-width / 2);
+		vbo[31] = (GLfloat)(-height / 2);
+		vbo[32] = (GLfloat)0;
+		vbo[33] = (GLfloat)color.rgb.v.c.r;
+		vbo[34] = (GLfloat)color.rgb.v.c.g;
+		vbo[35] = (GLfloat)color.rgb.v.c.b;
+		vbo[36] = (GLfloat)color.a;
+		vbo[37] = 0;
+		vbo[38] = 0;
+		vbo[39] = 1;
 
 		numIndices = 6;
 		ibo = new GLuint[(GLuint)numIndices];
@@ -73,11 +93,17 @@ namespace BD3GE {
 		ibo[4] = (GLuint)2;
 		ibo[5] = (GLuint)3;
 
+		this->shader = shader;
+
 		setup();
 
 		// Colors
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
+
+		// Normals
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
 	}
 
 	SquareBrush::SquareBrush(float width, float height, Shader* shader, Texture* texture) {
@@ -85,26 +111,30 @@ namespace BD3GE {
 		numVertices = 4;
 		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
 
-		vbo[0] = (GLfloat)0;
-		vbo[1] = (GLfloat)0;
+		// Top-left
+		vbo[0] = (GLfloat)(-width / 2);
+		vbo[1] = (GLfloat)(height / 2);
 		vbo[2] = (GLfloat)0;
 		vbo[3] = 0.0f;
 		vbo[4] = 1.0f;
 
-		vbo[5] = (GLfloat)width;
-		vbo[6] = (GLfloat)0;
+		// Top-right
+		vbo[5] = (GLfloat)(width / 2);
+		vbo[6] = (GLfloat)(height / 2);
 		vbo[7] = (GLfloat)0;
 		vbo[8] = 1.0f;
 		vbo[9] = 1.0f;
 
-		vbo[10] = (GLfloat)width;
-		vbo[11] = (GLfloat)(-height);
+		// Bottom-right
+		vbo[10] = (GLfloat)(width / 2);
+		vbo[11] = (GLfloat)(-height / 2);
 		vbo[12] = (GLfloat)0;
 		vbo[13] = 1.0f;
 		vbo[14] = 0.0f;
 
-		vbo[15] = (GLfloat)0;
-		vbo[16] = (GLfloat)(-height);
+		// Bottom-left
+		vbo[15] = (GLfloat)(-width / 2);
+		vbo[16] = (GLfloat)(-height / 2);
 		vbo[17] = (GLfloat)0;
 		vbo[18] = 0.0f;
 		vbo[19] = 0.0f;
@@ -144,8 +174,8 @@ namespace BD3GE {
 		}
 	}
 
-	CircularBrush::CircularBrush(float radius, int resolution, Color color) {
-		sizePerVertex = 6;
+	CircularBrush::CircularBrush(float radius, int resolution, Shader* shader, Color color) {
+		sizePerVertex = 10;
 		numVertices = (4 * resolution) + 1;
 		vbo = new GLfloat[sizePerVertex * GLuint(numVertices)];
 
@@ -156,6 +186,10 @@ namespace BD3GE {
 		vbo[3] = (GLfloat)color.rgb.v.c.r;
 		vbo[4] = (GLfloat)color.rgb.v.c.g;
 		vbo[5] = (GLfloat)color.rgb.v.c.b;
+		vbo[6] = (GLfloat)color.a;
+		vbo[7] = 0;
+		vbo[8] = 0;
+		vbo[9] = 1;
 
 		// Circumference
 		for (unsigned int i = 0; i < numVertices - 1; ++i) {
@@ -165,6 +199,10 @@ namespace BD3GE {
 			vbo[(sizePerVertex * (i + 1)) + 3] = (GLfloat)color.rgb.v.c.r;
 			vbo[(sizePerVertex * (i + 1)) + 4] = (GLfloat)color.rgb.v.c.g;
 			vbo[(sizePerVertex * (i + 1)) + 5] = (GLfloat)color.rgb.v.c.b;
+			vbo[(sizePerVertex * (i + 1)) + 6] = (GLfloat)color.a;
+			vbo[(sizePerVertex * (i + 1)) + 7] = 0;
+			vbo[(sizePerVertex * (i + 1)) + 8] = 0;
+			vbo[(sizePerVertex * (i + 1)) + 9] = 1;
 		}
 
 		numIndices = 3 * (numVertices - 1);
@@ -183,7 +221,11 @@ namespace BD3GE {
 		setup();
 
 		// Colors
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
+
+		// Normals
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
 	}
 }

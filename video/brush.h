@@ -23,13 +23,13 @@ namespace BD3GE {
 
 	class SquareBrush : public Brush {
 		public:
-			SquareBrush(float width, float height, Color color);
+			SquareBrush(float width, float height, Shader* shader, Color color);
 			SquareBrush(float width, float height, Shader* shader, Texture* texture);
 	};
 
 	class CircularBrush : public Brush {
 		public:
-			CircularBrush(float radius, int resolution, Color color);
+			CircularBrush(float radius, int resolution, Shader* shader, Color color);
 	};
 }
 

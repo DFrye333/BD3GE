@@ -1,10 +1,6 @@
 #include "scene.h"
 
 namespace BD3GE {
-	/*
-	 *	Scene class
-	 */
-
 	Scene::Scene(const std::string modelsDirectory) {
 		Assimp::Importer planeImporter;
 		Assimp::Importer duckImporter;
@@ -31,28 +27,31 @@ namespace BD3GE {
 
 		// TODO: These should be owned by renderables.
 		Shader* defaultShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
+		Shader* lightingShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point.frag");
 		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
 		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
+
+		this->lightingShader = lightingShader;
 
 		// Scary duck
 		this->scaryDuck = add_object(new Object(
 			Vector3(0, 0, -500),
 			Vector3(0, 0, 0),
-			new Mesh(duck->mMeshes[0], nullptr, defaultShader, Vector3(1, 1, 1))
+			new Mesh(duck->mMeshes[0], nullptr, lightingShader, Vector3(1, 1, 1))
 		));
 
 		// Cube
 		add_object(new Object(
 			Vector3(-60, 0, 0),
 			Vector3(0, 0, 0),
-			new Mesh(cube->mMeshes[0], nullptr, defaultShader, Vector3(1, 1, 1))
+			new Mesh(cube->mMeshes[0], nullptr, lightingShader, Vector3(1, 1, 1))
 		));
 
 		// Floor
 		add_object(new Object(
-			Vector3(-10, 10, 0),
+			Vector3(-5, 5, 0),
 			Vector3(0, 0, 0),
-			new SquareBrush(20, 20, textureShader, wallTexture)
+			new SquareBrush(10, 10, textureShader, wallTexture)
 		));
 
 		// Pillars
@@ -60,18 +59,26 @@ namespace BD3GE {
 			add_object(new Object(
 				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
 				Vector3(0, 0, 0),
-				new SquareBrush(2, 2, Color(Vector3(0.0f, 0.5f, 0.0f)))
+				new SquareBrush(2, 2, lightingShader, Color(0, 160, 0))
 			));
 		}
 
+		// Player
 		this->player = add_object(new Object(
-			Vector3(5.0f, 5.0f, 0),
+			Vector3(5, 5, 0),
 			Vector3(0, 0, 0),
-			new CircularBrush(2.5, 10, Color(Vector3(0, 0.66f, 0.33f)))
+			new SquareBrush(2, 2, lightingShader, Color(0, 51, 102))
+		));
+
+		// Light
+		this->light = add_light(new Object(
+			Vector3(5, 5, 100),
+			Vector3(0, 0, 0),
+			new CircularBrush(1.5, 10, defaultShader, Color(102, 229, 102))
 		));
 
 		this->camera = new Camera(Vector3(0, 0, 60));
-		//camera->rotate(Vector3(-30, 0, 0));
+		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
 	}
 
 	Scene::Scene(std::vector<Object*> objects) {
@@ -93,68 +100,54 @@ namespace BD3GE {
 		return object;
 	}
 
+	Object* Scene::add_light(Object* light) {
+		lights.push_back(light);
+		return light;
+	}
+
 	void Scene::tick(Input* input) {
-		if ((!input->get_key_state(BD3GE::KEY_CODE::W) && !input->get_key_state(BD3GE::KEY_CODE::S)) || (input->get_key_state(BD3GE::KEY_CODE::W) && input->get_key_state(BD3GE::KEY_CODE::S))) {
-			player->set_velocity_Y(0);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::W)) {
-			player->set_velocity_Y(PLAYER_SPEED);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::S)) {
-			player->set_velocity_Y(-PLAYER_SPEED);
+		if (input->get_key_state(BD3GE::KEY_CODE::W)) {
+			player->translate(Vector3(0, PLAYER_SPEED, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::S)) {
+			player->translate(Vector3(0, -PLAYER_SPEED, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::A)) {
+			player->translate(Vector3(-PLAYER_SPEED, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::D)) {
+			player->translate(Vector3(PLAYER_SPEED, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::Q)) {
+			player->translate(Vector3(0, 0, -PLAYER_SPEED));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::E)) {
+			player->translate(Vector3(0, 0, PLAYER_SPEED));
 		}
 
-		if ((!input->get_key_state(BD3GE::KEY_CODE::A) && !input->get_key_state(BD3GE::KEY_CODE::D)) || (input->get_key_state(BD3GE::KEY_CODE::A) && input->get_key_state(BD3GE::KEY_CODE::D))) {
-			player->set_velocity_X(0);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::A)) {
-			player->set_velocity_X(-PLAYER_SPEED);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::D)) {
-			player->set_velocity_X(PLAYER_SPEED);
-		}
-
-		if ((!input->get_key_state(BD3GE::KEY_CODE::Q) && !input->get_key_state(BD3GE::KEY_CODE::E)) || (input->get_key_state(BD3GE::KEY_CODE::Q) && input->get_key_state(BD3GE::KEY_CODE::E))) {
-			player->set_velocity_Z(0);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::Q)) {
-			player->set_velocity_Z(-PLAYER_SPEED);
-		} else if (input->get_key_state(BD3GE::KEY_CODE::E)) {
-			player->set_velocity_Z(PLAYER_SPEED);
-		}
-
-		if (input->get_key_state(BD3GE::KEY_CODE::J)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::F)) {
 			player->rotate(Vector3(0, 0, 0.01));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::L)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::H)) {
 			player->rotate(Vector3(0, 0, -0.01));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::I)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::T)) {
 			player->rotate(Vector3(-0.01, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::K)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::G)) {
 			player->rotate(Vector3(0.01, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::U)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::Y)) {
 			player->rotate(Vector3(0, 0.01, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::O)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::R)) {
 			player->rotate(Vector3(0, -0.01, 0));
-		}
-
-		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
-			camera->translate(Vector3(-CAMERA_SPEED, 0, 0));
-		}
-		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
-			camera->translate(Vector3(CAMERA_SPEED, 0, 0));
-		}
-		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
-			camera->translate(Vector3(0, CAMERA_SPEED, 0));
-		}
-		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
-			camera->translate(Vector3(0, -CAMERA_SPEED, 0));
 		}
 		bool mouseWheelUp = input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELUP);
 		bool mouseWheelDown = input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELDOWN);
 		if (mouseWheelUp) {
 			camera->translate(Vector3(0, 0, 2 * -CAMERA_SPEED));
-		}
-		else if (mouseWheelDown) {
+		} else if (mouseWheelDown) {
 			camera->translate(Vector3(0, 0, 2 * CAMERA_SPEED));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON) && input->is_mouse_position_fresh) {
@@ -172,11 +165,37 @@ namespace BD3GE {
 			camera->set_position(Vector3(0, 0, 60));
 		}
 
+		if (input->get_key_state(BD3GE::KEY_CODE::J)) {
+			light->translate(Vector3(0.25 * -PLAYER_SPEED, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::L)) {
+			light->translate(Vector3(0.25 * PLAYER_SPEED, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::I)) {
+			light->translate(Vector3(0, 0.25 * PLAYER_SPEED, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::K)) {
+			light->translate(Vector3(0, 0.25 * -PLAYER_SPEED, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::O)) {
+			light->translate(Vector3(0, 0, 0.25 * PLAYER_SPEED));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::U)) {
+			light->translate(Vector3(0, 0, 0.25 * -PLAYER_SPEED));
+		}
+
 		camera->move();
 		for (auto& object : objects) {
 			object->move();
 		}
+		for (auto& light : lights) {
+			light->move();
 		}
+
+		lightingShader->enable();
+		lightingShader->setUniform("light_position", this->light->get_position());
+		lightingShader->setUniform("viewer_position", this->camera->get_position());
+		lightingShader->disable();
 
 		scaryDuck->rotate(Vector3(0, 0.001, 0));
 	}
@@ -188,6 +207,8 @@ namespace BD3GE {
 		for (auto& object : objects) {
 			object->render(camera->get_view_projection_transform());
 		}
+		for (auto& light : lights) {
+			light->render(camera->get_view_projection_transform());
 		}
 	}
 
