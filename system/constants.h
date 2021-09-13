@@ -42,6 +42,8 @@ namespace BD3GE {
 	// Minimum time between frames, in milliseconds.
 	const float			FRAME_TIME = (1.0f / FRAME_RATE) * 1000.0f;
 
+	constexpr double	PI = 3.1415926535;
+
 	// Keystring mappings.
 	enum class KEY_CODE {
 		BACKSPACE,
