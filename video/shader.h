@@ -10,6 +10,8 @@
 
 #include "../system/constants.h"
 #include "../system/globals.h"
+#include "../utility/matrix.h"
+#include "../utility/vector.h"
 
 namespace BD3GE {
 	class Shader {
@@ -17,7 +19,11 @@ namespace BD3GE {
 
 					Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath);
 					~Shader();
-			GLuint	get_program_ID(void);
+			GLuint	get_program_ID();
+			void	enable();
+			void	disable();
+			void	setUniform(std::string uniform_name, Matrix4 matrix);
+			void	setUniform(std::string uniform_name, Vector3 vector);
 
 		private:
 

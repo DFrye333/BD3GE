@@ -1,10 +1,6 @@
 #include "shader.h"
 
 namespace BD3GE {
-	/*
-	 * 	Shader class
-	 */
-
 	BD3GE::Shader::Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
 		programID = create_program(vertexShaderFilePath, fragmentShaderFilePath);
 	}
@@ -104,7 +100,25 @@ namespace BD3GE {
 		infile.close();
 	}
 
-	GLuint BD3GE::Shader::get_program_ID(void) {
+	GLuint BD3GE::Shader::get_program_ID() {
 		return programID;
+	}
+
+	void BD3GE::Shader::enable() {
+		glUseProgram(get_program_ID());
+	}
+
+	void BD3GE::Shader::disable() {
+		glUseProgram(0);
+	}
+
+	void BD3GE::Shader::setUniform(std::string uniform_name, Matrix4 matrix) {
+		GLfloat transformation_array[16];
+		matrix.to_float_array(transformation_array);
+		glUniformMatrix4fv(glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, GL_TRUE, transformation_array);
+	}
+
+	void BD3GE::Shader::setUniform(std::string uniform_name, Vector3 vector) {
+		glUniform3fv(glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, vector.v.a);
 	}
 }
