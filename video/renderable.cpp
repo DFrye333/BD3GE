@@ -20,13 +20,10 @@ namespace BD3GE {
 
 	void Renderable::render(Transform worldTransform, Transform viewProjectionTransform) const {
 		// Setup for shader program.
-		glUseProgram(shader->get_program_ID());
-
-		GLfloat transformation_array[16];
-		worldTransform.to_float_array(transformation_array);
-		glUniformMatrix4fv(glGetUniformLocation(shader->get_program_ID(), "world_transform"), 1, GL_TRUE, transformation_array);
-		viewProjectionTransform.to_float_array(transformation_array);
-		glUniformMatrix4fv(glGetUniformLocation(shader->get_program_ID(), "view_projection_transform"), 1, GL_TRUE, transformation_array);
+		shader->enable();
+		shader->setUniform("world_transform", worldTransform.get_matrix());
+		shader->setUniform("inverse_world_transform", worldTransform.get_matrix().inverse());
+		shader->setUniform("view_projection_transform", viewProjectionTransform.get_matrix());
 
 		// Draw mesh using its VAO.
 		glBindTexture(GL_TEXTURE_2D, tboHandle);
@@ -35,6 +32,6 @@ namespace BD3GE {
 		glBindVertexArray(0);
 
 		// Cleanup.
-		glUseProgram(0);
+		shader->disable();
 	}
 }
