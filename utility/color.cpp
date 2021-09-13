@@ -14,7 +14,7 @@ namespace BD3GE {
 	Color::Color(Vector3 rgb) : Color(rgb, 1.0f) {}
 
 	Color::Color(int red, int green, int blue, float alpha) {
-		this->rgb = Vector3(std::clamp(red, 0, 255), std::clamp(green, 0, 255), std::clamp(blue, 0, 255));
+		this->rgb = Vector3(std::clamp(red, 0, 255) / 255.0, std::clamp(green, 0, 255) / 255.0, std::clamp(blue, 0, 255) / 255.0);
 		this->a = alpha;
 	}
 
