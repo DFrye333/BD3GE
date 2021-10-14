@@ -59,7 +59,7 @@ namespace BD3GE {
 			add_object(new Object(
 				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
 				Vector3(0, 0, 0),
-				new SquareBrush(2, 2, lightingShader, Color(0, 160, 0))
+				new SquareBrush(2, 2, lightingShader, Color(50, 160, 0))
 			));
 		}
 
@@ -67,7 +67,7 @@ namespace BD3GE {
 		this->player = add_object(new Object(
 			Vector3(5, 5, 0),
 			Vector3(0, 0, 0),
-			new SquareBrush(2, 2, lightingShader, Color(0, 51, 102))
+			new SquareBrush(2, 2, lightingShader, Color(10, 51, 102))
 		));
 
 		// Light
@@ -194,6 +194,7 @@ namespace BD3GE {
 
 		lightingShader->enable();
 		lightingShader->setUniform("light_position", this->light->get_position());
+		lightingShader->setUniform("light_color", Vector3(1.0, 0.1, 0.1));
 		lightingShader->setUniform("viewer_position", this->camera->get_position());
 		lightingShader->disable();
 
