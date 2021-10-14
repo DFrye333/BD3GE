@@ -11,7 +11,7 @@
 #include "../input/input.h"
 #include "../utility/timer.h"
 #include "../video/GL.h"
-#include "../video/scene.h"
+#include "../system/scene.h"
 #include "../system/window.h"
 #include "constants.h"
 #include "globals.h"
