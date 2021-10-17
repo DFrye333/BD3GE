@@ -20,6 +20,7 @@ namespace BD3GE {
 		private:
 
 			std::string			name;
+			bool				is_running;
 			uint64_t			timer_frequency_Hz;
 			uint64_t			system_frequency_Hz;
 			uint64_t			start_stamp;

@@ -29,41 +29,46 @@ namespace BD3GE
 
 		start_stamp = (current_count.QuadPart * 1000) / system_frequency_Hz;
 #endif
+
+		is_running = true;
 	}
 
 	bool Timer::is_due() {
 		bool is_due = false;
 
+		if (is_running) {
 #ifdef __linux__
-		// Calculate the amount of time since the last due time.
-		gettimeofday(&m_time_last, NULL);
-		*elapsed_time = ((m_time_last.tv_sec - m_time_start.tv_sec) * 1000.0f) + ((m_time_last.tv_usec - m_time_start.tv_usec) / 1000.0f);
+			// Calculate the amount of time since the last due time.
+			gettimeofday(&m_time_last, NULL);
+			*elapsed_time = ((m_time_last.tv_sec - m_time_start.tv_sec) * 1000.0f) + ((m_time_last.tv_usec - m_time_start.tv_usec) / 1000.0f);
 
-		// The timer is due.
-		if (*elapsed_time >= m_delta)
-		{
-			// Reset the timer.
-			gettimeofday(&m_time_start, NULL);
-			return true;
-		}
+			// The timer is due.
+			if (*elapsed_time >= m_delta)
+			{
+				// Reset the timer.
+				gettimeofday(&m_time_start, NULL);
+				return true;
+			}
 
-		// The timer is not due.
-		else
-		{
-			return false;
-		}
+			// The timer is not due.
+			else
+			{
+				return false;
+			}
 
 #elif _WIN32
-		LARGE_INTEGER current_count;
-		QueryPerformanceCounter(&current_count);
-		uint64_t current_stamp = (current_count.QuadPart * 1000) / system_frequency_Hz;
+			LARGE_INTEGER current_count;
+			QueryPerformanceCounter(&current_count);
+			uint64_t current_stamp = (current_count.QuadPart * 1000) / system_frequency_Hz;
 
-		if ((current_stamp - start_stamp) >= ((1.0f/ timer_frequency_Hz) * 1000)) {
-			start_stamp = current_stamp;
-			is_due = true;
+			if ((current_stamp - start_stamp) >= ((1.0f / timer_frequency_Hz) * 1000)) {
+				start_stamp = current_stamp;
+				is_due = true;
+			}
+
+#endif
 		}
 
 		return is_due;
-#endif
 	}
 }
