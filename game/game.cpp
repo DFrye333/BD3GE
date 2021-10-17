@@ -101,13 +101,16 @@ namespace BD3GE {
 		window->message_listener();
 
 		// Pass window input events.
-		Message<Window::InputEvent> input_message = window->pull_input_event();
-		if (input_message.get_data() != nullptr) {
-			input->handle(Window::InputEvent(*(input_message.get_data())));
+		Message<Window::InputEvent> window_input_message = window->pull_input_event();
+		if (window_input_message.get_data() != nullptr) {
+			input->handle(Window::InputEvent(*(window_input_message.get_data())));
 		}
 
 		// Pass gamepad input events.
-		input->handle(gamepad->pull_input_message());
+		Message<Gamepad::InputEvent> gamepad_input_message = gamepad->pull_input_message();
+		if (gamepad_input_message.get_data() != nullptr) {
+			input->handle(Gamepad::InputEvent(*(gamepad_input_message.get_data())));
+		}
 
 		// Pass window reshape events.
 		Message<Window::ReshapeEvent> reshape_event = window->pull_reshape_event();

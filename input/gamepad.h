@@ -57,7 +57,7 @@ namespace BD3GE {
 			} InputEvent;
 
 			Gamepad();
-			virtual Gamepad::InputEvent pull_input_message() = 0;
+			virtual Message<Gamepad::InputEvent> pull_input_message() = 0;
 
 			std::queue<Message<InputEvent>>* input_queue;
 	};
@@ -70,7 +70,7 @@ namespace BD3GE {
 
 			XInputGamepad();
 			XInputGamepad(DWORD user_index);
-			Gamepad::InputEvent pull_input_message() override;
+			Message<Gamepad::InputEvent> pull_input_message() override;
 			void check_input();
 
 			CONNECTION_STATE connection_state;

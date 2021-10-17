@@ -11,17 +11,17 @@ namespace BD3GE {
 		this->user_index = user_index;
 	}
 
-	Gamepad::InputEvent XInputGamepad::pull_input_message() {
+	Message<Gamepad::InputEvent> XInputGamepad::pull_input_message() {
 		check_input();
 
-		InputEvent input_event;
+		Message<Gamepad::InputEvent> input_message = Message<Gamepad::InputEvent>();
 
 		if (!input_queue->empty()) {
-			input_event = InputEvent(*(input_queue->front().get_data()));
+			input_message = input_queue->front();
 			input_queue->pop();
 		}
 
-		return input_event;
+		return input_message;
 	}
 
 	void XInputGamepad::check_input() {
