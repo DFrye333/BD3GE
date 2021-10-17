@@ -8,6 +8,15 @@ namespace BD3GE {
 		record_mouse_position(input_event.mouse_position);
 	}
 
+	void Input::handle(const BD3GE::Gamepad::InputEvent input_event) {
+		for (const auto& [input_code, state] : input_event.digitals) {
+			gamepads[input_event.index][input_code] = state;
+		}
+		for (const auto& [input_code, value] : input_event.analogs) {
+			gamepads[input_event.index][input_code] = value;
+		}
+	}
+
 	bool Input::get_key_state(BD3GE::KEY_CODE key) {
 		return keys[key];
 	}
@@ -35,5 +44,15 @@ namespace BD3GE {
 		is_mouse_position_fresh = true;
 		this->previous_mouse_position = this->current_mouse_position;
 		this->current_mouse_position = mouse_position;
+	}
+
+	float Input::get_gamepad_value(short gamepad_index, Gamepad::INPUT_CODE input_code) {
+		return gamepads[gamepad_index][input_code];
+	}
+
+	float Input::consume_gamepad_value(short gamepad_index, Gamepad::INPUT_CODE input_code) {
+		float value = gamepads[gamepad_index][input_code];
+		gamepads[gamepad_index][input_code] = 0.0f;
+		return value;
 	}
 }

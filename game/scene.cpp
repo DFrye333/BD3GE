@@ -106,16 +106,16 @@ namespace BD3GE {
 	}
 
 	void Scene::tick(Input* input) {
-		if (input->get_key_state(BD3GE::KEY_CODE::W)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::W) || input->get_gamepad_value(1, Gamepad::INPUT_CODE::LEFT_STICK_Y) > 0) {
 			player->translate(Vector3(0, PLAYER_SPEED, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::S)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::S) || input->get_gamepad_value(1, Gamepad::INPUT_CODE::LEFT_STICK_Y) < 0) {
 			player->translate(Vector3(0, -PLAYER_SPEED, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::A)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::A) || input->get_gamepad_value(1, Gamepad::INPUT_CODE::LEFT_STICK_X) < 0) {
 			player->translate(Vector3(-PLAYER_SPEED, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::D)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::D) || input->get_gamepad_value(1, Gamepad::INPUT_CODE::LEFT_STICK_X) > 0) {
 			player->translate(Vector3(PLAYER_SPEED, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::Q)) {
@@ -143,11 +143,10 @@ namespace BD3GE {
 		if (input->get_key_state(BD3GE::KEY_CODE::R)) {
 			player->rotate(Vector3(0, -0.01, 0));
 		}
-		bool mouseWheelUp = input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELUP);
-		bool mouseWheelDown = input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELDOWN);
-		if (mouseWheelUp) {
+
+		if (input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELUP) || input->get_gamepad_value(1, BD3GE::Gamepad::INPUT_CODE::RIGHT_TRIGGER)) {
 			camera->translate(Vector3(0, 0, 2 * -CAMERA_SPEED));
-		} else if (mouseWheelDown) {
+		} else if (input->consume_key_input(BD3GE::KEY_CODE::MOUSE_WHEELDOWN) || input->get_gamepad_value(1, BD3GE::Gamepad::INPUT_CODE::LEFT_TRIGGER)) {
 			camera->translate(Vector3(0, 0, 2 * CAMERA_SPEED));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON) && input->is_mouse_position_fresh) {

@@ -24,6 +24,7 @@ namespace BD3GE {
 		this->gl->print_info();
 		this->al = new AL();
 		this->input = new Input();
+		this->gamepad = new XInputGamepad(1);
 
 		glewExperimental = GL_TRUE;
 		glewInit();
@@ -65,13 +66,13 @@ namespace BD3GE {
 			// Handle subsystem communication.
 			bus_messages();
 
-			// Quit the program if the Escape key is pressed.
-			if (input->get_key_state(BD3GE::KEY_CODE::ESCAPE)) {
+			// Quits the program if necessary.
+			if (input->get_key_state(BD3GE::KEY_CODE::ESCAPE) || input->consume_gamepad_value(1, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
 				return;
 			}
 
 			// Enables toggling of wireframe mode.
-			if (input->consume_key_input(BD3GE::KEY_CODE::F3)) {
+			if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_value(1, BD3GE::Gamepad::INPUT_CODE::UTIL_1)) {
 				gl->toggle_wireframe_mode();
 			}
 
@@ -101,6 +102,9 @@ namespace BD3GE {
 
 		// Pass window input events.
 		input->handle(window->pull_input_event());
+
+		// Pass gamepad input events.
+		input->handle(gamepad->pull_input_message());
 
 		// Pass window reshape events.
 		Window::ReshapeEvent reshape_event = window->pull_reshape_event();

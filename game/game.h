@@ -8,6 +8,7 @@
 #include <dirent.h>
 
 #include "../audio/AL.h"
+#include "../input/gamepad.h"
 #include "../input/input.h"
 #include "../utility/timer.h"
 #include "../video/GL.h"
@@ -32,6 +33,7 @@ namespace BD3GE {
 			GL*					gl;
 			AL*					al;
 			Input*				input;
+			Gamepad*			gamepad;
 	};
 }
 
