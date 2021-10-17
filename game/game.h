@@ -11,10 +11,10 @@
 #include "../input/input.h"
 #include "../utility/timer.h"
 #include "../video/GL.h"
-#include "../system/scene.h"
+#include "../game/scene.h"
 #include "../system/window.h"
-#include "constants.h"
-#include "globals.h"
+#include "../system/constants.h"
+#include "../system/globals.h"
 
 namespace BD3GE {
 	class Game {

@@ -28,11 +28,11 @@ namespace BD3GE {
 		glFlush();
 	}
 
-	void GL::reshape(GLsizei width, GLsizei height) {
+	void GL::reshape(unsigned int width, unsigned int height) {
 		if (width > 0 && width < SCREEN_WIDTH && height > 0 && height < SCREEN_HEIGHT) {
 			viewport_width = width;
 			viewport_height = height;
-			glViewport(0, 0, viewport_width, viewport_height);
+			glViewport(0, 0, (GLsizei)viewport_width, (GLsizei)viewport_height);
 		}
 	}
 

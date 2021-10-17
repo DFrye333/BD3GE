@@ -13,7 +13,7 @@ namespace BD3GE {
 		public:
 
 							GL();
-			void			reshape(int x, int y);
+			void			reshape(unsigned int x, unsigned int y);
 			const void		print_info();
 			const GLubyte*	get_vendor();
 			const GLubyte*	get_renderer();

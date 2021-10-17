@@ -10,7 +10,7 @@ namespace BD3GE {
 
 	Camera::~Camera() {}
 
-	const Transform& Camera::get_projection_transform() const {
+	const Transform Camera::get_projection_transform() const {
 		float frustum_scale = 1.0f;
 		float z_near = 0.01f;
 		float z_far = 1000.0f;

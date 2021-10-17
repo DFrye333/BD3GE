@@ -1,10 +1,6 @@
 #include "game.h"
 
 namespace BD3GE {
-	/*
-	 *	Game class
-	 */
-
 	Game::Game(BD3GE::Window* window) {
 		g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
 
@@ -103,17 +99,12 @@ namespace BD3GE {
 		// Listen for window messages.
 		window->message_listener();
 
-		// Pass input events.
-		BD3GE::Window::InputEvent* input_event = window->pull_input_event();
-		if (input_event != NULL) {
-			input->handle(input_event);
-		}
+		// Pass window input events.
+		input->handle(window->pull_input_event());
 
-		// Pass reshape events.
-		Message<std::pair<int, int>> reshape_message = window->pull_reshape_message();
-		if (reshape_message.get_data()) {
-			gl->reshape(reshape_message.get_data()->first, reshape_message.get_data()->second);
-			scene->getCamera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
-		}
+		// Pass window reshape events.
+		Window::ReshapeEvent reshape_event = window->pull_reshape_event();
+		gl->reshape(reshape_event.width, reshape_event.height);
+		scene->getCamera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
 	}
 }

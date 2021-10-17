@@ -4,10 +4,6 @@ namespace BD3GE {
 
 #ifdef __linux__
 
-	/*
-	 *	XWindow class
-	 */
-
 	std::map<std::string, BD3GE::KEY_CODE> XWindow::m_key_code_map = {
 		{ "BackSpace", BD3GE::KEY_CODE::BACKSPACE },
 		{ "Tab", BD3GE::KEY_CODE::TAB },
@@ -348,7 +344,7 @@ namespace BD3GE {
 		return input_event;
 	}
 
-	Message<std::pair<int, int>> XWindow::pull_reshape_message(void) {
+	Message<std::pair<int, int>> XWindow::pull_reshape_event(void) {
 		Message<std::pair<int, int>> reshape_event;
 
 		if (!reshapeQueue.empty()) {
@@ -398,6 +394,8 @@ namespace BD3GE {
 					ReleaseDC(hwnd, display_context);
 				}
 
+				data->window->set_window_exists(true);
+
 				break;
 			case WM_PAINT:
 				PAINTSTRUCT paint_struct;
@@ -432,14 +430,14 @@ namespace BD3GE {
 				reshape_event.width = LOWORD(lParam);
 				reshape_event.height = HIWORD(lParam);
 
-				data->window->reshape_queue->push(BD3GE::Message(reshape_event));
+				data->window->push_reshape_event(reshape_event);
 				break;
 			case WM_CLOSE: DestroyWindow(hwnd); break;
 			case WM_DESTROY: PostQuitMessage(0); break;
 			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
 		}
 
-		data->window->input_queue->push(input_event);
+		data->window->push_input_event(input_event);
 
 		return EXIT_SUCCESS;
 	}
@@ -585,9 +583,6 @@ namespace BD3GE {
 			return;
 		}
 
-		input_queue = new std::queue<BD3GE::Message<BD3GE::Window::InputEvent>>;
-		reshape_queue = new std::queue<BD3GE::Message<BD3GE::Window::ReshapeEvent>>;
-
 		window_proc_data = new BD3GE::WinAPIWindow::WindowProcData;
 		window_proc_data->window = this;
 
@@ -615,6 +610,14 @@ namespace BD3GE {
 
 	WinAPIWindow::~WinAPIWindow() {}
 
+	bool WinAPIWindow::get_window_exists() {
+		return does_window_exist;
+	}
+
+	void WinAPIWindow::set_window_exists(bool does_window_exist) {
+		this->does_window_exist = does_window_exist;
+	}
+
 	void WinAPIWindow::message_listener(void) {
 		MSG msg;
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -629,27 +632,36 @@ namespace BD3GE {
 		ReleaseDC(window_handle, display_context);
 	}
 
-	BD3GE::Window::InputEvent* WinAPIWindow::pull_input_event(void) {
-		InputEvent* input_event = NULL;
+	void WinAPIWindow::push_input_event(Window::InputEvent input_event) {
+		input_queue.push(input_event);
+	}
 
-		if (!input_queue->empty()) {
-			input_event = input_queue->front().get_data();
-			input_queue->pop();
+	Window::InputEvent WinAPIWindow::pull_input_event(void) {
+		Window::InputEvent input_event{};
+
+		if (!input_queue.empty()) {
+			input_event = Window::InputEvent(*(input_queue.front().get_data()));
+			input_queue.pop();
 		}
 
 		return input_event;
 	}
 
-	Message<std::pair<int, int>> WinAPIWindow::pull_reshape_message(void) {
-		Message<std::pair<int, int>> reshape_message;
+	void WinAPIWindow::push_reshape_event(Window::ReshapeEvent reshape_event) {
+		reshape_queue.push(reshape_event);
+	}
 
-		if (!reshape_queue->empty()) {
-			ReshapeEvent* reshape_event = reshape_queue->front().get_data();
-			reshape_message.set_data(std::make_pair(reshape_event->width, reshape_event->height));
-			reshape_queue->pop();
+	Window::ReshapeEvent WinAPIWindow::pull_reshape_event(void) {
+		Window::ReshapeEvent reshape_event{};
+
+		if (!reshape_queue.empty()) {
+			Window::ReshapeEvent* queued_reshape_event = reshape_queue.front().get_data();
+			reshape_event.width = queued_reshape_event->width;
+			reshape_event.height = queued_reshape_event->height;
+			reshape_queue.pop();
 		}
 
-		return reshape_message;
+		return reshape_event;
 	}
 
 	void WinAPIWindow::set_mouse_cursor_visibility(bool shouldBeVisible) {

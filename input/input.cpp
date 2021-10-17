@@ -1,11 +1,11 @@
 #include "input.h"
 
 namespace BD3GE {
-	void Input::handle(const BD3GE::Window::InputEvent* const input_event) {
-		for (const auto& [key, state] : input_event->key_state_map) {
+	void Input::handle(const BD3GE::Window::InputEvent input_event) {
+		for (const auto& [key, state] : input_event.key_state_map) {
 			record_key_state(key, state);
 		}
-		record_mouse_position(input_event->mouse_position);
+		record_mouse_position(input_event.mouse_position);
 	}
 
 	bool Input::get_key_state(BD3GE::KEY_CODE key) {

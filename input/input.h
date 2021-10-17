@@ -15,7 +15,7 @@ namespace BD3GE {
 	class Input {
 		public:
 
-			void					handle(const BD3GE::Window::InputEvent* const input_event);
+			void					handle(const BD3GE::Window::InputEvent input_event);
 			bool					get_key_state(BD3GE::KEY_CODE key);
 			bool					consume_key_input(BD3GE::KEY_CODE key);
 			std::pair<short, short>	get_current_mouse_position();
@@ -28,7 +28,7 @@ namespace BD3GE {
 			void					record_key_state(BD3GE::KEY_CODE key, bool state);
 			void					record_mouse_position(std::pair<short, short> mouse_position);
 
-			std::map<BD3GE::KEY_CODE, bool>	keys;
+			std::map<KEY_CODE, bool> keys;
 			std::pair<short, short> current_mouse_position;
 			std::pair<short, short> previous_mouse_position;
 	};

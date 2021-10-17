@@ -1,4 +1,4 @@
-#include "system/game.h"
+#include "game/game.h"
 
 #ifdef __linux__
 
@@ -26,9 +26,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	winAPIEntryArgs.lpCmdLine = lpCmdLine;
 	winAPIEntryArgs.nCmdShow = nCmdShow;
 	BD3GE::Window* window = new BD3GE::WinAPIWindow(winAPIEntryArgs);
-	if (window == NULL) {
-		return EXIT_FAILURE;
-	}
 
 	BD3GE::Game game(window);
 	game.run();
