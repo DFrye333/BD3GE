@@ -1,7 +1,7 @@
 BD3GE
 ===
 
-Let's build a game from the ground up. Rendering, physics, audio - all of that good stuff.
+Let's build a game from the ground up. Rendering, physics, audio, input - all of that good stuff.
 
 **TODO:**
 
@@ -16,6 +16,7 @@ Let's build a game from the ground up. Rendering, physics, audio - all of that g
 * Settle on some styling conventions.
 * Try to remove log global? Put it in Game?
 * I need a Material class to represent visual information about surfaces, and this class should have its own Shader.
+* Rework "scene" so that it's not so heavy on game logic
 
 **Linux Installation Dependencies:**
 
