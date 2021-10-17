@@ -32,7 +32,8 @@ namespace BD3GE {
 		if (check_result == ERROR_SUCCESS && input_state.dwPacketNumber > last_checked_packet_number) {
 			last_checked_packet_number = input_state.dwPacketNumber;
 
-			Gamepad::InputEvent input_event;
+			Gamepad::InputEvent input_event{};
+			input_event.connection_state = connection_state = Gamepad::CONNECTION_STATE::CONNECTED;
 			input_event.index = user_index;
 			float STICK_RADIUS = 32767.0f;
 			float LEFT_STICK_DEADZONE = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
@@ -62,6 +63,13 @@ namespace BD3GE {
 			input_event.digitals.insert({ Gamepad::INPUT_CODE::UTIL_0, (input_state.Gamepad.wButtons & XINPUT_GAMEPAD_START) == XINPUT_GAMEPAD_START });
 			input_event.digitals.insert({ Gamepad::INPUT_CODE::UTIL_1, (input_state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) == XINPUT_GAMEPAD_BACK });
 
+			input_queue->push(input_event);
+		} else if (check_result == ERROR_DEVICE_NOT_CONNECTED && connection_state == Gamepad::CONNECTION_STATE::CONNECTED) {
+			last_checked_packet_number = 0;
+
+			Gamepad::InputEvent input_event = Gamepad::InputEvent{};
+			input_event.connection_state = connection_state = Gamepad::CONNECTION_STATE::DISCONNECTED;
+			input_event.index = user_index;
 			input_queue->push(input_event);
 		}
 	}

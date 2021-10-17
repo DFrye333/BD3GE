@@ -21,6 +21,11 @@ namespace BD3GE {
 	class Gamepad {
 		public:
 
+			enum class CONNECTION_STATE {
+				CONNECTED,
+				DISCONNECTED
+			};
+
 			enum class INPUT_CODE {
 				LEFT_STICK_X,
 				LEFT_STICK_Y,
@@ -45,6 +50,7 @@ namespace BD3GE {
 			};
 
 			typedef struct InputEvent {
+				CONNECTION_STATE connection_state;
 				short index = 0;
 				std::map<INPUT_CODE, bool> digitals;
 				std::map<INPUT_CODE, float> analogs;
@@ -67,6 +73,7 @@ namespace BD3GE {
 			Gamepad::InputEvent pull_input_message() override;
 			void check_input();
 
+			CONNECTION_STATE connection_state;
 			DWORD user_index;
 			DWORD last_checked_packet_number;
 	};
