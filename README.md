@@ -17,6 +17,7 @@ Let's build a game from the ground up. Rendering, physics, audio, input - all of
 * Try to remove log global? Put it in Game?
 * I need a Material class to represent visual information about surfaces, and this class should have its own Shader.
 * Rework "scene" so that it's not so heavy on game logic
+* Make config dynamically-loaded from a file, rather than hardcoded in constants
 
 **Linux Installation Dependencies:**
 
