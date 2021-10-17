@@ -636,32 +636,30 @@ namespace BD3GE {
 		input_queue.push(input_event);
 	}
 
-	Window::InputEvent WinAPIWindow::pull_input_event(void) {
-		Window::InputEvent input_event{};
+	Message<Window::InputEvent> WinAPIWindow::pull_input_event(void) {
+		Message<Window::InputEvent> input_message = Message<Window::InputEvent>();
 
 		if (!input_queue.empty()) {
-			input_event = Window::InputEvent(*(input_queue.front().get_data()));
+			input_message = input_queue.front();
 			input_queue.pop();
 		}
 
-		return input_event;
+		return input_message;
 	}
 
 	void WinAPIWindow::push_reshape_event(Window::ReshapeEvent reshape_event) {
 		reshape_queue.push(reshape_event);
 	}
 
-	Window::ReshapeEvent WinAPIWindow::pull_reshape_event(void) {
-		Window::ReshapeEvent reshape_event{};
+	Message<Window::ReshapeEvent> WinAPIWindow::pull_reshape_event(void) {
+		Message<Window::ReshapeEvent> reshape_message = Message<Window::ReshapeEvent>();
 
 		if (!reshape_queue.empty()) {
-			Window::ReshapeEvent* queued_reshape_event = reshape_queue.front().get_data();
-			reshape_event.width = queued_reshape_event->width;
-			reshape_event.height = queued_reshape_event->height;
+			reshape_message = reshape_queue.front();
 			reshape_queue.pop();
 		}
 
-		return reshape_event;
+		return reshape_message;
 	}
 
 	void WinAPIWindow::set_mouse_cursor_visibility(bool shouldBeVisible) {

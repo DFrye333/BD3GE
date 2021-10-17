@@ -101,14 +101,19 @@ namespace BD3GE {
 		window->message_listener();
 
 		// Pass window input events.
-		input->handle(window->pull_input_event());
+		Message<Window::InputEvent> input_message = window->pull_input_event();
+		if (input_message.get_data() != nullptr) {
+			input->handle(Window::InputEvent(*(input_message.get_data())));
+		}
 
 		// Pass gamepad input events.
 		input->handle(gamepad->pull_input_message());
 
 		// Pass window reshape events.
-		Window::ReshapeEvent reshape_event = window->pull_reshape_event();
-		gl->reshape(reshape_event.width, reshape_event.height);
-		scene->getCamera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
+		Message<Window::ReshapeEvent> reshape_event = window->pull_reshape_event();
+		if (reshape_event.get_data() != nullptr) {
+			gl->reshape(reshape_event.get_data()->width, reshape_event.get_data()->height);
+			scene->getCamera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
+		}
 	}
 }

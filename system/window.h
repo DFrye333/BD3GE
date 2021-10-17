@@ -46,9 +46,9 @@ namespace BD3GE {
 			virtual void										message_listener() = 0;
 			virtual void										swap_buffers() = 0;
 			virtual void										push_input_event(InputEvent input_message) = 0;
-			virtual InputEvent									pull_input_event() = 0;
+			virtual Message<InputEvent>							pull_input_event() = 0;
 			virtual	void										push_reshape_event(ReshapeEvent reshape_message) = 0;
-			virtual ReshapeEvent								pull_reshape_event() = 0;
+			virtual Message<ReshapeEvent>						pull_reshape_event() = 0;
 			virtual void										set_mouse_cursor_visibility(bool shouldBeVisible) = 0;
 
 		protected:
@@ -110,9 +110,9 @@ namespace BD3GE {
 			void											message_listener() override;
 			void											swap_buffers() override;
 			void											push_input_event(Window::InputEvent input_event) override;
-			Window::InputEvent								pull_input_event() override;
+			Message<Window::InputEvent>						pull_input_event() override;
 			void											push_reshape_event(Window::ReshapeEvent reshape_event) override;
-			Window::ReshapeEvent							pull_reshape_event() override;
+			Message<Window::ReshapeEvent>					pull_reshape_event() override;
 			void											set_mouse_cursor_visibility(bool shouldBeVisible) override;
 
 			static std::map<int, BD3GE::KEY_CODE>			key_code_map;
