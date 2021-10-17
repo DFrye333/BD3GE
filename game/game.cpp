@@ -67,7 +67,7 @@ namespace BD3GE {
 			bus_messages();
 
 			// Quits the program if necessary.
-			if (input->get_key_state(BD3GE::KEY_CODE::ESCAPE) || input->consume_gamepad_value(1, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
+			if (!window->get_window_exists() || input->get_key_state(BD3GE::KEY_CODE::ESCAPE) || input->consume_gamepad_value(1, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
 				return;
 			}
 

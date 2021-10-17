@@ -433,7 +433,7 @@ namespace BD3GE {
 				data->window->push_reshape_event(reshape_event);
 				break;
 			case WM_CLOSE: DestroyWindow(hwnd); break;
-			case WM_DESTROY: PostQuitMessage(0); break;
+			case WM_DESTROY: PostQuitMessage(0); data->window->set_window_exists(false); break;
 			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
 		}
 
