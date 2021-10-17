@@ -15,9 +15,7 @@ namespace BD3GE {
 			}
 
 			Message(const Message& source) {
-				if (source.m_data) {
-					m_data = new T(*(source.m_data));
-				}
+				m_data = source.m_data != nullptr ? new T(*(source.m_data)) : nullptr;
 			}
 
 			~Message() {
