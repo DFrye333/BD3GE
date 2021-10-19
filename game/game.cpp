@@ -19,7 +19,7 @@ namespace BD3GE {
 
 		// TODO: Consider platform independence here.
 		this->window = window;
-		//window->set_mouse_cursor_visibility(false);
+		window->set_mouse_cursor_visibility(false);
 		this->gl = new GL();
 		this->gl->print_info();
 		this->al = new AL();

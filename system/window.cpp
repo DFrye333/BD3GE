@@ -423,6 +423,18 @@ namespace BD3GE {
 				{
 					input_event.mouse_position.first = LOWORD(lParam); // X
 					input_event.mouse_position.second = HIWORD(lParam); // Y
+
+					// Clamps cursor within the window.
+					RECT window;
+					GetWindowRect(hwnd, &window);
+					POINT cursor;
+					GetCursorPos(&cursor);
+					short MARGIN = 200;
+					short TITLE_BAR_HEIGHT = 50;
+					if (cursor.x < window.left + MARGIN) { SetCursorPos(window.right - MARGIN, cursor.y); }
+					if (cursor.x > window.right - MARGIN) { SetCursorPos(window.left + MARGIN, cursor.y); }
+					if (cursor.y < window.top + MARGIN + TITLE_BAR_HEIGHT) { SetCursorPos(cursor.x, window.bottom - MARGIN); }
+					if (cursor.y > window.bottom - MARGIN) { SetCursorPos(cursor.x, window.top + MARGIN + TITLE_BAR_HEIGHT); }
 				}
 				break;
 			case WM_SIZE:
