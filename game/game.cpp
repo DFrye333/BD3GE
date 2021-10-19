@@ -58,8 +58,10 @@ namespace BD3GE {
 		// Initialize the logic and rendering timers.
 		Timer render_timer("Render", FRAME_RATE);
 		Timer logic_timer("Logic", TICK_RATE);
+		Timer mouse_drag_timer("Mouse Drag", 10 * TICK_RATE);
 		render_timer.start();
 		logic_timer.start();
+		mouse_drag_timer.start();
 
 		// Iterate endlessly (unless halted elsewhere).
 		while (true) {
@@ -80,6 +82,12 @@ namespace BD3GE {
 			if (logic_timer.is_due()) {
 				// Process a logic tick.
 				scene->tick(input);
+			}
+
+			// Check mouse drag timer.
+			if (mouse_drag_timer.is_due()) {
+				// Process a logic tick.
+				scene->mouse_drag(input);
 			}
 
 			// Check render timer.
