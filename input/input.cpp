@@ -1,6 +1,21 @@
 #include "input.h"
 
 namespace BD3GE {
+	Input::Input() : is_mouse_position_fresh(false) {}
+
+	Input::Input(std::vector<Gamepad*> gamepads) : Input() {
+		for (unsigned short i = 0; i < gamepads.size() && i < Gamepad::MAX_QUANTITY_GAMEPADS; ++i) {
+			this->gamepads[i] = gamepads[i];
+		}
+	}
+
+	Input::~Input() {
+		for (auto& [gamepad_index, gamepad] : gamepads) {
+			delete gamepad;
+			gamepad = nullptr;
+		}
+	}
+
 	void Input::handle(const BD3GE::Window::InputEvent input_event) {
 		for (const auto& [key, state] : input_event.key_state_map) {
 			record_key_state(key, state);
@@ -12,15 +27,24 @@ namespace BD3GE {
 		switch (input_event.connection_state) {
 			case Gamepad::CONNECTION_STATE::CONNECTED:
 				for (const auto& [input_code, state] : input_event.digitals) {
-					gamepads[input_event.index][input_code] = state;
+					gamepad_inputs[input_event.index][input_code] = state;
 				}
 				for (const auto& [input_code, value] : input_event.analogs) {
-					gamepads[input_event.index][input_code] = value;
+					gamepad_inputs[input_event.index][input_code] = value;
 				}
 				break;
 			case Gamepad::CONNECTION_STATE::DISCONNECTED:
-				gamepads.erase(input_event.index);
+				gamepad_inputs.erase(input_event.index);
 				break;
+		}
+	}
+
+	void Input::update() {
+		for (const auto& [gamepad_index, gamepad] : gamepads) {
+			Message<Gamepad::InputEvent> gamepad_input_message = gamepad->pull_input_message();
+			if (gamepad_input_message.get_data() != nullptr) {
+				handle(Gamepad::InputEvent(*(gamepad_input_message.get_data())));
+			}
 		}
 	}
 
@@ -53,26 +77,53 @@ namespace BD3GE {
 		this->current_mouse_position = mouse_position;
 	}
 
-	short Input::get_quantity_gamepads_active() {
-		return gamepads.size();
+	short Input::get_quantity_gamepads_connected() {
+		short quantity_gamepads_connected = 0;
+
+		for (const auto& [gamepad_index, gamepad] : gamepads) {
+			quantity_gamepads_connected += (gamepad->connection_state == Gamepad::CONNECTION_STATE::CONNECTED);
+		}
+
+		return quantity_gamepads_connected;
 	}
 
 	bool Input::check_is_gamepad_connected(short gamepad_index) {
-		return gamepads.contains(gamepad_index);
+		return gamepads[gamepad_index]->connection_state == Gamepad::CONNECTION_STATE::CONNECTED;
 	}
 
-	float Input::get_gamepad_value(short gamepad_index, Gamepad::INPUT_CODE input_code) {
-		return gamepads.contains(gamepad_index) ? gamepads[gamepad_index][input_code] : 0.0f;
+	short Input::get_primary_connected_gamepad_index() {
+		for (short i = 0; i < Gamepad::MAX_QUANTITY_GAMEPADS; ++i) {
+			if (check_is_gamepad_connected(i)) {
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
-	float Input::consume_gamepad_value(short gamepad_index, Gamepad::INPUT_CODE input_code) {
+	float Input::get_gamepad_input_value(short gamepad_index, Gamepad::INPUT_CODE input_code) {
+		return gamepad_inputs.contains(gamepad_index) ? gamepad_inputs[gamepad_index][input_code] : 0.0f;
+	}
+
+	float Input::consume_gamepad_input_value(short gamepad_index, Gamepad::INPUT_CODE input_code) {
 		float value = 0.0f;
 		
-		if (gamepads.contains(gamepad_index)) {
-			value = gamepads[gamepad_index][input_code];
-			gamepads[gamepad_index][input_code] = 0.0f;
+		if (gamepad_inputs.contains(gamepad_index)) {
+			value = gamepad_inputs[gamepad_index][input_code];
+			gamepad_inputs[gamepad_index][input_code] = 0.0f;
 		}
 
 		return value;
+	}
+
+	float Input::get_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code) {
+		return gamepad_outputs.contains(gamepad_index) ? gamepad_outputs[gamepad_index][output_code] : 0.0f;
+	}
+
+	void Input::set_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code, float output_value) {
+		Gamepad::OutputEvent output_event;
+		output_event.index = gamepad_index;
+		output_event.analogs[output_code] = gamepad_outputs[gamepad_index][output_code] = output_value;
+		gamepads[gamepad_index]->push_output_message(Message<Gamepad::OutputEvent>(output_event));
 	}
 }

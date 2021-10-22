@@ -33,7 +33,6 @@ namespace BD3GE {
 			GL*					gl;
 			AL*					al;
 			Input*				input;
-			Gamepad*			gamepad;
 	};
 }
 

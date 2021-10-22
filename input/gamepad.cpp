@@ -1,7 +1,9 @@
 #include "gamepad.h"
 
 namespace BD3GE {
-	Gamepad::Gamepad() {
+	short Gamepad::MAX_QUANTITY_GAMEPADS = 4;
+
+	Gamepad::Gamepad() : user_index(-1), connection_state(Gamepad::CONNECTION_STATE::DISCONNECTED) {
 		this->input_queue = new std::queue<Message<InputEvent>>;
 	}
 
@@ -22,6 +24,14 @@ namespace BD3GE {
 		}
 
 		return input_message;
+	}
+
+	void XInputGamepad::push_output_message(Message<Gamepad::OutputEvent> output_message) {
+		XINPUT_VIBRATION output_vibration;
+		float VIBRATION_MAX = 65535;
+		output_vibration.wLeftMotorSpeed = std::clamp(output_message.get_data()->analogs[Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_0] * VIBRATION_MAX, 0.0f, VIBRATION_MAX);
+		output_vibration.wRightMotorSpeed = std::clamp(output_message.get_data()->analogs[Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1] * VIBRATION_MAX, 0.0f, VIBRATION_MAX);
+		XInputSetState(output_message.get_data()->index, &output_vibration);
 	}
 
 	void XInputGamepad::check_input() {

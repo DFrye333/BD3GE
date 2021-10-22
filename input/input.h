@@ -16,16 +16,23 @@ namespace BD3GE {
 	class Input {
 		public:
 
+									Input();
+									Input(std::vector<Gamepad*> gamepads);
+									~Input();
 			void					handle(const BD3GE::Window::InputEvent input_event);
 			void					handle(const BD3GE::Gamepad::InputEvent input_event);
+			void					update();
 			bool					get_key_state(BD3GE::KEY_CODE key);
 			bool					consume_key_input(BD3GE::KEY_CODE key);
 			std::pair<short, short>	get_current_mouse_position();
 			std::pair<short, short>	get_previous_mouse_position();
-			short					get_quantity_gamepads_active();
+			short					get_quantity_gamepads_connected();
 			bool					check_is_gamepad_connected(short gamepad_index);
-			float					get_gamepad_value(short gamepad_index, Gamepad::INPUT_CODE input_code);
-			float					consume_gamepad_value(short gamepad_index, Gamepad::INPUT_CODE input_code);
+			short					get_primary_connected_gamepad_index();
+			float					get_gamepad_input_value(short gamepad_index, Gamepad::INPUT_CODE input_code);
+			float					consume_gamepad_input_value(short gamepad_index, Gamepad::INPUT_CODE input_code);
+			float					get_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code);
+			void					set_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code, float output_value);
 
 			bool is_mouse_position_fresh;
 
@@ -37,7 +44,9 @@ namespace BD3GE {
 			std::map<KEY_CODE, bool> keys;
 			std::pair<short, short> current_mouse_position;
 			std::pair<short, short> previous_mouse_position;
-			std::map<short, std::map<Gamepad::INPUT_CODE, float>> gamepads;
+			std::map<short, Gamepad*> gamepads;
+			std::map<short, std::map<Gamepad::INPUT_CODE, float>> gamepad_inputs;
+			std::map<short, std::map<Gamepad::OUTPUT_CODE, float>> gamepad_outputs;
 	};
 }
 

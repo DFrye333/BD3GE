@@ -21,6 +21,8 @@ namespace BD3GE {
 	class Gamepad {
 		public:
 
+			static short MAX_QUANTITY_GAMEPADS;
+
 			enum class CONNECTION_STATE {
 				CONNECTED,
 				DISCONNECTED
@@ -49,6 +51,11 @@ namespace BD3GE {
 				UTIL_1
 			};
 
+			enum class OUTPUT_CODE {
+				VIBRATION_MOTOR_0,
+				VIBRATION_MOTOR_1,
+			};
+
 			typedef struct InputEvent {
 				CONNECTION_STATE connection_state;
 				short index = 0;
@@ -56,9 +63,18 @@ namespace BD3GE {
 				std::map<INPUT_CODE, float> analogs;
 			} InputEvent;
 
+			typedef struct OutputEvent {
+				short index = 0;
+				std::map<OUTPUT_CODE, float> analogs;
+			} OutputEvent;
+
 			Gamepad();
 			virtual Message<Gamepad::InputEvent> pull_input_message() = 0;
+			virtual void push_output_message(Message<Gamepad::OutputEvent> output_message) = 0;
+			virtual void check_input() = 0;
 
+			short user_index;
+			CONNECTION_STATE connection_state;
 			std::queue<Message<InputEvent>>* input_queue;
 	};
 
@@ -71,10 +87,9 @@ namespace BD3GE {
 			XInputGamepad();
 			XInputGamepad(DWORD user_index);
 			Message<Gamepad::InputEvent> pull_input_message() override;
-			void check_input();
+			void push_output_message(Message<Gamepad::OutputEvent> output_message) override;
+			void check_input() override;
 
-			CONNECTION_STATE connection_state;
-			DWORD user_index;
 			DWORD last_checked_packet_number;
 	};
 }
