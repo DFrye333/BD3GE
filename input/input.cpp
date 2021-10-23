@@ -77,6 +77,10 @@ namespace BD3GE {
 		this->current_mouse_position = mouse_position;
 	}
 
+	Gamepad* Input::get_gamepad(short gamepad_index) {
+		return gamepads[gamepad_index];
+	}
+
 	short Input::get_quantity_gamepads_connected() {
 		short quantity_gamepads_connected = 0;
 
@@ -88,7 +92,8 @@ namespace BD3GE {
 	}
 
 	bool Input::check_is_gamepad_connected(short gamepad_index) {
-		return gamepads[gamepad_index]->connection_state == Gamepad::CONNECTION_STATE::CONNECTED;
+		Gamepad* gamepad = get_gamepad(gamepad_index);
+		return gamepad != nullptr && gamepad->connection_state == Gamepad::CONNECTION_STATE::CONNECTED;
 	}
 
 	short Input::get_primary_connected_gamepad_index() {
@@ -121,9 +126,12 @@ namespace BD3GE {
 	}
 
 	void Input::set_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code, float output_value) {
-		Gamepad::OutputEvent output_event;
-		output_event.index = gamepad_index;
-		output_event.analogs[output_code] = gamepad_outputs[gamepad_index][output_code] = output_value;
-		gamepads[gamepad_index]->push_output_message(Message<Gamepad::OutputEvent>(output_event));
+		Gamepad* gamepad = get_gamepad(gamepad_index);
+		if (gamepad != nullptr) {
+			Gamepad::OutputEvent output_event;
+			output_event.index = gamepad_index;
+			output_event.analogs[output_code] = gamepad_outputs[gamepad_index][output_code] = output_value;
+			gamepad->push_output_message(Message<Gamepad::OutputEvent>(output_event));
+		}
 	}
 }

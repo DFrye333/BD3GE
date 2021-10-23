@@ -26,6 +26,7 @@ namespace BD3GE {
 			bool					consume_key_input(BD3GE::KEY_CODE key);
 			std::pair<short, short>	get_current_mouse_position();
 			std::pair<short, short>	get_previous_mouse_position();
+			Gamepad*				get_gamepad(short gamepad_index);
 			short					get_quantity_gamepads_connected();
 			bool					check_is_gamepad_connected(short gamepad_index);
 			short					get_primary_connected_gamepad_index();
