@@ -1,14 +1,26 @@
 #include "shader.h"
 
 namespace BD3GE {
-	BD3GE::Shader::Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
+	Shader::Shader() : Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag") {}
+
+	Shader::Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
 		programID = create_program(vertexShaderFilePath, fragmentShaderFilePath);
 	}
 
-	BD3GE::Shader::~Shader() {}
+	Shader::~Shader() {
+		for (auto& light : lights) {
+			delete light;
+			light = nullptr;
+		}
+
+		for (auto& material : materials) {
+			delete material;
+			material = nullptr;
+		}
+	}
 
 	// Create a shader program composed of shader objects.
-	GLuint BD3GE::Shader::create_program(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
+	GLuint Shader::create_program(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
 		shaderObjects.push_back(create_shader(GL_VERTEX_SHADER, vertexShaderFilePath));
 		shaderObjects.push_back(create_shader(GL_FRAGMENT_SHADER, fragmentShaderFilePath));
 
@@ -28,7 +40,7 @@ namespace BD3GE {
 
 			GLchar* information_log_string = new GLchar[information_log_length + 1];
 			glGetProgramInfoLog(program_ID, information_log_length, NULL, information_log_string);
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Shader linker failure: " + std::string(information_log_string));
+			g_log.write(LOG_TYPE::ERR, "Shader linker failure: " + std::string(information_log_string));
 			delete[] information_log_string;
 		}
 
@@ -42,7 +54,7 @@ namespace BD3GE {
 	}
 
 	// Create an individual shader object.
-	GLuint BD3GE::Shader::create_shader(GLenum shaderType, const std::string filePath) {
+	GLuint Shader::create_shader(GLenum shaderType, const std::string filePath) {
 		GLuint shader_ID = glCreateShader(shaderType);
 
 		std::string shader_string;
@@ -76,7 +88,7 @@ namespace BD3GE {
 					break;
 			}
 
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Shader compiler failure in " + std::string(strShaderType) + " shader:\n " + std::string(information_log_string));
+			g_log.write(LOG_TYPE::ERR, "Shader compiler failure in " + std::string(strShaderType) + " shader:\n " + std::string(information_log_string));
 			delete[] information_log_string;
 		}
 
@@ -84,13 +96,13 @@ namespace BD3GE {
 	}
 
 	// Read shader program text from a file.
-	void BD3GE::Shader::read_file(const std::string filePath, std::string* shaderText) {
+	void Shader::read_file(const std::string filePath, std::string* shaderText) {
 		// Open shader file stream.
 		std::ifstream infile(filePath.c_str());
 
 		// Ensure that the shader file was opened successfully.
 		if (!infile) {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open shader file path " + filePath + " for reading!");
+			g_log.write(LOG_TYPE::ERR, "Cannot open shader file path " + filePath + " for reading!");
 			return;
 		}
 
@@ -100,25 +112,45 @@ namespace BD3GE {
 		infile.close();
 	}
 
-	GLuint BD3GE::Shader::get_program_ID() {
+	GLuint Shader::get_program_ID() {
 		return programID;
 	}
 
-	void BD3GE::Shader::enable() {
+	void Shader::enable() {
 		glUseProgram(get_program_ID());
 	}
 
-	void BD3GE::Shader::disable() {
+	void Shader::disable() {
 		glUseProgram(0);
 	}
 
-	void BD3GE::Shader::setUniform(std::string uniform_name, Matrix4 matrix) {
+	void Shader::setUniform(std::string uniform_name, Matrix4 value) {
 		GLfloat transformation_array[16];
-		matrix.to_float_array(transformation_array);
-		glUniformMatrix4fv(glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, GL_TRUE, transformation_array);
+		value.to_float_array(transformation_array);
+		glProgramUniformMatrix4fv(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, GL_TRUE, transformation_array);
 	}
 
-	void BD3GE::Shader::setUniform(std::string uniform_name, Vector3 vector) {
-		glUniform3fv(glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, vector.v.a);
+	void Shader::setUniform(std::string uniform_name, Vector3 value) {
+		glProgramUniform3fv(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, value.v.a);
+	}
+
+	void Shader::setUniform(std::string uniform_name, float value) {
+		glProgramUniform1f(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
+	}
+
+	void Shader::addLight(Light light) {
+		lights.push_back(new Light(light));
+		setUniform("light.position", light.position);
+		setUniform("light.color_ambient", light.color_ambient);
+		setUniform("light.color_diffuse", light.color_diffuse);
+		setUniform("light.color_specular", light.color_specular);
+	}
+
+	void Shader::addMaterial(Material material) {
+		materials.push_back(new Material(material));
+		setUniform("material.color_ambient", material.color_ambient);
+		setUniform("material.color_diffuse", material.color_diffuse);
+		setUniform("material.color_specular", material.color_specular);
+		setUniform("material.gloss_factor", material.gloss_factor);
 	}
 }

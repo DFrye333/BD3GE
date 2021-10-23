@@ -5,6 +5,7 @@
 
 #include "../utility/transform.h"
 #include "../utility/vector.h"
+#include "../video/material.h"
 #include "../video/shader.h"
 
 namespace BD3GE {
@@ -12,10 +13,12 @@ namespace BD3GE {
 		public:
 			Renderable();
 			Renderable(Shader* shader);
+			Renderable(Material* material);
+			Renderable(Shader* shader, Material* material);
 			virtual ~Renderable();
 			virtual void render(Transform worldTransform, Transform viewProjectionTransform) const;
-
 			Shader* shader;
+			Material* material;
 			GLuint vaoHandle;
 			GLuint tboHandle;
 			GLfloat* vbo;
@@ -26,6 +29,8 @@ namespace BD3GE {
 
 		protected:
 			virtual void setup() = 0;
+			bool owns_shader;
+			bool owns_material;
 	};
 }
 

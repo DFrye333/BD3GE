@@ -36,13 +36,15 @@ namespace BD3GE {
 
 		private:
 
-			Shader* lightingShader;
+			std::vector<Shader*> shaders;
+			std::vector<Texture*> textures;
 			std::vector<Object*> objects;
 			std::vector<Object*> lights;
 			Camera* camera;
 			Object* player;
 			Object* scaryDuck;
 			Object* light;
+			Shader* lightingShader;
 	};
 }
 

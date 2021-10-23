@@ -24,13 +24,12 @@ namespace BD3GE {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
-		// TODO: These should be owned by renderables.
 		Shader* defaultShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
 		Shader* lightingShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point.frag");
 		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
 		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
-
-		this->lightingShader = lightingShader;
+		shaders.insert(shaders.end(), { defaultShader, lightingShader, textureShader });
+		textures.insert(textures.end(), { wallTexture });
 
 		// Scary duck
 		this->scaryDuck = add_object(new Object(
@@ -76,6 +75,9 @@ namespace BD3GE {
 			new CircularBrush(1.5, 10, defaultShader, Color(102, 229, 102))
 		));
 
+		this->lightingShader = lightingShader;
+		lightingShader->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
+
 		this->camera = new Camera(Vector3(0, 0, 60));
 		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
 	}
@@ -88,9 +90,19 @@ namespace BD3GE {
 		delete camera;
 		camera = nullptr;
 
-		for (std::vector<Object*>::size_type i = 0; i != objects.size(); ++i) {
-			delete objects[i];
-			objects[i] = nullptr;
+		for (auto& object : objects) {
+			delete object;
+			object = nullptr;
+		}
+
+		for (auto& shader : shaders) {
+			delete shader;
+			shader = nullptr;
+		}
+
+		for (auto& texture : textures) {
+			delete texture;
+			texture = nullptr;
 		}
 	}
 
@@ -217,11 +229,8 @@ namespace BD3GE {
 			light->move();
 		}
 
-		lightingShader->enable();
-		lightingShader->setUniform("light_position", this->light->get_position());
-		lightingShader->setUniform("light_color", Vector3(1.0, 0.1, 0.1));
+		lightingShader->setUniform("light.position", this->light->get_position());
 		lightingShader->setUniform("viewer_position", this->camera->get_position());
-		lightingShader->disable();
 
 		scaryDuck->rotate(Vector3(0, 0.001, 0));
 		//camera->rotate(Vector3(0, 0, 0.001 / (180 / BD3GE::PI)));

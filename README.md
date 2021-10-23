@@ -21,6 +21,7 @@ Let's build a game from the ground up. Rendering, physics, audio, input - all of
 * Input:
     * Add custom mapping
 	* Add DirectInput support
+* Build out wider/universal support for class member ownership (e.g. Renderable.owns_shader)?
 
 **Linux Installation Dependencies:**
 
