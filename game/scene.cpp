@@ -20,8 +20,7 @@ namespace BD3GE {
 		// Ensure that asset importing succeeded.
 		if (plane && duck) {
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Assimp scene loading succeeded!");
-		}
-		else {
+		} else {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
@@ -236,7 +235,6 @@ namespace BD3GE {
 			Vector3 previousMouseVector = Vector3(-previousMousePosition.first, previousMousePosition.second, 0);
 			Vector3 mouseTranslation = currentMouseVector - previousMouseVector;
 			if (mouseTranslation.get_magnitude() < 100) {
-				std::cout << mouseTranslation << std::endl;
 				camera->translate(mouseTranslation * 0.1);
 			}
 		}
