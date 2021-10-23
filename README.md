@@ -18,6 +18,9 @@ Let's build a game from the ground up. Rendering, physics, audio, input - all of
 * I need a Material class to represent visual information about surfaces, and this class should have its own Shader.
 * Rework "scene" so that it's not so heavy on game logic
 * Make config dynamically-loaded from a file, rather than hardcoded in constants
+* Input:
+    * Add custom mapping
+	* Add DirectInput support
 
 **Linux Installation Dependencies:**
 
