@@ -20,7 +20,6 @@ namespace BD3GE {
 		public:
 			Mesh(const aiMesh* mesh, aiTexture* texture, Shader* shader, Vector3 scale);
 			~Mesh();
-			void setup();
 
 			aiTexture* texture;
 	};

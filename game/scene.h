@@ -44,7 +44,8 @@ namespace BD3GE {
 			Object* player;
 			Object* scaryDuck;
 			Object* light;
-			Shader* lightingShader;
+			Shader* lightingShaderSimple;
+			Shader* lightingShaderMapped;
 	};
 }
 

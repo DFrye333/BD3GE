@@ -28,8 +28,8 @@ namespace BD3GE {
 			void	setUniform(std::string uniform_name, Matrix4 value);
 			void	setUniform(std::string uniform_name, Vector3 value);
 			void	setUniform(std::string uniform_name, float value);
+			void	setUniform(std::string uniform_name, int value);
 			void	addLight(Light light);
-			void	addMaterial(Material material);
 
 		private:
 
@@ -37,10 +37,9 @@ namespace BD3GE {
 			GLuint		create_shader(GLenum shader_type, const std::string file_path);
 			void		read_file(const std::string file_path, std::string* shader_text);
 
-			GLuint					programID;
-			std::vector<GLuint>		shaderObjects;
-			std::vector<Light*>		lights;
-			std::vector<Material*>	materials;
+			GLuint							programID;
+			std::vector<GLuint>				shaderObjects;
+			std::vector<Light*>				lights;
 	};
 }
 

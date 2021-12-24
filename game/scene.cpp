@@ -25,24 +25,26 @@ namespace BD3GE {
 		}
 
 		Shader* defaultShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
-		Shader* lightingShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point.frag");
+		Shader* lightingShaderSimple = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point_simple.frag");
+		Shader* lightingShaderMapped = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point_mapped.frag");
 		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
 		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
-		shaders.insert(shaders.end(), { defaultShader, lightingShader, textureShader });
+		MappedMaterial* containerMaterial = new MappedMaterial(DEFAULT_RESOURCE_DIRECTORY + "textures/container_diffuse.png", DEFAULT_RESOURCE_DIRECTORY + "textures/container_specular.png", 32.0f);
+		shaders.insert(shaders.end(), { defaultShader, lightingShaderSimple, lightingShaderMapped, textureShader });
 		textures.insert(textures.end(), { wallTexture });
 
 		// Scary duck
 		this->scaryDuck = add_object(new Object(
 			Vector3(0, 0, -500),
 			Vector3(0, 0, 0),
-			new Mesh(duck->mMeshes[0], nullptr, lightingShader, Vector3(1, 1, 1))
+			new Mesh(duck->mMeshes[0], nullptr, lightingShaderSimple, Vector3(1, 1, 1))
 		));
 
 		// Cube
 		add_object(new Object(
 			Vector3(-60, 0, 0),
 			Vector3(0, 0, 0),
-			new Mesh(cube->mMeshes[0], nullptr, lightingShader, Vector3(1, 1, 1))
+			new Mesh(cube->mMeshes[0], nullptr, lightingShaderSimple, Vector3(1, 1, 1))
 		));
 
 		// Floor
@@ -57,15 +59,22 @@ namespace BD3GE {
 			add_object(new Object(
 				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
 				Vector3(0, 0, 0),
-				new SquareBrush(2, 2, lightingShader, Color(50, 160, 0))
+				new SquareBrush(2, 2, lightingShaderSimple, Color(50, 160, 0))
 			));
 		}
+
+		// Mapped container
+		add_object(new Object(
+			Vector3(75, 0, 0),
+			Vector3(0, 0, 0),
+			new SquareBrush(5, 5, lightingShaderMapped, containerMaterial)
+		));
 
 		// Player
 		this->player = add_object(new Object(
 			Vector3(5, 5, 0),
 			Vector3(0, 0, 0),
-			new SquareBrush(2, 2, lightingShader, Color(10, 51, 102))
+			new SquareBrush(2, 2, lightingShaderSimple, Color(10, 51, 102))
 		));
 
 		// Light
@@ -75,8 +84,10 @@ namespace BD3GE {
 			new CircularBrush(1.5, 10, defaultShader, Color(102, 229, 102))
 		));
 
-		this->lightingShader = lightingShader;
-		lightingShader->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
+		this->lightingShaderSimple = lightingShaderSimple;
+		this->lightingShaderMapped = lightingShaderMapped;
+		lightingShaderSimple->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
+		lightingShaderMapped->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
 
 		this->camera = new Camera(Vector3(0, 0, 60));
 		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
@@ -229,8 +240,10 @@ namespace BD3GE {
 			light->move();
 		}
 
-		lightingShader->setUniform("light.position", this->light->get_position());
-		lightingShader->setUniform("viewer_position", this->camera->get_position());
+		lightingShaderSimple->setUniform("light.position", this->light->get_position());
+		lightingShaderSimple->setUniform("viewer_position", this->camera->get_position());
+		lightingShaderMapped->setUniform("light.position", this->light->get_position());
+		lightingShaderMapped->setUniform("viewer_position", this->camera->get_position());
 
 		scaryDuck->rotate(Vector3(0, 0.001, 0));
 		//camera->rotate(Vector3(0, 0, 0.001 / (180 / BD3GE::PI)));

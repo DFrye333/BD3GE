@@ -12,11 +12,6 @@ namespace BD3GE {
 			delete light;
 			light = nullptr;
 		}
-
-		for (auto& material : materials) {
-			delete material;
-			material = nullptr;
-		}
 	}
 
 	// Create a shader program composed of shader objects.
@@ -138,19 +133,15 @@ namespace BD3GE {
 		glProgramUniform1f(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
 	}
 
+	void Shader::setUniform(std::string uniform_name, int value) {
+		glProgramUniform1i(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
+	}
+
 	void Shader::addLight(Light light) {
 		lights.push_back(new Light(light));
 		setUniform("light.position", light.position);
 		setUniform("light.color_ambient", light.color_ambient);
 		setUniform("light.color_diffuse", light.color_diffuse);
 		setUniform("light.color_specular", light.color_specular);
-	}
-
-	void Shader::addMaterial(Material material) {
-		materials.push_back(new Material(material));
-		setUniform("material.color_ambient", material.color_ambient);
-		setUniform("material.color_diffuse", material.color_diffuse);
-		setUniform("material.color_specular", material.color_specular);
-		setUniform("material.gloss_factor", material.gloss_factor);
 	}
 }
