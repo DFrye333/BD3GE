@@ -31,7 +31,7 @@ out vec4 fragment_color;
 void main(void) {
 	mat3 normal_matrix = mat3(transpose(inverse_world_transform));
 	// TODO: Need real normal vector, rather than constant (0, 0, 1)
-	vec3 normal_vector = mat3(world_transform) * (normal_matrix * normalize(vec3(0, 0, 1)));
+	vec3 normal_vector = normal_matrix * normalize(vec3(0, 0, 1));
 	vec3 light_direction = light.position - world_position.xyz;
 
 	vec3 ambient_component = vec3(texture(material.map_diffuse, texture_coordinates)) * light.color_ambient;
