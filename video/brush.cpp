@@ -249,4 +249,173 @@ namespace BD3GE {
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(2);
 	}
+
+	BoxBrush::BoxBrush(Vector3 dimensions, Shader* shader, Color color) {
+		this->shader = shader;
+
+		sizePerVertex = 10;
+		numVertices = 8;
+		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
+
+		float width = dimensions.v.g.x;
+		float length = dimensions.v.g.y;
+		float height = dimensions.v.g.z;
+
+		// Near top-left
+		vbo[0] = (GLfloat)(-width / 2);		// Position X
+		vbo[1] = (GLfloat)(height / 2);		// Position Y
+		vbo[2] = (GLfloat)(length / 2);		// Position Z
+		vbo[3] = (GLfloat)color.rgb.v.c.r;	// Color R
+		vbo[4] = (GLfloat)color.rgb.v.c.g;	// Color G
+		vbo[5] = (GLfloat)color.rgb.v.c.b;	// Color B
+		vbo[6] = (GLfloat)color.a;			// Color A
+		vbo[7] = -1;						// Normal X
+		vbo[8] = 1;							// Normal Y
+		vbo[9] = 1;							// Normal Z
+
+		// Near top-right
+		vbo[10] = (GLfloat)(width / 2);
+		vbo[11] = (GLfloat)(height / 2);
+		vbo[12] = (GLfloat)(length / 2);
+		vbo[13] = (GLfloat)color.rgb.v.c.r;
+		vbo[14] = (GLfloat)color.rgb.v.c.g;
+		vbo[15] = (GLfloat)color.rgb.v.c.b;
+		vbo[16] = (GLfloat)color.a;
+		vbo[17] = 1;
+		vbo[18] = 1;
+		vbo[19] = 1;
+
+		// Near bottom-right
+		vbo[20] = (GLfloat)(width / 2);
+		vbo[21] = (GLfloat)(-height / 2);
+		vbo[22] = (GLfloat)(length / 2);
+		vbo[23] = (GLfloat)color.rgb.v.c.r;
+		vbo[24] = (GLfloat)color.rgb.v.c.g;
+		vbo[25] = (GLfloat)color.rgb.v.c.b;
+		vbo[26] = (GLfloat)color.a;
+		vbo[27] = 1;
+		vbo[28] = -1;
+		vbo[29] = 1;
+
+		// Near bottom-left
+		vbo[30] = (GLfloat)(-width / 2);
+		vbo[31] = (GLfloat)(-height / 2);
+		vbo[32] = (GLfloat)(length / 2);
+		vbo[33] = (GLfloat)color.rgb.v.c.r;
+		vbo[34] = (GLfloat)color.rgb.v.c.g;
+		vbo[35] = (GLfloat)color.rgb.v.c.b;
+		vbo[36] = (GLfloat)color.a;
+		vbo[37] = -1;
+		vbo[38] = -1;
+		vbo[39] = 1;
+
+		// Far top-left
+		vbo[40] = (GLfloat)(-width / 2);
+		vbo[41] = (GLfloat)(height / 2);
+		vbo[42] = (GLfloat)(-length / 2);
+		vbo[43] = (GLfloat)color.rgb.v.c.r;
+		vbo[44] = (GLfloat)color.rgb.v.c.g;
+		vbo[45] = (GLfloat)color.rgb.v.c.b;
+		vbo[46] = (GLfloat)color.a;
+		vbo[47] = -1;
+		vbo[48] = 1;
+		vbo[49] = -1;
+
+		// Far top-right
+		vbo[50] = (GLfloat)(width / 2);
+		vbo[51] = (GLfloat)(height / 2);
+		vbo[52] = (GLfloat)(-length / 2);
+		vbo[53] = (GLfloat)color.rgb.v.c.r;
+		vbo[54] = (GLfloat)color.rgb.v.c.g;
+		vbo[55] = (GLfloat)color.rgb.v.c.b;
+		vbo[56] = (GLfloat)color.a;
+		vbo[57] = 1;
+		vbo[58] = 1;
+		vbo[59] = -1;
+
+		// Far bottom-right
+		vbo[60] = (GLfloat)(width / 2);
+		vbo[61] = (GLfloat)(-height / 2);
+		vbo[62] = (GLfloat)(-length / 2);
+		vbo[63] = (GLfloat)color.rgb.v.c.r;
+		vbo[64] = (GLfloat)color.rgb.v.c.g;
+		vbo[65] = (GLfloat)color.rgb.v.c.b;
+		vbo[66] = (GLfloat)color.a;
+		vbo[67] = 1;
+		vbo[68] = -1;
+		vbo[69] = -1;
+
+		// Far bottom-left
+		vbo[70] = (GLfloat)(-width / 2);
+		vbo[71] = (GLfloat)(-height / 2);
+		vbo[72] = (GLfloat)(-length / 2);
+		vbo[73] = (GLfloat)color.rgb.v.c.r;
+		vbo[74] = (GLfloat)color.rgb.v.c.g;
+		vbo[75] = (GLfloat)color.rgb.v.c.b;
+		vbo[76] = (GLfloat)color.a;
+		vbo[77] = -1;
+		vbo[78] = -1;
+		vbo[79] = -1;
+
+		numIndices = 36;
+		ibo = new GLuint[(GLuint)numIndices];
+
+		// Near face
+		ibo[0] = (GLuint)0;
+		ibo[1] = (GLuint)1;
+		ibo[2] = (GLuint)2;
+		ibo[3] = (GLuint)0;
+		ibo[4] = (GLuint)2;
+		ibo[5] = (GLuint)3;
+
+		// Left face
+		ibo[6] = (GLuint)4;
+		ibo[7] = (GLuint)0;
+		ibo[8] = (GLuint)3;
+		ibo[9] = (GLuint)4;
+		ibo[10] = (GLuint)3;
+		ibo[11] = (GLuint)7;
+
+		// Far face
+		ibo[12] = (GLuint)5;
+		ibo[13] = (GLuint)4;
+		ibo[14] = (GLuint)7;
+		ibo[15] = (GLuint)5;
+		ibo[16] = (GLuint)7;
+		ibo[17] = (GLuint)6;
+
+		// Right face
+		ibo[18] = (GLuint)1;
+		ibo[19] = (GLuint)5;
+		ibo[20] = (GLuint)6;
+		ibo[21] = (GLuint)1;
+		ibo[22] = (GLuint)6;
+		ibo[23] = (GLuint)2;
+
+		// Top face
+		ibo[24] = (GLuint)4;
+		ibo[25] = (GLuint)5;
+		ibo[26] = (GLuint)1;
+		ibo[27] = (GLuint)4;
+		ibo[28] = (GLuint)1;
+		ibo[29] = (GLuint)0;
+
+		// Bottom face
+		ibo[30] = (GLuint)3;
+		ibo[31] = (GLuint)2;
+		ibo[32] = (GLuint)6;
+		ibo[33] = (GLuint)3;
+		ibo[34] = (GLuint)6;
+		ibo[35] = (GLuint)7;
+
+		setup();
+
+		// Colors
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
+
+		// Normals
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
+	}
 }

@@ -26,11 +26,17 @@ namespace BD3GE {
 			SquareBrush(float width, float height, Shader* shader, Color color);
 			SquareBrush(float width, float height, Shader* shader, Texture* texture);
 			SquareBrush(float width, float height, Shader* shader, MappedMaterial* mappedMaterial);
+			void setupSquare(float width, float height);
 	};
 
 	class CircularBrush : public Brush {
 		public:
 			CircularBrush(float radius, int resolution, Shader* shader, Color color);
+	};
+
+	class BoxBrush : public Brush {
+		public:
+			BoxBrush(Vector3 dimensions, Shader* shader, Color color);
 	};
 }
 
