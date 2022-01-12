@@ -23,6 +23,7 @@ namespace BD3GE {
 			void 				to_float_array(float* float_array) const;
 			Transform 			inverse(void) const;
 			Matrix4				get_matrix(void) const;
+			Vector3				get_position() const;
 			const float 		operator()(unsigned short i, unsigned short j) const;
 			void 				operator()(unsigned short i, unsigned short j, float value);
 			const Transform& 	operator=(const Transform& other);

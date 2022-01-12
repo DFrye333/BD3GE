@@ -77,6 +77,11 @@ namespace BD3GE {
 	Matrix4 Transform::get_matrix(void) const {
 		return this->matrix;
 	}
+	
+	Vector3 Transform::get_position() const {
+		Matrix4 matrix = get_matrix();
+		return Vector3(matrix(3, 0), matrix(3, 1), matrix(3, 2));
+	}
 
 	const float Transform::operator()(unsigned short i, unsigned short j) const {
 		return this->matrix(i, j);
