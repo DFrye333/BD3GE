@@ -1,4 +1,4 @@
-#version 460
+#version 460 core
 
 in vec4 vertex_color;
 in vec2 texture_coordinates;

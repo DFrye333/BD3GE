@@ -32,7 +32,7 @@ namespace BD3GE {
 			virtual void	render(Transform viewProjectionTransform);
 			void			set_position(Vector3 position) { this->worldTransform.translate(position); }
 			Vector3			get_position()			{ return this->worldTransform.get_position(); }
-			void			set_velocity(Vector3 velocity) { this->velocity = velocity;  }
+			void			set_velocity(Vector3 velocity) { this->velocity = velocity; }
 
 		protected:
 
