@@ -30,7 +30,7 @@ namespace BD3GE {
 			Object* add_object(Object* object);
 			Object* add_light(Object* light);
 			void tick(Input* input);
-			void mouse_drag(Input* input);
+			void mouse_move(Input* input);
 			void render(void);
 			Camera* getCamera(void);
 

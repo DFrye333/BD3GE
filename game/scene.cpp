@@ -249,7 +249,7 @@ namespace BD3GE {
 		//camera->rotate(Vector3(0, 0, 0.001 / (180 / BD3GE::PI)));
 	}
 
-	void Scene::mouse_drag(Input* input) {
+	void Scene::mouse_move(Input* input) {
 		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON) && input->is_mouse_position_fresh) {
 			std::pair<short, short> currentMousePosition = input->get_current_mouse_position();
 			std::pair<short, short> previousMousePosition = input->get_previous_mouse_position();
