@@ -1,7 +1,7 @@
 #include "camera.h"
 
 namespace BD3GE {
-	Camera::Camera(Vector3 position) : Object(position, Vector3(0, 0, 0)) {
+	Camera::Camera(Vector3 position) : Object(position) {
 		viewport_width = WINDOW_WIDTH;
 		viewport_height = WINDOW_HEIGHT;
 	}

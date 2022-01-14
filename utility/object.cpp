@@ -1,11 +1,11 @@
 #include "object.h"
 
 namespace BD3GE {
-	Object::Object() : renderable(nullptr), ogg(nullptr) {}
+	Object::Object() : renderable(nullptr) {}
 
-	Object::Object(const Vector3 position, const Vector3 velocity) : Object(position, velocity, nullptr) {}
+	Object::Object(const Vector3 position) : Object(position, nullptr) {}
 
-	Object::Object(const Vector3 position, const Vector3 velocity, Renderable* renderable) : velocity(velocity), renderable(renderable), ogg(nullptr) {
+	Object::Object(const Vector3 position, Renderable* renderable) : renderable(renderable) {
 		translate(position);
 
 		// TODO: Revisit audio stuff later!
@@ -17,13 +17,6 @@ namespace BD3GE {
 	Object::~Object() {
 		delete renderable;
 		renderable = nullptr;
-
-		delete ogg;
-		ogg = nullptr;
-	}
-
-	void Object::move(void) {
-		worldTransform.translate(get_position() + velocity);
 	}
 
 	void Object::translate(Vector3 translation) {

@@ -36,21 +36,18 @@ namespace BD3GE {
 		// Scary duck
 		this->scaryDuck = add_object(new Object(
 			Vector3(0, 0, -500),
-			Vector3(0, 0, 0),
 			new Mesh(duck->mMeshes[0], nullptr, lightingShaderSimple, Vector3(1, 1, 1))
 		));
 
 		// Cube
 		add_object(new Object(
 			Vector3(-60, 0, 0),
-			Vector3(0, 0, 0),
 			new Mesh(cube->mMeshes[0], nullptr, lightingShaderSimple, Vector3(1, 1, 1))
 		));
 
 		// Floor
 		add_object(new Object(
 			Vector3(-5, 5, 0),
-			Vector3(0, 0, 0),
 			new SquareBrush(10, 10, textureShader, wallTexture)
 		));
 
@@ -58,7 +55,6 @@ namespace BD3GE {
 		for (unsigned int i = 0; i < 121; ++i) {
 			add_object(new Object(
 				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
-				Vector3(0, 0, 0),
 				new BoxBrush(Vector3(2, 10, 2), lightingShaderSimple, Color(50, 160, 0))
 			));
 		}
@@ -66,21 +62,18 @@ namespace BD3GE {
 		// Mapped container
 		add_object(new Object(
 			Vector3(75, 0, 0),
-			Vector3(0, 0, 0),
 			new SquareBrush(5, 5, lightingShaderMapped, containerMaterial)
 		));
 
 		// Player
 		this->player = add_object(new Object(
 			Vector3(5, 5, 0),
-			Vector3(0, 0, 0),
 			new BoxBrush(Vector3(2, 2, 2), lightingShaderSimple, Color(10, 51, 102))
 		));
 
 		// Light
 		this->light = add_light(new Object(
 			Vector3(5, 5, 100),
-			Vector3(0, 0, 0),
 			new CircularBrush(1.5, 10, defaultShader, Color(102, 229, 102))
 		));
 
@@ -230,14 +223,6 @@ namespace BD3GE {
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1) - 0.001);
-		}
-
-		camera->move();
-		for (auto& object : objects) {
-			object->move();
-		}
-		for (auto& light : lights) {
-			light->move();
 		}
 
 		lightingShaderSimple->setUniform("light.position", this->light->get_position());
