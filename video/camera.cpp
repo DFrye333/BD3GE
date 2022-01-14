@@ -11,9 +11,9 @@ namespace BD3GE {
 	Camera::~Camera() {}
 
 	const Transform Camera::get_projection_transform() const {
-		float frustum_scale = 1.0f;
+		float frustum_scale = 5.0f;
 		float z_near = 0.01f;
-		float z_far = 1000.0f;
+		float z_far = 10000.0f;
 
 		return Matrix4(
 			frustum_scale / ((GLfloat)viewport_width / (GLfloat)viewport_height), 0, 0, 0,

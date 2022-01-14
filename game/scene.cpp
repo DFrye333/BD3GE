@@ -82,7 +82,7 @@ namespace BD3GE {
 		lightingShaderSimple->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
 		lightingShaderMapped->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
 
-		this->camera = new Camera(Vector3(0, 0, 60));
+		this->camera = new Camera(Vector3(0, 0, 300));
 		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
 	}
 
@@ -138,11 +138,30 @@ namespace BD3GE {
 			player->translate(Vector3(0, input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::LEFT_STICK_Y) * player_speed, 0));
 			camera->translate(Vector3(0, input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::LEFT_STICK_Y) * player_speed, 0));
 		}
+
 		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_X) != 0) {
 			camera->translate(Vector3(input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_X) * player_speed, 0, 0));
 		}
+		camera->translate(Vector3(input->get_key_state(BD3GE::KEY_CODE::LEFT) * -player_speed, 0, 0));
+		camera->translate(Vector3(input->get_key_state(BD3GE::KEY_CODE::RIGHT) * player_speed, 0, 0));
+
 		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_Y) != 0) {
 			camera->translate(Vector3(0, input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_Y) * player_speed, 0));
+		}
+		camera->translate(Vector3(0, input->get_key_state(BD3GE::KEY_CODE::UP) * player_speed, 0));
+		camera->translate(Vector3(0, input->get_key_state(BD3GE::KEY_CODE::DOWN) * -player_speed, 0));
+
+		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::DPAD_UP)) {
+			player->translate(Vector3(0, player_speed, 0));
+		}
+		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::DPAD_DOWN)) {
+			player->translate(Vector3(0, -player_speed, 0));
+		}
+		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::DPAD_LEFT)) {
+			player->translate(Vector3(-player_speed, 0, 0));
+		}
+		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::DPAD_RIGHT)) {
+			player->translate(Vector3(player_speed, 0, 0));
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::W)) {
@@ -164,6 +183,18 @@ namespace BD3GE {
 			player->translate(Vector3(0, 0, player_speed));
 		}
 
+		if (input->get_key_state(BD3GE::KEY_CODE::G)) {
+			player->rotate(Vector3(0.01, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::B)) {
+			player->rotate(Vector3(-0.01, 0, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::V)) {
+			player->rotate(Vector3(0, 0.01, 0));
+		}
+		if (input->get_key_state(BD3GE::KEY_CODE::N)) {
+			player->rotate(Vector3(0, -0.01, 0));
+		}
 		if (input->get_key_state(BD3GE::KEY_CODE::F)) {
 			player->rotate(Vector3(0, 0, 0.01));
 		}
@@ -178,7 +209,8 @@ namespace BD3GE {
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::R)) {
-			camera->set_position(Vector3(0, 0, 60));
+			camera->set_position(Vector3(0, 0, 300));
+			//camera->set_direction();
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::J)) {
@@ -200,28 +232,29 @@ namespace BD3GE {
 			light->translate(Vector3(0, 0, 0.25 * -player_speed));
 		}
 
-		/*if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::KP_1)) {
 			light->rotate(Vector3(-0.01, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::KP_3)) {
 			light->rotate(Vector3(0.01, 0, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::KP_5)) {
 			light->rotate(Vector3(0, 0.01, 0));
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::KP_2)) {
 			light->rotate(Vector3(0, -0.01, 0));
-		}*/
-		if (input->get_key_state(BD3GE::KEY_CODE::LEFT)) {
+		}
+
+		if (input->get_key_state(BD3GE::KEY_CODE::DEL)) {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_0, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_0) - 0.001);
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::RIGHT)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::INSERT)) {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_0, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_0) + 0.001);
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::UP)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::PAGEUP)) {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1) + 0.001);
 		}
-		if (input->get_key_state(BD3GE::KEY_CODE::DOWN)) {
+		if (input->get_key_state(BD3GE::KEY_CODE::PAGEDOWN)) {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1) - 0.001);
 		}
 
@@ -231,7 +264,7 @@ namespace BD3GE {
 		lightingShaderMapped->setUniform("viewer_position", this->camera->get_position());
 
 		scaryDuck->rotate(Vector3(0, 0.001, 0));
-		//camera->rotate(Vector3(0, 0, 0.001 / (180 / BD3GE::PI)));
+		//camera->rotate(Vector3(0, 0.1 / (180 / BD3GE::PI), 0));
 	}
 
 	void Scene::mouse_move(Input* input) {
