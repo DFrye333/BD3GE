@@ -140,8 +140,8 @@ namespace BD3GE {
 	void Shader::addLight(Light light) {
 		lights.push_back(new Light(light));
 		setUniform("light.position", light.position);
-		setUniform("light.color_ambient", light.color_ambient);
-		setUniform("light.color_diffuse", light.color_diffuse);
-		setUniform("light.color_specular", light.color_specular);
+		setUniform("light.color_ambient", light.color_ambient.rgb);
+		setUniform("light.color_diffuse", light.color_diffuse.rgb);
+		setUniform("light.color_specular", light.color_specular.rgb);
 	}
 }

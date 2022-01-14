@@ -79,8 +79,9 @@ namespace BD3GE {
 
 		this->lightingShaderSimple = lightingShaderSimple;
 		this->lightingShaderMapped = lightingShaderMapped;
-		lightingShaderSimple->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
-		lightingShaderMapped->addLight(Light(light->get_position(), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f)));
+		Light light = Light(this->light->get_position(), Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255));
+		lightingShaderSimple->addLight(light);
+		lightingShaderMapped->addLight(light);
 
 		this->camera = new Camera(Vector3(0, 0, 300));
 		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
