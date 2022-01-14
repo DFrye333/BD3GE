@@ -1,7 +1,6 @@
 #ifndef BD3GE_MESH_H
 #define BD3GE_MESH_H
 
-#include <assimp/Importer.hpp>
 #include <assimp/mesh.h>
 #include <assimp/texture.h>
 #include <assimp/vector3.h>

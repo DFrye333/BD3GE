@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include <assimp/Importer.hpp>
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -16,6 +17,7 @@
 #include "../utility/object.h"
 #include "../video/brush.h"
 #include "../video/camera.h"
+#include "../video/mesh.h"
 
 
 #include <cmath>

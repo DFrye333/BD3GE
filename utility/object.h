@@ -8,14 +8,9 @@
 
 #include "../audio/ogg.h"
 #include "../system/constants.h"
-#include "../utility/color.h"
-#include "../utility/matrix.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"
-#include "../video/mesh.h"
 #include "../video/renderable.h"
-#include "../video/shader.h"
-#include "../video/texture.h"
 
 namespace BD3GE {
 	class Object {
