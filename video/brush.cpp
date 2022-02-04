@@ -3,13 +3,15 @@
 namespace BD3GE {
 	Brush::Brush() : texture(nullptr) {}
 
+	Brush::Brush(Vector3 position) : Renderable(position), texture(nullptr) {}
+
 	Brush::~Brush() {
 		delete texture;
 		texture = nullptr;
 	}
 
-	SquareBrush::SquareBrush(float width, float height, Shader* shader, Color color) {
-		sizePerVertex = 10;
+	SquareBrush::SquareBrush(Vector3 position, float width, float height, SimpleMaterial* simpleMaterial) : Brush(position) {
+		sizePerVertex = 6;
 		numVertices = 4;
 		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
 
@@ -17,49 +19,33 @@ namespace BD3GE {
 		vbo[0] = (GLfloat)(-width / 2);		// Position X
 		vbo[1] = (GLfloat)(height / 2);		// Position Y
 		vbo[2] = (GLfloat)0;				// Position Z
-		vbo[3] = (GLfloat)color.rgb.v.c.r;	// Color R
-		vbo[4] = (GLfloat)color.rgb.v.c.g;	// Color G
-		vbo[5] = (GLfloat)color.rgb.v.c.b;	// Color B
-		vbo[6] = (GLfloat)color.a;			// Color A
-		vbo[7] = 0;							// Normal X
-		vbo[8] = 0;							// Normal Y
-		vbo[9] = 1;							// Normal Z
+		vbo[3] = 0;							// Normal X
+		vbo[4] = 0;							// Normal Y
+		vbo[5] = 1;							// Normal Z
 
 		// Top-right
-		vbo[10] = (GLfloat)(width / 2);
-		vbo[11] = (GLfloat)(height / 2);
-		vbo[12] = (GLfloat)0;
-		vbo[13] = (GLfloat)color.rgb.v.c.r;
-		vbo[14] = (GLfloat)color.rgb.v.c.g;
-		vbo[15] = (GLfloat)color.rgb.v.c.b;
-		vbo[16] = (GLfloat)color.a;
-		vbo[17] = 0;
-		vbo[18] = 0;
-		vbo[19] = 1;
+		vbo[6] = (GLfloat)(width / 2);
+		vbo[7] = (GLfloat)(height / 2);
+		vbo[8] = (GLfloat)0;
+		vbo[9] = 0;
+		vbo[10] = 0;
+		vbo[11] = 1;
 
 		// Bottom-right
-		vbo[20] = (GLfloat)(width / 2);
-		vbo[21] = (GLfloat)(-height / 2);
-		vbo[22] = (GLfloat)0;
-		vbo[23] = (GLfloat)color.rgb.v.c.r;
-		vbo[24] = (GLfloat)color.rgb.v.c.g;
-		vbo[25] = (GLfloat)color.rgb.v.c.b;
-		vbo[26] = (GLfloat)color.a;
-		vbo[27] = 0;
-		vbo[28] = 0;
-		vbo[29] = 1;
+		vbo[12] = (GLfloat)(width / 2);
+		vbo[13] = (GLfloat)(-height / 2);
+		vbo[14] = (GLfloat)0;
+		vbo[15] = 0;
+		vbo[16] = 0;
+		vbo[17] = 1;
 
 		// Bottom-left
-		vbo[30] = (GLfloat)(-width / 2);
-		vbo[31] = (GLfloat)(-height / 2);
-		vbo[32] = (GLfloat)0;
-		vbo[33] = (GLfloat)color.rgb.v.c.r;
-		vbo[34] = (GLfloat)color.rgb.v.c.g;
-		vbo[35] = (GLfloat)color.rgb.v.c.b;
-		vbo[36] = (GLfloat)color.a;
-		vbo[37] = 0;
-		vbo[38] = 0;
-		vbo[39] = 1;
+		vbo[18] = (GLfloat)(-width / 2);
+		vbo[19] = (GLfloat)(-height / 2);
+		vbo[20] = (GLfloat)0;
+		vbo[21] = 0;
+		vbo[22] = 0;
+		vbo[23] = 1;
 
 		numIndices = 6;
 		ibo = new GLuint[(GLuint)numIndices];
@@ -70,43 +56,23 @@ namespace BD3GE {
 		ibo[4] = (GLuint)2;
 		ibo[5] = (GLuint)3;
 
-		this->shader = shader;
+		this->materials.push_back(simpleMaterial);
 
 		setup();
 
-		// Colors
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
-
 		// Normals
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
 	}
 
-	SquareBrush::SquareBrush(float width, float height, Shader* shader, Texture* texture) {
-		this->shader = shader;
-		this->texture = texture;
-
-		setupSquare(width, height);
-
-		// Texture
-		if (texture != nullptr && texture->data != nullptr) {
-			addTexture(GL_TEXTURE0, texture);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(2);
-		}
-	}
-
-	SquareBrush::SquareBrush(float width, float height, Shader* shader, MappedMaterial* mappedMaterial) {
-		this->shader = shader;
-
+	SquareBrush::SquareBrush(Vector3 position, float width, float height, MappedMaterial* mappedMaterial) : Brush(position) {
 		setupSquare(width, height);
 
 		// Mapped material
 		if (mappedMaterial != nullptr) {
-			setMaterial(mappedMaterial);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(2);
+			this->materials.push_back(mappedMaterial);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(1);
 		}
 	}
 
@@ -155,7 +121,7 @@ namespace BD3GE {
 		setup();
 	}
 
-	CircularBrush::CircularBrush(float radius, int resolution, Shader* shader, Color color) {
+	CircularBrush::CircularBrush(Vector3 position, float radius, int resolution, Color color) : Brush(position) {
 		sizePerVertex = 10;
 		numVertices = (4 * resolution) + 1;
 		vbo = new GLfloat[sizePerVertex * GLuint(numVertices)];
@@ -197,23 +163,64 @@ namespace BD3GE {
 			ibo[(3 * i) + 2] = (GLuint)(numVertices - i - 1);
 		}
 
-		this->shader = shader;
-
 		setup();
 
-		// Colors
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		// Color
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 
 		// Normals
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(2);
 	}
 
-	BoxBrush::BoxBrush(Vector3 dimensions, Shader* shader, Color color) {
-		this->shader = shader;
+	CircularBrush::CircularBrush(Vector3 position, float radius, int resolution, SimpleMaterial* simpleMaterial) : Brush(position) {
+		sizePerVertex = 6;
+		numVertices = (4 * resolution) + 1;
+		vbo = new GLfloat[sizePerVertex * GLuint(numVertices)];
 
-		sizePerVertex = 10;
+		// Center
+		vbo[0] = (GLfloat)0;
+		vbo[1] = (GLfloat)0;
+		vbo[2] = (GLfloat)0;
+		vbo[3] = 0;
+		vbo[4] = 0;
+		vbo[5] = 1;
+
+		// Circumference
+		for (unsigned int i = 0; i < numVertices - 1; ++i) {
+			vbo[(sizePerVertex * (i + 1)) + 0] = (GLfloat)(cos(i * ((std::numbers::pi / 2) / resolution)) * radius);
+			vbo[(sizePerVertex * (i + 1)) + 1] = (GLfloat)(sin(i * ((std::numbers::pi / 2) / resolution)) * radius);
+			vbo[(sizePerVertex * (i + 1)) + 2] = (GLfloat)(0);
+			vbo[(sizePerVertex * (i + 1)) + 3] = 0;
+			vbo[(sizePerVertex * (i + 1)) + 4] = 0;
+			vbo[(sizePerVertex * (i + 1)) + 5] = 1;
+		}
+
+		numIndices = 3 * (numVertices - 1);
+		ibo = new GLuint[numIndices];
+		ibo[0] = (GLuint)0;
+		ibo[1] = (GLuint)1;
+		ibo[2] = (GLuint)(numVertices - 1);
+		for (int i = 1; i < numVertices - 1; ++i) {
+			ibo[(3 * i) + 0] = (GLuint)0;
+			ibo[(3 * i) + 1] = (GLuint)(numVertices - i);
+			ibo[(3 * i) + 2] = (GLuint)(numVertices - i - 1);
+		}
+
+		setup();
+
+		this->materials.push_back(simpleMaterial);
+
+		// Normals
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
+	}
+
+	BoxBrush::BoxBrush(Vector3 position, Vector3 dimensions, SimpleMaterial* simpleMaterial) : Brush(position) {
+		this->materials.push_back(simpleMaterial);
+
+		sizePerVertex = 6;
 		numVertices = 8;
 		vbo = new GLfloat[sizePerVertex * (GLuint)numVertices];
 
@@ -225,97 +232,65 @@ namespace BD3GE {
 		vbo[0] = (GLfloat)(-width / 2);		// Position X
 		vbo[1] = (GLfloat)(height / 2);		// Position Y
 		vbo[2] = (GLfloat)(length / 2);		// Position Z
-		vbo[3] = (GLfloat)color.rgb.v.c.r;	// Color R
-		vbo[4] = (GLfloat)color.rgb.v.c.g;	// Color G
-		vbo[5] = (GLfloat)color.rgb.v.c.b;	// Color B
-		vbo[6] = (GLfloat)color.a;			// Color A
-		vbo[7] = -1;						// Normal X
-		vbo[8] = 1;							// Normal Y
-		vbo[9] = 1;							// Normal Z
+		vbo[3] = -1;						// Normal X
+		vbo[4] = 1;							// Normal Y
+		vbo[5] = 1;							// Normal Z
 
 		// Near top-right
-		vbo[10] = (GLfloat)(width / 2);
-		vbo[11] = (GLfloat)(height / 2);
-		vbo[12] = (GLfloat)(length / 2);
-		vbo[13] = (GLfloat)color.rgb.v.c.r;
-		vbo[14] = (GLfloat)color.rgb.v.c.g;
-		vbo[15] = (GLfloat)color.rgb.v.c.b;
-		vbo[16] = (GLfloat)color.a;
-		vbo[17] = 1;
-		vbo[18] = 1;
-		vbo[19] = 1;
+		vbo[6] = (GLfloat)(width / 2);
+		vbo[7] = (GLfloat)(height / 2);
+		vbo[8] = (GLfloat)(length / 2);
+		vbo[9] = 1;
+		vbo[10] = 1;
+		vbo[11] = 1;
 
 		// Near bottom-right
-		vbo[20] = (GLfloat)(width / 2);
-		vbo[21] = (GLfloat)(-height / 2);
-		vbo[22] = (GLfloat)(length / 2);
-		vbo[23] = (GLfloat)color.rgb.v.c.r;
-		vbo[24] = (GLfloat)color.rgb.v.c.g;
-		vbo[25] = (GLfloat)color.rgb.v.c.b;
-		vbo[26] = (GLfloat)color.a;
-		vbo[27] = 1;
-		vbo[28] = -1;
-		vbo[29] = 1;
+		vbo[12] = (GLfloat)(width / 2);
+		vbo[13] = (GLfloat)(-height / 2);
+		vbo[14] = (GLfloat)(length / 2);
+		vbo[15] = 1;
+		vbo[16] = -1;
+		vbo[17] = 1;
 
 		// Near bottom-left
-		vbo[30] = (GLfloat)(-width / 2);
-		vbo[31] = (GLfloat)(-height / 2);
-		vbo[32] = (GLfloat)(length / 2);
-		vbo[33] = (GLfloat)color.rgb.v.c.r;
-		vbo[34] = (GLfloat)color.rgb.v.c.g;
-		vbo[35] = (GLfloat)color.rgb.v.c.b;
-		vbo[36] = (GLfloat)color.a;
-		vbo[37] = -1;
-		vbo[38] = -1;
-		vbo[39] = 1;
+		vbo[18] = (GLfloat)(-width / 2);
+		vbo[19] = (GLfloat)(-height / 2);
+		vbo[20] = (GLfloat)(length / 2);
+		vbo[21] = -1;
+		vbo[22] = -1;
+		vbo[23] = 1;
 
 		// Far top-left
-		vbo[40] = (GLfloat)(-width / 2);
-		vbo[41] = (GLfloat)(height / 2);
-		vbo[42] = (GLfloat)(-length / 2);
-		vbo[43] = (GLfloat)color.rgb.v.c.r;
-		vbo[44] = (GLfloat)color.rgb.v.c.g;
-		vbo[45] = (GLfloat)color.rgb.v.c.b;
-		vbo[46] = (GLfloat)color.a;
-		vbo[47] = -1;
-		vbo[48] = 1;
-		vbo[49] = -1;
+		vbo[24] = (GLfloat)(-width / 2);
+		vbo[25] = (GLfloat)(height / 2);
+		vbo[26] = (GLfloat)(-length / 2);
+		vbo[27] = -1;
+		vbo[28] = 1;
+		vbo[29] = -1;
 
 		// Far top-right
-		vbo[50] = (GLfloat)(width / 2);
-		vbo[51] = (GLfloat)(height / 2);
-		vbo[52] = (GLfloat)(-length / 2);
-		vbo[53] = (GLfloat)color.rgb.v.c.r;
-		vbo[54] = (GLfloat)color.rgb.v.c.g;
-		vbo[55] = (GLfloat)color.rgb.v.c.b;
-		vbo[56] = (GLfloat)color.a;
-		vbo[57] = 1;
-		vbo[58] = 1;
-		vbo[59] = -1;
+		vbo[30] = (GLfloat)(width / 2);
+		vbo[31] = (GLfloat)(height / 2);
+		vbo[32] = (GLfloat)(-length / 2);
+		vbo[33] = 1;
+		vbo[34] = 1;
+		vbo[35] = -1;
 
 		// Far bottom-right
-		vbo[60] = (GLfloat)(width / 2);
-		vbo[61] = (GLfloat)(-height / 2);
-		vbo[62] = (GLfloat)(-length / 2);
-		vbo[63] = (GLfloat)color.rgb.v.c.r;
-		vbo[64] = (GLfloat)color.rgb.v.c.g;
-		vbo[65] = (GLfloat)color.rgb.v.c.b;
-		vbo[66] = (GLfloat)color.a;
-		vbo[67] = 1;
-		vbo[68] = -1;
-		vbo[69] = -1;
+		vbo[36] = (GLfloat)(width / 2);
+		vbo[37] = (GLfloat)(-height / 2);
+		vbo[38] = (GLfloat)(-length / 2);
+		vbo[39] = 1;
+		vbo[40] = -1;
+		vbo[41] = -1;
 
 		// Far bottom-left
-		vbo[70] = (GLfloat)(-width / 2);
-		vbo[71] = (GLfloat)(-height / 2);
-		vbo[72] = (GLfloat)(-length / 2);
-		vbo[73] = (GLfloat)color.rgb.v.c.r;
-		vbo[74] = (GLfloat)color.rgb.v.c.g;
-		vbo[75] = (GLfloat)color.rgb.v.c.b;
-		vbo[76] = (GLfloat)color.a;
-		vbo[77] = -1;
-		vbo[78] = -1;
-		vbo[79] = -1;
+		vbo[42] = (GLfloat)(-width / 2);
+		vbo[43] = (GLfloat)(-height / 2);
+		vbo[44] = (GLfloat)(-length / 2);
+		vbo[45] = -1;
+		vbo[46] = -1;
+		vbo[47] = -1;
 
 		numIndices = 36;
 		ibo = new GLuint[(GLuint)numIndices];
@@ -370,12 +345,8 @@ namespace BD3GE {
 
 		setup();
 
-		// Colors
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
-
 		// Normals
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
 	}
 }

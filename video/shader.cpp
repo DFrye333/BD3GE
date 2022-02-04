@@ -1,97 +1,39 @@
 #include "shader.h"
 
 namespace BD3GE {
-	Shader::Shader() : Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag") {}
-
-	Shader::Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
-		programID = create_program(vertexShaderFilePath, fragmentShaderFilePath);
-	}
-
-	Shader::~Shader() {
-		for (auto& light : lights) {
-			delete light;
-			light = nullptr;
-		}
-	}
-
-	// Create a shader program composed of shader objects.
-	GLuint Shader::create_program(std::string vertexShaderFilePath, std::string fragmentShaderFilePath) {
-		shaderObjects.push_back(create_shader(GL_VERTEX_SHADER, vertexShaderFilePath));
-		shaderObjects.push_back(create_shader(GL_FRAGMENT_SHADER, fragmentShaderFilePath));
-
-		GLuint program_ID = glCreateProgram();
-
-		for (size_t i = 0; i < shaderObjects.size(); ++i) {
-			glAttachShader(program_ID, shaderObjects[i]);
-		}
-
-		glLinkProgram(program_ID);
-
-		GLint status = GL_TRUE;
-		glGetShaderiv(program_ID, GL_LINK_STATUS, &status);
-		if (status == GL_FALSE) {
-			GLint information_log_length;
-			glGetProgramiv(program_ID, GL_INFO_LOG_LENGTH, &information_log_length);
-
-			GLchar* information_log_string = new GLchar[information_log_length + 1];
-			glGetProgramInfoLog(program_ID, information_log_length, NULL, information_log_string);
-			g_log.write(LOG_TYPE::ERR, "Shader linker failure: " + std::string(information_log_string));
-			delete[] information_log_string;
-		}
-
-		for (size_t i = 0; i < shaderObjects.size(); ++i) {
-			glDetachShader(program_ID, shaderObjects[i]);
-		}
-
-		std::for_each(shaderObjects.begin(), shaderObjects.end(), glDeleteShader);
-
-		return program_ID;
-	}
-
-	// Create an individual shader object.
-	GLuint Shader::create_shader(GLenum shaderType, const std::string filePath) {
-		GLuint shader_ID = glCreateShader(shaderType);
+	ShaderObject::ShaderObject(GLenum shader_type, std::string shader_source_path) {
+		this->object_ID = glCreateShader(shader_type);
 
 		std::string shader_string;
-		read_file(filePath, &shader_string);
+		read_file(shader_source_path, &shader_string);
 
 		const char* shaderText = shader_string.c_str();
-
-		glShaderSource(shader_ID, 1, &shaderText, NULL);
-
-		glCompileShader(shader_ID);
+		glShaderSource(object_ID, 1, &shaderText, NULL);
+		glCompileShader(object_ID);
 
 		GLint status = GL_TRUE;
-		glGetShaderiv(shader_ID, GL_COMPILE_STATUS, &status);
+		glGetShaderiv(object_ID, GL_COMPILE_STATUS, &status);
 		if (status == GL_FALSE) {
 			GLint information_log_length;
-			glGetShaderiv(shader_ID, GL_INFO_LOG_LENGTH, &information_log_length);
+			glGetShaderiv(object_ID, GL_INFO_LOG_LENGTH, &information_log_length);
 
 			GLchar* information_log_string = new GLchar[information_log_length + 1];
-			glGetShaderInfoLog(shader_ID, information_log_length, NULL, information_log_string);
+			glGetShaderInfoLog(object_ID, information_log_length, NULL, information_log_string);
 
-			const char* strShaderType = NULL;
-			switch (shaderType) {
-				case GL_VERTEX_SHADER:
-					strShaderType = "vertex";
-					break;
-				case GL_GEOMETRY_SHADER:
-					strShaderType = "geometry";
-					break;
-				case GL_FRAGMENT_SHADER:
-					strShaderType = "fragment";
-					break;
+			const char* str_shader_type = nullptr;
+			switch (shader_type) {
+				case GL_VERTEX_SHADER: str_shader_type = "vertex"; break;
+				case GL_GEOMETRY_SHADER: str_shader_type = "geometry"; break;
+				case GL_FRAGMENT_SHADER: str_shader_type = "fragment"; break;
 			}
 
-			g_log.write(LOG_TYPE::ERR, "Shader compiler failure in " + std::string(strShaderType) + " shader:\n " + std::string(information_log_string));
+			g_log.write(LOG_TYPE::ERR, "Shader compiler failure in " + std::string(str_shader_type) + " shader:\n " + std::string(information_log_string));
 			delete[] information_log_string;
 		}
-
-		return shader_ID;
 	}
 
 	// Read shader program text from a file.
-	void Shader::read_file(const std::string filePath, std::string* shaderText) {
+	void ShaderObject::read_file(const std::string filePath, std::string* shaderText) {
 		// Open shader file stream.
 		std::ifstream infile(filePath.c_str());
 
@@ -107,8 +49,53 @@ namespace BD3GE {
 		infile.close();
 	}
 
+	Shader::Shader() : Shader(&ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert"), &ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag")) {}
+
+	Shader::Shader(std::vector<ShaderObject*> shader_objects) {
+		this->program_ID = glCreateProgram();
+
+		std::vector<GLuint> shader_object_IDs;
+		for (ShaderObject* shader_object : shader_objects) {
+			shader_object_IDs.push_back(shader_object->object_ID);
+		}
+
+		for (size_t i = 0; i < shader_object_IDs.size(); ++i) {
+			glAttachShader(this->program_ID, shader_object_IDs[i]);
+		}
+
+		glLinkProgram(this->program_ID);
+
+		GLint status = GL_TRUE;
+		glGetShaderiv(this->program_ID, GL_LINK_STATUS, &status);
+		if (status == GL_FALSE) {
+			GLint information_log_length;
+			glGetProgramiv(this->program_ID, GL_INFO_LOG_LENGTH, &information_log_length);
+
+			GLchar* information_log_string = new GLchar[information_log_length + 1];
+			glGetProgramInfoLog(this->program_ID, information_log_length, NULL, information_log_string);
+			g_log.write(LOG_TYPE::ERR, "Shader linker failure: " + std::string(information_log_string));
+			delete[] information_log_string;
+		}
+
+		for (size_t i = 0; i < shader_object_IDs.size(); ++i) {
+			glDetachShader(this->program_ID, shader_object_IDs[i]);
+		}
+
+		// TODO: Move the deletion/cleanup logic into a shader management class.
+		//std::for_each(shader_object_IDs.begin(), shader_object_IDs.end(), glDeleteShader);
+	}
+
+	Shader::Shader(ShaderObject* vertex_shader_object, ShaderObject* fragment_shader_object) : Shader(std::vector<ShaderObject*>{ vertex_shader_object, fragment_shader_object }) {}
+
+	Shader::~Shader() {
+		for (auto& light : lights) {
+			delete light;
+			light = nullptr;
+		}
+	}
+
 	GLuint Shader::get_program_ID() {
-		return programID;
+		return program_ID;
 	}
 
 	void Shader::enable() {
@@ -143,5 +130,8 @@ namespace BD3GE {
 		setUniform("light.color_ambient", light.color_ambient.rgb);
 		setUniform("light.color_diffuse", light.color_diffuse.rgb);
 		setUniform("light.color_specular", light.color_specular.rgb);
+		setUniform("light.attenuation_constant", light.attenuation_constant);
+		setUniform("light.attenuation_linear", light.attenuation_linear);
+		setUniform("light.attenuation_quadratic", light.attenuation_quadratic);
 	}
 }

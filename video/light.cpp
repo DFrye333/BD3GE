@@ -9,4 +9,10 @@ namespace BD3GE {
 		this->color_diffuse = color_diffuse;
 		this->color_specular = color_specular;
 	}
+
+	Light::Light(Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular, float attenuation_constant, float attenuation_linear, float attenuation_quadratic) : Light(position, color_ambient, color_diffuse, color_specular) {
+		this->attenuation_constant = attenuation_constant;
+		this->attenuation_linear = attenuation_linear;
+		this->attenuation_quadratic = attenuation_quadratic;
+	}
 }

@@ -17,8 +17,7 @@
 namespace BD3GE {
 	class Mesh : public Renderable {
 		public:
-			Mesh(const aiMesh* mesh, aiTexture* texture, Shader* shader, Vector3 scale);
-			~Mesh();
+			Mesh(Vector3 position, const aiMesh* mesh, aiTexture* texture, SimpleMaterial* simpleMaterial, Vector3 scale);
 
 			aiTexture* texture;
 	};

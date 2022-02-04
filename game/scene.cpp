@@ -24,101 +24,70 @@ namespace BD3GE {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
-		Shader* defaultShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
-		Shader* lightingShaderSimple = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point_simple.frag");
-		Shader* lightingShaderMapped = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/lighting_point_mapped.frag");
-		Shader* textureShader = new Shader(DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert", DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
-		Texture* wallTexture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
-		MappedMaterial* containerMaterial = new MappedMaterial(DEFAULT_RESOURCE_DIRECTORY + "textures/container_diffuse.png", DEFAULT_RESOURCE_DIRECTORY + "textures/container_specular.png", 32.0f);
-		shaders.insert(shaders.end(), { defaultShader, lightingShaderSimple, lightingShaderMapped, textureShader });
-		textures.insert(textures.end(), { wallTexture });
+		ShaderObject vertex_default = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert");
+		ShaderObject vertex_texture = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert");
+		ShaderObject vertex_material_simple = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_simple.vert");
+		ShaderObject fragment_default = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
+		ShaderObject fragment_texture = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
+		ShaderObject fragment_material_simple = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_simple.frag");
+		ShaderObject fragment_material_mapped = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_mapped.frag");
+		Texture* wall_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
+		Texture* container_diffuse_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_diffuse.png");
+		Texture* container_specular_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_specular.png");
 
 		// Scary duck
-		this->scaryDuck = add_object(new Object(
-			Vector3(0, 0, -500),
-			new Mesh(duck->mMeshes[0], nullptr, lightingShaderSimple, Vector3(1, 1, 1))
-		));
+		SimpleMaterial* duck_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 255, 0));
+		this->scaryDuck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, duck_material, Vector3(1, 1, 1)));
 
 		// Cube
-		add_object(new Object(
-			Vector3(-60, 0, 0),
-			new Mesh(cube->mMeshes[0], nullptr, lightingShaderSimple, Vector3(1, 1, 1))
-		));
+		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(0, 255, 0));
+		add_renderable(new Mesh(Vector3(-60, 0, 0), cube->mMeshes[0], nullptr, cube_material, Vector3(1, 1, 1)));
 
 		// Floor
-		add_object(new Object(
-			Vector3(-5, 5, 0),
-			new SquareBrush(10, 10, textureShader, wallTexture)
-		));
+		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_texture, &fragment_material_mapped), wall_texture, wall_texture, 32.0f);
+		add_renderable(new SquareBrush(Vector3(-5, 5, 0), 10, 10, brick_floor_material));
 
 		// Pillars
+		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 0, 0));
 		for (unsigned int i = 0; i < 121; ++i) {
-			add_object(new Object(
-				Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0),
-				new BoxBrush(Vector3(2, 10, 2), lightingShaderSimple, Color(50, 160, 0))
-			));
+			add_renderable(new BoxBrush(Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0), Vector3(2, 10, 2), pillar_material));
 		}
 
 		// Mapped container
-		add_object(new Object(
-			Vector3(75, 0, 0),
-			new SquareBrush(5, 5, lightingShaderMapped, containerMaterial)
-		));
+		MappedMaterial* container_material = new MappedMaterial(new Shader(&vertex_texture, &fragment_material_mapped), container_diffuse_texture, container_specular_texture, 32.0f);
+		add_renderable(new SquareBrush(Vector3(75, 0, 0), 5, 5, container_material));
 
 		// Player
-		this->player = add_object(new Object(
-			Vector3(5, 5, 0),
-			new BoxBrush(Vector3(2, 2, 2), lightingShaderSimple, Color(10, 51, 102))
-		));
+		SimpleMaterial* player_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(10, 51, 102));
+		this->player = add_renderable(new BoxBrush(Vector3(5, 5, 0), Vector3(2, 2, 2), player_material));
 
 		// Light
-		this->light = add_light(new Object(
-			Vector3(5, 5, 100),
-			new CircularBrush(1.5, 10, defaultShader, Color(102, 229, 102))
-		));
+		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(102, 229, 102));
+		this->light = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
 
-		this->lightingShaderSimple = lightingShaderSimple;
-		this->lightingShaderMapped = lightingShaderMapped;
-		Light light = Light(this->light->get_position(), Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255));
-		lightingShaderSimple->addLight(light);
-		lightingShaderMapped->addLight(light);
+		Light light = Light(this->light->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255));
+		player_material->shader->addLight(light);
+		pillar_material->shader->addLight(light);
+		brick_floor_material->shader->addLight(light);
+		container_material->shader->addLight(light);
 
 		this->camera = new Camera(Vector3(0, 0, 300));
 		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
-	}
-
-	Scene::Scene(std::vector<Object*> objects) {
-		objects = objects;
 	}
 
 	Scene::~Scene() {
 		delete camera;
 		camera = nullptr;
 
-		for (auto& object : objects) {
-			delete object;
-			object = nullptr;
-		}
-
-		for (auto& shader : shaders) {
-			delete shader;
-			shader = nullptr;
-		}
-
-		for (auto& texture : textures) {
-			delete texture;
-			texture = nullptr;
+		for (auto& renderable : renderables) {
+			delete renderable;
+			renderable = nullptr;
 		}
 	}
 
-	Object* Scene::add_object(Object* object) {
-		objects.push_back(object);
-		return object;
-	}
-
-	Object* Scene::add_light(Object* light) {
-		lights.push_back(light);
-		return light;
+	Renderable* Scene::add_renderable(Renderable* renderable) {
+		renderables.push_back(renderable);
+		return renderable;
 	}
 
 	void Scene::tick(Input* input) {
@@ -259,10 +228,12 @@ namespace BD3GE {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1) - 0.001);
 		}
 
-		lightingShaderSimple->setUniform("light.position", this->light->get_position());
-		lightingShaderSimple->setUniform("viewer_position", this->camera->get_position());
-		lightingShaderMapped->setUniform("light.position", this->light->get_position());
-		lightingShaderMapped->setUniform("viewer_position", this->camera->get_position());
+		for (Renderable* renderable : renderables) {
+			for (Material* material : renderable->materials) {
+				material->shader->setUniform("light.position", this->light->get_position());
+				material->shader->setUniform("viewer_position", this->camera->get_position());
+			}
+		}
 
 		scaryDuck->rotate(Vector3(0, 0.001, 0));
 		//camera->rotate(Vector3(0, 0.1 / (180 / BD3GE::PI), 0));
@@ -285,11 +256,8 @@ namespace BD3GE {
 		// Clear the color buffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (auto& object : objects) {
-			object->render(camera->get_view_projection_transform());
-		}
-		for (auto& light : lights) {
-			light->render(camera->get_view_projection_transform());
+		for (auto& renderable : renderables) {
+			renderable->render(camera->get_view_projection_transform());
 		}
 	}
 

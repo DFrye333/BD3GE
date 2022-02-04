@@ -13,14 +13,22 @@
 #include "../utility/matrix.h"
 #include "../utility/vector.h"
 #include "../video/light.h"
-#include "../video/material.h"
 
 namespace BD3GE {
+	class ShaderObject {
+		public:
+			ShaderObject(GLenum shader_type, std::string shader_source_path);
+			void read_file(const std::string file_path, std::string* shader_text);
+
+			GLuint object_ID;
+	};
+
 	class Shader {
 		public:
 
 					Shader();
-					Shader(std::string vertexShaderFilePath, std::string fragmentShaderFilePath);
+					Shader(std::vector<ShaderObject*> shader_objects);
+					Shader(ShaderObject* vertex_shader_object, ShaderObject* fragment_shader_object);
 					~Shader();
 			GLuint	get_program_ID();
 			void	enable();
@@ -31,14 +39,7 @@ namespace BD3GE {
 			void	setUniform(std::string uniform_name, int value);
 			void	addLight(Light light);
 
-		private:
-
-			GLuint		create_program(std::string vertexShaderFilePath, std::string fragmentShaderFilePath);
-			GLuint		create_shader(GLenum shader_type, const std::string file_path);
-			void		read_file(const std::string file_path, std::string* shader_text);
-
-			GLuint							programID;
-			std::vector<GLuint>				shaderObjects;
+			GLuint							program_ID;
 			std::vector<Light*>				lights;
 	};
 }

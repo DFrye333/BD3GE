@@ -1,6 +1,5 @@
 #version 460 core
 
-in vec4 vertex_color;
 in vec2 texture_coordinates;
 
 out vec4 fragment_color;

@@ -1,7 +1,7 @@
 #include "mesh.h"
 
 namespace BD3GE {
-	Mesh::Mesh(const aiMesh* mesh, aiTexture* texture, Shader* shader, Vector3 scale) : Renderable(shader) {
+	Mesh::Mesh(Vector3 position, const aiMesh* mesh, aiTexture* texture, SimpleMaterial* simpleMaterial, Vector3 scale) : Renderable(position) {
 		g_log.write(BD3GE::LOG_TYPE::INFO, "Loading mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces...");
 
 		// Fill the VBO.
@@ -31,12 +31,8 @@ namespace BD3GE {
 			}
 		}
 
-		setup();
-	}
+		this->materials.push_back(simpleMaterial);
 
-	Mesh::~Mesh() {
-		// TODO: This is an aiMesh*, which is owned by an aiScene*
-		/*delete texture;
-		texture = nullptr;*/
+		setup();
 	}
 }

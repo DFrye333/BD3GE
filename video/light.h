@@ -10,11 +10,15 @@ namespace BD3GE {
 
 			Light();
 			Light(Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular);
+			Light(Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular, float attenuation_constant, float attenuation_linear, float attenuation_quadratci);
 
 			Vector3 position;
 			Color color_ambient;
 			Color color_diffuse;
 			Color color_specular;
+			float attenuation_constant = 1.0f;
+			float attenuation_linear = 0.001f;
+			float attenuation_quadratic = 0.000001f;
 	};
 }
 

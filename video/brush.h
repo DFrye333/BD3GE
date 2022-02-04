@@ -4,7 +4,6 @@
 #include <cmath>
 #include <numbers>
 
-#include "../utility/color.h"
 #include "../utility/vector.h"
 #include "../video/material.h"
 #include "../video/renderable.h"
@@ -15,6 +14,7 @@ namespace BD3GE {
 	class Brush : public Renderable {
 		public:
 			Brush();
+			Brush(Vector3 position);
 			virtual ~Brush();
 
 			Texture* texture;
@@ -23,20 +23,20 @@ namespace BD3GE {
 
 	class SquareBrush : public Brush {
 		public:
-			SquareBrush(float width, float height, Shader* shader, Color color);
-			SquareBrush(float width, float height, Shader* shader, Texture* texture);
-			SquareBrush(float width, float height, Shader* shader, MappedMaterial* mappedMaterial);
+			SquareBrush(Vector3 position, float width, float height, SimpleMaterial* color);
+			SquareBrush(Vector3 position, float width, float height, MappedMaterial* mappedMaterial);
 			void setupSquare(float width, float height);
 	};
 
 	class CircularBrush : public Brush {
 		public:
-			CircularBrush(float radius, int resolution, Shader* shader, Color color);
+			CircularBrush(Vector3 position, float radius, int resolution, Color color);
+			CircularBrush(Vector3 position, float radius, int resolution, SimpleMaterial* simpleMaterial);
 	};
 
 	class BoxBrush : public Brush {
 		public:
-			BoxBrush(Vector3 dimensions, Shader* shader, Color color);
+			BoxBrush(Vector3 position, Vector3 dimensions, SimpleMaterial* color);
 	};
 }
 

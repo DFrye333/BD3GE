@@ -26,11 +26,9 @@
 namespace BD3GE {
 	class Scene {
 		public:
-			Scene(const std::string modelsDirectory);
+			Scene(const std::string models_directory);
 			~Scene();
-			Scene(std::vector<Object*> objects);
-			Object* add_object(Object* object);
-			Object* add_light(Object* light);
+			Renderable* add_renderable(Renderable* object);
 			void tick(Input* input);
 			void mouse_move(Input* input);
 			void render(void);
@@ -38,16 +36,11 @@ namespace BD3GE {
 
 		private:
 
-			std::vector<Shader*> shaders;
-			std::vector<Texture*> textures;
-			std::vector<Object*> objects;
-			std::vector<Object*> lights;
+			std::vector<Renderable*> renderables;
 			Camera* camera;
 			Object* player;
 			Object* scaryDuck;
 			Object* light;
-			Shader* lightingShaderSimple;
-			Shader* lightingShaderMapped;
 	};
 }
 

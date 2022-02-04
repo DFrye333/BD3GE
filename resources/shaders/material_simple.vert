@@ -3,15 +3,14 @@
 uniform mat4 world_transform;
 uniform mat4 view_projection_transform;
 
-layout(location = 0) in vec4 in_position;
-layout(location = 1) in vec2 in_texture_coordinates;
+layout(location = 0) in vec3 in_position;
+layout(location = 1) in vec3 in_normal;
 
-smooth out vec4 world_position;
-smooth out vec2 texture_coordinates;
+out vec4 world_position;
+out vec3 normal;
 
 void main(void) {
 	world_position = world_transform * vec4(in_position.xyz, 1.0);
 	gl_Position = view_projection_transform * world_position;
-
-	texture_coordinates = in_texture_coordinates;
+	normal = in_normal;
 }
