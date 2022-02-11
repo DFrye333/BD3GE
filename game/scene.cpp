@@ -240,14 +240,20 @@ namespace BD3GE {
 	}
 
 	void Scene::mouse_move(Input* input) {
-		if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON) && input->is_mouse_position_fresh) {
-			std::pair<short, short> currentMousePosition = input->get_current_mouse_position();
-			std::pair<short, short> previousMousePosition = input->get_previous_mouse_position();
-			Vector3 currentMouseVector = Vector3(-currentMousePosition.first, currentMousePosition.second, 0);
-			Vector3 previousMouseVector = Vector3(-previousMousePosition.first, previousMousePosition.second, 0);
-			Vector3 mouseTranslation = currentMouseVector - previousMouseVector;
-			if (mouseTranslation.get_magnitude() < 100) {
-				camera->translate(mouseTranslation * 0.1);
+		if (input->is_mouse_position_fresh) {
+			std::pair<short, short> current_mouse_position = input->get_current_mouse_position();
+			std::pair<short, short> previous_mouse_position = input->get_previous_mouse_position();
+			Vector3 current_mouse_vector = Vector3(-current_mouse_position.first, current_mouse_position.second, 0);
+			Vector3 previous_mouse_vector = Vector3(-previous_mouse_position.first, previous_mouse_position.second, 0);
+			Vector3 mouse_translation = current_mouse_vector - previous_mouse_vector;
+
+			if (mouse_translation.get_magnitude() < 100) {
+				Vector3 mouse_rotation = mouse_translation * (float)(180 / BD3GE::PI);
+				camera->rotate(Vector3(-mouse_translation.v.g.y, mouse_translation.v.g.x, 0) * 0.0001);
+
+				if (input->get_key_state(BD3GE::KEY_CODE::MOUSE_LEFTBUTTON)) {
+					camera->translate(mouse_translation * 0.1);
+				}
 			}
 		}
 	}
