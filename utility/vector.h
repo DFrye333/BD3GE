@@ -21,18 +21,18 @@ namespace BD3GE {
 			const Vector3& normalize(void);
 			const Vector3& operator=(const Vector3& other);
 			const Vector3& operator+=(const Vector3& other);
-			const Vector3 operator+(const Vector3& other);
+			const Vector3 operator+(const Vector3& other) const;
 			const Vector3& operator-=(const Vector3& other);
-			const Vector3 operator-(const Vector3& other);
+			const Vector3 operator-(const Vector3& other) const;
 			const Vector3& operator*=(const Vector3& other);
-			const Vector3 operator*(const Vector3& other);
+			const Vector3 operator*(const Vector3& other) const;
 			const Vector3& operator*=(const float other);
-			const Vector3 operator*(const float other);
+			const Vector3 operator*(const float other) const;
 			const Vector3& operator/=(const Vector3& other);
-			const Vector3 operator/(const Vector3& other);
+			const Vector3 operator/(const Vector3& other) const;
 			const Vector3& operator/=(const float other);
-			const Vector3 operator/(const float other);
-			const Vector3 operator-();
+			const Vector3 operator/(const float other) const;
+			const Vector3 operator-() const;
 			friend std::ostream& operator<<(std::ostream& out, const Vector3& vec);
 
 			static constexpr float EPSILON = 1.0e-12f;

@@ -80,7 +80,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator+(const Vector3& other) {
+	const Vector3 Vector3::operator+(const Vector3& other) const {
 		return Vector3(*this) += other;
 	}
 
@@ -92,7 +92,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator-(const Vector3& other) {
+	const Vector3 Vector3::operator-(const Vector3& other) const {
 		return Vector3(*this) -= other;
 	}
 
@@ -104,7 +104,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator*(const Vector3& other) {
+	const Vector3 Vector3::operator*(const Vector3& other) const {
 		return Vector3(*this) *= other;
 	}
 
@@ -116,7 +116,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator*(const float other) {
+	const Vector3 Vector3::operator*(const float other) const {
 		return Vector3(*this) *= other;
 	}
 
@@ -128,7 +128,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator/(const Vector3& other) {
+	const Vector3 Vector3::operator/(const Vector3& other) const {
 		return Vector3(*this) /= other;
 	}
 
@@ -140,11 +140,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator/(const float other) {
+	const Vector3 Vector3::operator/(const float other) const {
 		return Vector3(*this) /= other;
 	}
 
-	const Vector3 Vector3::operator-() {
+	const Vector3 Vector3::operator-() const {
 		return Vector3(*this) *= -1;
 	}
 
