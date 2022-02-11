@@ -15,14 +15,14 @@ namespace BD3GE {
 	Object::~Object() {}
 
 	void Object::translate(Vector3 translation) {
-		worldTransform.translate(get_position() + translation);
+		world_transform.translate(get_position() + translation);
 	}
 
 	void Object::scale(Vector3 scaler) {
-		worldTransform.scale(scaler);
+		world_transform.scale(scaler);
 	}
 
 	void Object::rotate(Vector3 rotation) {
-		worldTransform.rotate(rotation);
+		world_transform.rotate(rotation);
 	}
 }

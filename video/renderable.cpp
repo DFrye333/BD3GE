@@ -40,8 +40,8 @@ namespace BD3GE {
 			// Setup for shader program.
 			material->shader->enable();
 
-			material->shader->setUniform("world_transform", this->worldTransform.get_matrix());
-			material->shader->setUniform("inverse_world_transform", this->worldTransform.get_matrix().inverse());
+			material->shader->setUniform("world_transform", this->world_transform.get_matrix());
+			material->shader->setUniform("inverse_world_transform", this->world_transform.get_matrix().inverse());
 			material->shader->setUniform("view_projection_transform", view_projection_transform.get_matrix());
 
 			// TODO: Change this?

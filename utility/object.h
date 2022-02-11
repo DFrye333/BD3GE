@@ -20,12 +20,12 @@ namespace BD3GE {
 			void			translate(Vector3 translation);
 			void			scale(Vector3 scaler);
 			void			rotate(Vector3 angle);
-			void			set_position(Vector3 position) { this->worldTransform.translate(position); }
-			Vector3			get_position()			{ return this->worldTransform.get_position(); }
+			void			set_position(Vector3 position) { this->world_transform.translate(position); }
+			Vector3			get_position()			{ return this->world_transform.get_position(); }
 
 		protected:
 
-			Transform worldTransform;
+			Transform world_transform;
 	};
 }
 

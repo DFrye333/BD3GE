@@ -24,7 +24,7 @@ namespace BD3GE {
 	}
 
 	const Transform Camera::get_view_transform() const {
-		return this->worldTransform.inverse();
+		return this->world_transform.inverse();
 	}
 
 	const Transform Camera::get_view_projection_transform() const {
