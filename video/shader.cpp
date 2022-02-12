@@ -49,8 +49,6 @@ namespace BD3GE {
 		infile.close();
 	}
 
-	Shader::Shader() : Shader(&ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert"), &ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag")) {}
-
 	Shader::Shader(std::vector<ShaderObject*> shader_objects) {
 		this->program_ID = glCreateProgram();
 
@@ -87,12 +85,7 @@ namespace BD3GE {
 
 	Shader::Shader(ShaderObject* vertex_shader_object, ShaderObject* fragment_shader_object) : Shader(std::vector<ShaderObject*>{ vertex_shader_object, fragment_shader_object }) {}
 
-	Shader::~Shader() {
-		for (auto& light : lights) {
-			delete light;
-			light = nullptr;
-		}
-	}
+	Shader::~Shader() {}
 
 	GLuint Shader::get_program_ID() {
 		return program_ID;
@@ -124,14 +117,25 @@ namespace BD3GE {
 		glProgramUniform1i(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
 	}
 
-	void Shader::addLight(Light light) {
-		lights.push_back(new Light(light));
-		setUniform("light.position", light.position);
-		setUniform("light.color_ambient", light.color_ambient.rgb);
-		setUniform("light.color_diffuse", light.color_diffuse.rgb);
-		setUniform("light.color_specular", light.color_specular.rgb);
-		setUniform("light.attenuation_constant", light.attenuation_constant);
-		setUniform("light.attenuation_linear", light.attenuation_linear);
-		setUniform("light.attenuation_quadratic", light.attenuation_quadratic);
+	void Shader::setUniform(std::string uniform_name, unsigned int value) {
+		glProgramUniform1ui(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
+	}
+
+	void Shader::setLight(Light* light) {
+		std::string light_index;
+		if (lights.contains(light->name)) {
+			light_index = lights[light->name];
+		} else {
+			light_index = lights[light->name] = std::to_string(quantity_lights);
+			setUniform("quantity_lights", (unsigned int)(++quantity_lights));
+		}
+
+		setUniform("lights[" + light_index + "].position", light->position);
+		setUniform("lights[" + light_index + "].color_ambient", light->color_ambient.rgb);
+		setUniform("lights[" + light_index + "].color_diffuse", light->color_diffuse.rgb);
+		setUniform("lights[" + light_index + "].color_specular", light->color_specular.rgb);
+		setUniform("lights[" + light_index + "].attenuation_constant", light->attenuation_constant);
+		setUniform("lights[" + light_index + "].attenuation_linear", light->attenuation_linear);
+		setUniform("lights[" + light_index + "].attenuation_quadratic", light->attenuation_quadratic);
 	}
 }

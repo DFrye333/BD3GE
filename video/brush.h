@@ -23,15 +23,13 @@ namespace BD3GE {
 
 	class SquareBrush : public Brush {
 		public:
-			SquareBrush(Vector3 position, float width, float height, SimpleMaterial* color);
-			SquareBrush(Vector3 position, float width, float height, MappedMaterial* mappedMaterial);
-			void setupSquare(float width, float height);
+			SquareBrush(Vector3 position, float width, float height, SimpleMaterial* simple_material);
+			SquareBrush(Vector3 position, float width, float height, MappedMaterial* mapped_material);
 	};
 
 	class CircularBrush : public Brush {
 		public:
-			CircularBrush(Vector3 position, float radius, int resolution, Color color);
-			CircularBrush(Vector3 position, float radius, int resolution, SimpleMaterial* simpleMaterial);
+			CircularBrush(Vector3 position, float radius, int resolution, SimpleMaterial* simple_material);
 	};
 
 	class BoxBrush : public Brush {

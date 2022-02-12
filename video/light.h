@@ -9,9 +9,10 @@ namespace BD3GE {
 		public:
 
 			Light();
-			Light(Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular);
-			Light(Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular, float attenuation_constant, float attenuation_linear, float attenuation_quadratic);
+			Light(std::string name, Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular);
+			Light(std::string name, Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular, float attenuation_constant, float attenuation_linear, float attenuation_quadratic);
 
+			std::string name;
 			Vector3 position;
 			Color color_ambient;
 			Color color_diffuse;

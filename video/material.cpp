@@ -25,10 +25,12 @@ namespace BD3GE {
 	}
 
 	void SimpleMaterial::setup() {
-		this->shader->setUniform("material.color_ambient", this->color_ambient.rgb);
-		this->shader->setUniform("material.color_diffuse", this->color_diffuse.rgb);
-		this->shader->setUniform("material.color_specular", this->color_specular.rgb);
-		this->shader->setUniform("material.gloss_factor", this->gloss_factor);
+		if (this->shader) {
+			this->shader->setUniform("material.color_ambient", this->color_ambient.rgb);
+			this->shader->setUniform("material.color_diffuse", this->color_diffuse.rgb);
+			this->shader->setUniform("material.color_specular", this->color_specular.rgb);
+			this->shader->setUniform("material.gloss_factor", this->gloss_factor);
+		}
 	}
 
 	void SimpleMaterial::prepForRender() {}

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <vector>
 
 #include <GL/glew.h>
@@ -26,7 +27,6 @@ namespace BD3GE {
 	class Shader {
 		public:
 
-					Shader();
 					Shader(std::vector<ShaderObject*> shader_objects);
 					Shader(ShaderObject* vertex_shader_object, ShaderObject* fragment_shader_object);
 					~Shader();
@@ -37,10 +37,12 @@ namespace BD3GE {
 			void	setUniform(std::string uniform_name, Vector3 value);
 			void	setUniform(std::string uniform_name, float value);
 			void	setUniform(std::string uniform_name, int value);
-			void	addLight(Light light);
+			void	setUniform(std::string uniform_name, unsigned int value);
+			void	setLight(Light* light);
 
-			GLuint							program_ID;
-			std::vector<Light*>				lights;
+			GLuint program_ID;
+			std::map<std::string, std::string> lights;
+			unsigned short quantity_lights = 0;
 	};
 }
 

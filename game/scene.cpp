@@ -24,11 +24,8 @@ namespace BD3GE {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
-		ShaderObject vertex_default = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert");
-		ShaderObject vertex_texture = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.vert");
 		ShaderObject vertex_material_simple = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_simple.vert");
-		ShaderObject fragment_default = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
-		ShaderObject fragment_texture = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/texture.frag");
+		ShaderObject vertex_material_mapped = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_mapped.vert");
 		ShaderObject fragment_material_simple = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_simple.frag");
 		ShaderObject fragment_material_mapped = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_mapped.frag");
 		Texture* wall_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
@@ -37,42 +34,41 @@ namespace BD3GE {
 
 		// Scary duck
 		SimpleMaterial* duck_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 255, 0));
-		this->scaryDuck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, duck_material, Vector3(1, 1, 1)));
+		this->scary_duck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, duck_material, Vector3(1, 1, 1)));
 
 		// Cube
 		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(0, 255, 0));
 		add_renderable(new Mesh(Vector3(-60, 0, 0), cube->mMeshes[0], nullptr, cube_material, Vector3(1, 1, 1)));
 
 		// Floor
-		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_texture, &fragment_material_mapped), wall_texture, wall_texture, 32.0f);
+		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_material_mapped, &fragment_material_mapped), wall_texture, wall_texture, 32.0f);
 		add_renderable(new SquareBrush(Vector3(-5, 5, 0), 10, 10, brick_floor_material));
+		lit_materials.push_back(brick_floor_material);
 
 		// Pillars
 		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 0, 0));
 		for (unsigned int i = 0; i < 121; ++i) {
 			add_renderable(new BoxBrush(Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0), Vector3(2, 10, 2), pillar_material));
 		}
+		lit_materials.push_back(pillar_material);
 
 		// Mapped container
-		MappedMaterial* container_material = new MappedMaterial(new Shader(&vertex_texture, &fragment_material_mapped), container_diffuse_texture, container_specular_texture, 32.0f);
+		MappedMaterial* container_material = new MappedMaterial(new Shader(&vertex_material_mapped, &fragment_material_mapped), container_diffuse_texture, container_specular_texture, 32.0f);
 		add_renderable(new SquareBrush(Vector3(75, 0, 0), 5, 5, container_material));
+		lit_materials.push_back(container_material);
 
 		// Player
 		SimpleMaterial* player_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(10, 51, 102));
 		this->player = add_renderable(new BoxBrush(Vector3(5, 5, 0), Vector3(2, 2, 2), player_material));
+		lit_materials.push_back(player_material);
 
 		// Light
-		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(102, 229, 102));
-		this->light = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
+		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(102, 229, 102));
+		this->light_renderable = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
 
-		Light light = Light(this->light->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255));
-		player_material->shader->addLight(light);
-		pillar_material->shader->addLight(light);
-		brick_floor_material->shader->addLight(light);
-		container_material->shader->addLight(light);
+		this->lights.push_back(new Light("Light 0", this->light_renderable->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
 
 		this->camera = new Camera(Vector3(0, 0, 300));
-		//camera->rotate(Vector3(10 / (180 / BD3GE::PI), 0, 10 / (180 / BD3GE::PI)));
 	}
 
 	Scene::~Scene() {
@@ -180,39 +176,40 @@ namespace BD3GE {
 
 		if (input->get_key_state(BD3GE::KEY_CODE::R)) {
 			camera->set_position(Vector3(0, 0, 300));
+			// TODO: Finish this thought.
 			//camera->set_direction();
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::J)) {
-			light->translate(Vector3(0.25 * -player_speed, 0, 0));
+			light_renderable->translate(Vector3(0.25 * -player_speed, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::L)) {
-			light->translate(Vector3(0.25 * player_speed, 0, 0));
+			light_renderable->translate(Vector3(0.25 * player_speed, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::I)) {
-			light->translate(Vector3(0, 0.25 * player_speed, 0));
+			light_renderable->translate(Vector3(0, 0.25 * player_speed, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::K)) {
-			light->translate(Vector3(0, 0.25 * -player_speed, 0));
+			light_renderable->translate(Vector3(0, 0.25 * -player_speed, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::O)) {
-			light->translate(Vector3(0, 0, 0.25 * player_speed));
+			light_renderable->translate(Vector3(0, 0, 0.25 * player_speed));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::U)) {
-			light->translate(Vector3(0, 0, 0.25 * -player_speed));
+			light_renderable->translate(Vector3(0, 0, 0.25 * -player_speed));
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::KP_1)) {
-			light->rotate(Vector3(-0.01, 0, 0));
+			light_renderable->rotate(Vector3(-0.01, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::KP_3)) {
-			light->rotate(Vector3(0.01, 0, 0));
+			light_renderable->rotate(Vector3(0.01, 0, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::KP_5)) {
-			light->rotate(Vector3(0, 0.01, 0));
+			light_renderable->rotate(Vector3(0, 0.01, 0));
 		}
 		if (input->get_key_state(BD3GE::KEY_CODE::KP_2)) {
-			light->rotate(Vector3(0, -0.01, 0));
+			light_renderable->rotate(Vector3(0, -0.01, 0));
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::DEL)) {
@@ -228,14 +225,19 @@ namespace BD3GE {
 			input->set_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1, input->get_gamepad_output_value(primary_gamepad_index, Gamepad::OUTPUT_CODE::VIBRATION_MOTOR_1) - 0.001);
 		}
 
-		for (Renderable* renderable : renderables) {
-			for (Material* material : renderable->materials) {
-				material->shader->setUniform("light.position", this->light->get_position());
-				material->shader->setUniform("viewer_position", this->camera->get_position());
+		if (input->get_key_state(BD3GE::KEY_CODE::P)) {
+			camera->rotate(Vector3(1, 0, 0));
+		}
+
+		this->lights[0]->position = this->light_renderable->get_position();
+		for (Material* lit_material : lit_materials) {
+			if (lit_material->shader) {
+				lit_material->shader->setLight(this->lights[0]);
+				lit_material->shader->setUniform("viewer_position", this->camera->get_position());
 			}
 		}
 
-		scaryDuck->rotate(Vector3(0, 0.001, 0));
+		scary_duck->rotate(Vector3(0, 0.001, 0));
 		//camera->rotate(Vector3(0, 0.1 / (180 / BD3GE::PI), 0));
 	}
 
@@ -267,7 +269,7 @@ namespace BD3GE {
 		}
 	}
 
-	Camera* Scene::getCamera(void) {
+	Camera* Scene::get_camera(void) {
 		return camera;
 	}
 }

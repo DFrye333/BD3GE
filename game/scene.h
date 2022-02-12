@@ -14,10 +14,10 @@
 // TODO: Can I eliminate this dependency on input.h?
 #include "../input/input.h"
 #include "../utility/color.h"
-#include "../utility/object.h"
 #include "../video/brush.h"
 #include "../video/camera.h"
 #include "../video/mesh.h"
+#include "../video/renderable.h"
 
 
 #include <cmath>
@@ -32,15 +32,17 @@ namespace BD3GE {
 			void tick(Input* input);
 			void mouse_move(Input* input);
 			void render(void);
-			Camera* getCamera(void);
+			Camera* get_camera(void);
 
 		private:
 
 			std::vector<Renderable*> renderables;
+			std::vector<Light*> lights;
+			std::vector<Material*> lit_materials;
 			Camera* camera;
-			Object* player;
-			Object* scaryDuck;
-			Object* light;
+			Renderable* player;
+			Renderable* scary_duck;
+			Renderable* light_renderable;
 	};
 }
 

@@ -18,13 +18,13 @@ namespace BD3GE {
 			void setup();
 			virtual void render(Transform view_projection_transform) const;
 
+			std::vector<Material*> materials;
 			GLuint vaoHandle;
 			GLfloat* vbo;
 			GLuint* ibo;
 			GLuint numVertices;
 			GLuint numIndices;
 			GLuint sizePerVertex;
-			std::vector<Material*> materials;
 	};
 }
 
