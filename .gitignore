@@ -33,8 +33,7 @@
 Debug/*
 
 #=== Custom entries ===#
-x64/*
-Release/*
+build
 resources/models
 resources/textures
 log
