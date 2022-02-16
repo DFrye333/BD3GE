@@ -121,7 +121,7 @@ namespace BD3GE {
 		Message<Window::ReshapeEvent> reshape_event = window->pull_reshape_event();
 		if (reshape_event.get_data() != nullptr) {
 			gl->reshape(reshape_event.get_data()->width, reshape_event.get_data()->height);
-			scene->getCamera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
+			scene->get_camera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
 		}
 	}
 }
