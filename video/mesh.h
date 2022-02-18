@@ -4,7 +4,7 @@
 #include <assimp/mesh.h>
 #include <assimp/texture.h>
 #include <assimp/vector3.h>
-#include <GL/glew.h>
+#include <glew/GL/glew.h>
 
 #include "../system/globals.h"
 #include "../utility/matrix.h"

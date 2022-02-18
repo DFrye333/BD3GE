@@ -9,7 +9,7 @@
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include <GL/glew.h>
+#include <glew/GL/glew.h>
 
 // TODO: Can I eliminate this dependency on input.h?
 #include "../input/input.h"

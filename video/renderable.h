@@ -1,8 +1,7 @@
 #ifndef BD3GE_RENDERABLE_H
 #define BD3GE_RENDERABLE_H
 
-#include <GL/glew.h>
-
+#include <glew/GL/glew.h>
 #include "../utility/object.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"

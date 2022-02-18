@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 
-#include <GL/glew.h>
+#include <glew/GL/glew.h>
 
 #ifdef __linux__
 

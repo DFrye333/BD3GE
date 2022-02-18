@@ -3,9 +3,8 @@
 
 #include <string>
 
-#include <GL/glew.h>
-
-#include "../libraries/stb/stb_image.h"
+#include <glew/GL/glew.h>
+#include <stb/stb_image.h>
 
 #include "../system/globals.h"
 

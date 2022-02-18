@@ -3,8 +3,8 @@
 
 #include <cstddef>
 
-#include <al.h>
-#include <alc.h>
+#include <openal/al.h>
+#include <openal/alc.h>
 
 namespace BD3GE {
 	class AL {

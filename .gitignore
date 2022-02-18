@@ -34,7 +34,7 @@ Debug/*
 
 #=== Custom entries ===#
 build
+libraries
+log
 resources/models
 resources/textures
-log
-libraries

@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 
-#include <GL/glew.h>
+#include <glew/GL/glew.h>
 
 #include "../system/constants.h"
 #include "../system/globals.h"

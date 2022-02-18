@@ -4,7 +4,7 @@
 #include <string>
 
 #include <assimp/mesh.h>
-#include <GL/glew.h>
+#include <glew/GL/glew.h>
 
 #include "../system/constants.h"
 #include "../utility/transform.h"

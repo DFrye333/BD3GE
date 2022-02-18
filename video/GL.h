@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include <GL/glew.h>
+#include <glew/GL/glew.h>
 
 #include "../system/constants.h"
 #include "../utility/vector.h"

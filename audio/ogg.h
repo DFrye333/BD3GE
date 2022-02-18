@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-#include <al.h>
-#include <alc.h>
-#include <vorbis/vorbisfile.h>
+#include <libvorbis/vorbis/vorbisfile.h>
+#include <openal/al.h>
+#include <openal/alc.h>
 
 #include "../system/constants.h"
 #include "../system/globals.h"
