@@ -55,12 +55,12 @@ namespace BD3GE {
 		// ========================================================================
 
 		// Initialize the logic and rendering timers.
-		Timer render_timer("Render", FRAME_RATE);
-		Timer logic_timer("Logic", TICK_RATE);
-		Timer mouse_move_timer("Mouse Move", 10 * TICK_RATE);
-		render_timer.start();
-		logic_timer.start();
-		mouse_move_timer.start();
+		Timer* render_timer = new WinAPITimer("Render", FRAME_RATE);
+		Timer* logic_timer = new WinAPITimer("Logic", TICK_RATE);
+		Timer* mouse_move_timer = new WinAPITimer("Mouse Move", 10 * TICK_RATE);
+		render_timer->start();
+		logic_timer->start();
+		mouse_move_timer->start();
 
 		// Iterate endlessly (unless halted elsewhere).
 		while (true) {
@@ -80,19 +80,19 @@ namespace BD3GE {
 			}
 
 			// Check logic timer.
-			if (logic_timer.is_due()) {
+			if (logic_timer->is_due()) {
 				// Process a logic tick.
 				scene->tick(input);
 			}
 
 			// Check mouse drag timer.
-			if (mouse_move_timer.is_due()) {
+			if (mouse_move_timer->is_due()) {
 				// Process a logic tick.
 				scene->mouse_move(input);
 			}
 
 			// Check render timer.
-			if (render_timer.is_due()) {
+			if (render_timer->is_due()) {
 				//std::cout << "FRAME" << std::endl;
 
 				// Process a rendering frame.

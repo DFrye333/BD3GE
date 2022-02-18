@@ -1,29 +1,23 @@
 #ifndef BD3GE_TIMER_H
 #define BD3GE_TIMER_H
 
-#include <ctime>
 #include <string>
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 
 namespace BD3GE {
 	class Timer {
 		public:
 
-			Timer(std::string name, uint64_t timer_frequency_Hz);
-			~Timer();
-			void start(void);
-			bool is_due(void);
+			virtual ~Timer() {}
+			virtual void start(void) = 0;
+			virtual bool is_due(void) = 0;
 
 		private:
 
 			std::string			name;
 			bool				is_running;
-			uint64_t			timer_frequency_Hz;
-			uint64_t			system_frequency_Hz;
-			uint64_t			start_stamp;
+			long long			timer_frequency_Hz;
+			long long			system_frequency_Hz;
+			long long			start_stamp;
 	};
 }
 

@@ -14,6 +14,8 @@ int main() {
 
 #include <Windows.h>
 
+#include "os/win32.h"
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 #ifndef NDEBUG
 	if (AttachConsole(GetCurrentProcessId()) || AllocConsole()) {
