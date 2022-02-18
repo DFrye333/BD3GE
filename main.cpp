@@ -15,10 +15,12 @@ int main() {
 #include <Windows.h>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+#ifndef NDEBUG
 	if (AttachConsole(GetCurrentProcessId()) || AllocConsole()) {
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
 	}
+#endif
 
 	BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs;
 	winAPIEntryArgs.hInstance = hInstance;
