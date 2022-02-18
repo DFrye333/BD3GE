@@ -13,6 +13,7 @@ namespace BD3GE {
 			Light(std::string name, Vector3 position, Color color_ambient, Color color_diffuse, Color color_specular, float attenuation_constant, float attenuation_linear, float attenuation_quadratic);
 
 			std::string name;
+			bool is_active;
 			Vector3 position;
 			Color color_ambient;
 			Color color_diffuse;

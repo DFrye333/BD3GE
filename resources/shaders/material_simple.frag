@@ -2,6 +2,7 @@
 
 struct Light {
 	vec3 position;
+	bool is_active;
 	vec3 color_ambient;
 	vec3 color_diffuse;
 	vec3 color_specular;
@@ -33,11 +34,15 @@ out vec4 fragment_color;
 void main(void) {
 	if (quantity_lights == 0) { fragment_color = vec4(material.color_diffuse, 1.0); return; }
 
+	fragment_color = vec4(material.color_ambient * 0.1, 1);
+
 	mat3 normal_matrix = mat3(transpose(inverse_world_transform));
 	vec3 normal_vector = normal_matrix * normalize(normal);
 	vec3 view_direction = normalize(viewer_position - world_position.xyz);
 
 	for (unsigned int i = 0; i < quantity_lights; ++i) {
+		if (!lights[i].is_active) { continue; }
+
 		vec3 light_direction = lights[i].position - world_position.xyz;
 
 		vec3 ambient_component = lights[i].color_ambient * material.color_ambient;

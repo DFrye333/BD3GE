@@ -228,6 +228,10 @@ namespace BD3GE {
 		if (input->get_key_state(BD3GE::KEY_CODE::P)) {
 			camera->rotate(Vector3(1, 0, 0));
 		}
+		
+		if (input->consume_key_input(BD3GE::KEY_CODE::M)) {
+			lights[0]->is_active = !lights[0]->is_active;
+		}
 
 		this->lights[0]->position = this->light_renderable->get_position();
 		for (Material* lit_material : lit_materials) {

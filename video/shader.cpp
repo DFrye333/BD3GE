@@ -131,6 +131,7 @@ namespace BD3GE {
 		}
 
 		setUniform("lights[" + light_index + "].position", light->position);
+		setUniform("lights[" + light_index + "].is_active", light->is_active);
 		setUniform("lights[" + light_index + "].color_ambient", light->color_ambient.rgb);
 		setUniform("lights[" + light_index + "].color_diffuse", light->color_diffuse.rgb);
 		setUniform("lights[" + light_index + "].color_specular", light->color_specular.rgb);
