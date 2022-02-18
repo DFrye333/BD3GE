@@ -41,8 +41,10 @@ namespace BD3GE {
 			void	setLight(Light* light);
 
 			GLuint program_ID;
-			std::map<std::string, std::string> lights;
-			unsigned short quantity_lights = 0;
+			std::map<std::string, std::string> point_lights;
+			std::map<std::string, std::string> spot_lights;
+			unsigned short quantity_point_lights = 0;
+			unsigned short quantity_spot_lights = 0;
 	};
 }
 

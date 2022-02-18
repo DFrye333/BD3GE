@@ -122,21 +122,39 @@ namespace BD3GE {
 	}
 
 	void Shader::setLight(Light* light) {
+		std::string light_group_name;
 		std::string light_index;
-		if (lights.contains(light->name)) {
-			light_index = lights[light->name];
-		} else {
-			light_index = lights[light->name] = std::to_string(quantity_lights);
-			setUniform("quantity_lights", (unsigned int)(++quantity_lights));
+
+		if (light->light_type == Light::TYPE::POINT) {
+			light_group_name = "point_lights";
+			if (point_lights.contains(light->name)) {
+				light_index = point_lights[light->name];
+			} else {
+				light_index = point_lights[light->name] = std::to_string(quantity_point_lights);
+				setUniform("quantity_point_lights", (unsigned int)(++quantity_point_lights));
+			}
+
+			setUniform(light_group_name + "[" + light_index + "].attenuation_constant", light->attenuation_constant);
+			setUniform(light_group_name + "[" + light_index + "].attenuation_linear", light->attenuation_linear);
+			setUniform(light_group_name + "[" + light_index + "].attenuation_quadratic", light->attenuation_quadratic);
+		} else if (light->light_type == Light::TYPE::SPOT) {
+			light_group_name = "spot_lights";
+			if (spot_lights.contains(light->name)) {
+				light_index = spot_lights[light->name];
+			}
+			else {
+				light_index = spot_lights[light->name] = std::to_string(quantity_spot_lights);
+				setUniform("quantity_spot_lights", (unsigned int)(++quantity_spot_lights));
+			}
+
+			setUniform(light_group_name + "[" + light_index + "].direction", light->direction);
+			setUniform(light_group_name + "[" + light_index + "].cone_cutoff", cos(light->cone_cutoff));
 		}
 
-		setUniform("lights[" + light_index + "].position", light->position);
-		setUniform("lights[" + light_index + "].is_active", light->is_active);
-		setUniform("lights[" + light_index + "].color_ambient", light->color_ambient.rgb);
-		setUniform("lights[" + light_index + "].color_diffuse", light->color_diffuse.rgb);
-		setUniform("lights[" + light_index + "].color_specular", light->color_specular.rgb);
-		setUniform("lights[" + light_index + "].attenuation_constant", light->attenuation_constant);
-		setUniform("lights[" + light_index + "].attenuation_linear", light->attenuation_linear);
-		setUniform("lights[" + light_index + "].attenuation_quadratic", light->attenuation_quadratic);
+		setUniform(light_group_name + "[" + light_index + "].position", light->position);
+		setUniform(light_group_name + "[" + light_index + "].is_active", light->is_active);
+		setUniform(light_group_name + "[" + light_index + "].color_ambient", light->color_ambient.rgb);
+		setUniform(light_group_name + "[" + light_index + "].color_diffuse", light->color_diffuse.rgb);
+		setUniform(light_group_name + "[" + light_index + "].color_specular", light->color_specular.rgb);
 	}
 }
