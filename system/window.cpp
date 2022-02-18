@@ -574,9 +574,11 @@ namespace BD3GE {
 	};
 
 	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs) {
-		WNDCLASSEX wc;
-		const char g_szClassName[] = "BD3GEWindowClass";
+		std::string windowClassName = "BD3GEWindowClass";
+		wchar_t g_szClassName[32];
+		BD3GE::Win32::toUTF16(windowClassName, g_szClassName);
 
+		WNDCLASSEX wc;
 		wc.cbSize = sizeof(WNDCLASSEX);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = WindowProc;
@@ -591,9 +593,12 @@ namespace BD3GE {
 		wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
 		if (!RegisterClassEx(&wc)) {
-			MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+			BD3GE::Win32::displayMessageBox("Error!", "Window Registration Failed!");
 			return;
 		}
+
+		wchar_t window_title[256];
+		BD3GE::Win32::toUTF16(BD3GE::WINDOW_TITLE, window_title);
 
 		window_proc_data = new BD3GE::WinAPIWindow::WindowProcData;
 		window_proc_data->window = this;
@@ -601,7 +606,7 @@ namespace BD3GE {
 		window_handle = CreateWindowEx(
 			WS_EX_CLIENTEDGE,
 			g_szClassName,
-			BD3GE::WINDOW_TITLE.c_str(),
+			window_title,
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT, CW_USEDEFAULT, BD3GE::WINDOW_WIDTH, BD3GE::WINDOW_HEIGHT,
 			NULL, NULL, winAPIEntryArgs.hInstance,
@@ -609,7 +614,7 @@ namespace BD3GE {
 		);
 
 		if (window_handle == NULL) {
-			MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+			BD3GE::Win32::displayMessageBox("Error!", "Window Creation Failed!");
 			return;
 		}
 

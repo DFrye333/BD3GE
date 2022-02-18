@@ -22,6 +22,7 @@
 
 #endif
 
+#include "../os/win32.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
 #include "../utility/message.h"
