@@ -24,46 +24,44 @@ namespace BD3GE {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
 
-		ShaderObject vertex_material_simple = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_simple.vert");
-		ShaderObject vertex_material_mapped = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_mapped.vert");
-		ShaderObject fragment_material_simple = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_simple.frag");
-		ShaderObject fragment_material_mapped = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/material_mapped.frag");
+		ShaderObject vertex_default = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert");
+		ShaderObject fragment_default = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
 		Texture* wall_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
 		Texture* container_diffuse_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_diffuse.png");
 		Texture* container_specular_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_specular.png");
 
 		// Scary duck
-		SimpleMaterial* duck_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 255, 0));
+		SimpleMaterial* duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(255, 255, 0));
 		this->scary_duck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, duck_material, Vector3(1, 1, 1)));
 
 		// Cube
-		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(0, 255, 0));
+		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(0, 255, 0));
 		add_renderable(new Mesh(Vector3(-60, 0, 0), cube->mMeshes[0], nullptr, cube_material, Vector3(1, 1, 1)));
 
 		// Floor
-		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_material_mapped, &fragment_material_mapped), wall_texture, wall_texture, 32.0f);
+		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_default, &fragment_default), wall_texture, wall_texture, 32.0f);
 		add_renderable(new SquareBrush(Vector3(-5, 5, 0), 10, 10, brick_floor_material));
 		lit_materials.push_back(brick_floor_material);
 
 		// Pillars
-		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 0, 25));
+		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(255, 0, 25));
 		for (unsigned int i = 0; i < 121; ++i) {
 			add_renderable(new BoxBrush(Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0), Vector3(2, 10, 2), pillar_material));
 		}
 		lit_materials.push_back(pillar_material);
 
 		// Mapped container
-		MappedMaterial* container_material = new MappedMaterial(new Shader(&vertex_material_mapped, &fragment_material_mapped), container_diffuse_texture, container_specular_texture, 32.0f);
+		MappedMaterial* container_material = new MappedMaterial(new Shader(&vertex_default, &fragment_default), container_diffuse_texture, container_specular_texture, 32.0f);
 		add_renderable(new SquareBrush(Vector3(75, 0, 0), 5, 5, container_material));
 		lit_materials.push_back(container_material);
 
 		// Player
-		SimpleMaterial* player_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(10, 51, 102));
+		SimpleMaterial* player_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(10, 51, 102));
 		this->player = add_renderable(new BoxBrush(Vector3(5, 5, 0), Vector3(2, 2, 2), player_material));
 		lit_materials.push_back(player_material);
 
 		// Light
-		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(102, 229, 102));
+		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(102, 229, 102));
 		this->light_renderable = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
 
 		this->lights.push_back(new SpotLight("White Spot Light", this->light_renderable->get_position(), Vector3(0, 0, -1), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
