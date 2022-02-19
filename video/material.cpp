@@ -26,10 +26,11 @@ namespace BD3GE {
 
 	void SimpleMaterial::setup() {
 		if (this->shader) {
-			this->shader->setUniform("material.color_ambient", this->color_ambient.rgb);
-			this->shader->setUniform("material.color_diffuse", this->color_diffuse.rgb);
-			this->shader->setUniform("material.color_specular", this->color_specular.rgb);
-			this->shader->setUniform("material.gloss_factor", this->gloss_factor);
+			this->shader->setUniform("is_material_mapped", false);
+			this->shader->setUniform("simple_material.color_ambient", this->color_ambient.rgb);
+			this->shader->setUniform("simple_material.color_diffuse", this->color_diffuse.rgb);
+			this->shader->setUniform("simple_material.color_specular", this->color_specular.rgb);
+			this->shader->setUniform("simple_material.gloss_factor", this->gloss_factor);
 		}
 	}
 
@@ -41,9 +42,10 @@ namespace BD3GE {
 		this->map_diffuse = map_diffuse;
 		this->map_specular = map_specular;
 
-		this->shader->setUniform("material.map_diffuse", 0);
-		this->shader->setUniform("material.map_specular", 1);
-		this->shader->setUniform("material.gloss_factor", gloss_factor);
+		this->shader->setUniform("is_material_mapped", true);
+		this->shader->setUniform("mapped_material.map_diffuse", 0);
+		this->shader->setUniform("mapped_material.map_specular", 1);
+		this->shader->setUniform("mapped_material.gloss_factor", gloss_factor);
 	}
 
 	void MappedMaterial::prepForRender() {
