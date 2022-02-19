@@ -29,8 +29,8 @@ namespace BD3GE {
 
 	void Transform::scale(Vector3 scaler) {
 		this->matrix(0, 0, scaler.v.g.x);
-		this->matrix(0, 0, scaler.v.g.y);
-		this->matrix(0, 0, scaler.v.g.z);
+		this->matrix(1, 1, scaler.v.g.y);
+		this->matrix(2, 2, scaler.v.g.z);
 	}
 
 	void Transform::rotate(Vector3 angle) {
