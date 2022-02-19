@@ -36,7 +36,7 @@ namespace BD3GE {
 			static const short NUMBER_COLUMNS = 4;
 			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
 
-			float m_elements[NUMBER_ELEMENTS];
+			float elements[NUMBER_ELEMENTS];
 	};
 }
 

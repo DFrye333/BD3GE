@@ -16,14 +16,14 @@ namespace BD3GE {
 
 	Matrix4::Matrix4() {
 		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
-			m_elements[i] = 0.0f;
+			elements[i] = 0.0f;
 		}
 	}
 
 	// Constructs a matrix given an array of values.
 	Matrix4::Matrix4(float* elements) {
 		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
-			m_elements[i] = elements[i];
+			elements[i] = elements[i];
 		}
 	}
 
@@ -32,21 +32,21 @@ namespace BD3GE {
 					float a21, float a22, float a23, float a24,
 					float a31, float a32, float a33, float a34,
 					float a41, float a42, float a43, float a44) {
-		m_elements[0] = a11;	m_elements[1] = a12;	m_elements[2] = a13;	m_elements[3] = a14;
-		m_elements[4] = a21;	m_elements[5] = a22;	m_elements[6] = a23;	m_elements[7] = a24;
-		m_elements[8] = a31;	m_elements[9] = a32;	m_elements[10] = a33;	m_elements[11] = a34;
-		m_elements[12] = a41;	m_elements[13] = a42;	m_elements[14] = a43;	m_elements[15] = a44;
+		elements[0] = a11;	elements[1] = a12;	elements[2] = a13;	elements[3] = a14;
+		elements[4] = a21;	elements[5] = a22;	elements[6] = a23;	elements[7] = a24;
+		elements[8] = a31;	elements[9] = a32;	elements[10] = a33;	elements[11] = a34;
+		elements[12] = a41;	elements[13] = a42;	elements[14] = a43;	elements[15] = a44;
 	}
 
 	Matrix4::Matrix4(const Matrix4& source) {
 		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
-			m_elements[i] = source.m_elements[i];
+			elements[i] = source.elements[i];
 		}
 	}
 
 	void Matrix4::to_float_array(float* float_array) const {
 		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
-			float_array[i] = (float)m_elements[i];
+			float_array[i] = (float)elements[i];
 		}
 	}
 
@@ -139,8 +139,7 @@ namespace BD3GE {
 			if (i_i == 0.0f) {
 				for (unsigned short l = i; l < NUMBER_ROWS; ++l) {
 					// If a suitable row has been found to swap with row i, swap rows.
-					if (determinant_matrix(i, l) != 0.0f)
-					{
+					if (determinant_matrix(i, l) != 0.0f) {
 						determinant_matrix.row_swap(i, l);
 
 						// Keep track of each row-swap made, as it affects the final determinant.
@@ -208,17 +207,17 @@ namespace BD3GE {
 
 	// Returns the matrix element mapped to by the 0-based subscripts "i" and "j". Row-major order.
 	const float Matrix4::operator()(unsigned short i, unsigned short j) const {
-		return m_elements[i + (4 * j)];
+		return elements[i + (4 * j)];
 	}
 
 	// Set the matrix element mapped to by the 0-based subscripts "i" and "j" to the input "value". Row-major order.
 	void Matrix4::operator()(unsigned short i, unsigned short j, float value) {
-		m_elements[i + (4 * j)] = value;
+		elements[i + (4 * j)] = value;
 	}
 
 	const Matrix4& Matrix4::operator=(const Matrix4& other) {
 		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
-			m_elements[i] = other.m_elements[i];
+			elements[i] = other.elements[i];
 		}
 
 		return *this;
