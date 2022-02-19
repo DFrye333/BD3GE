@@ -19,8 +19,13 @@ namespace BD3GE {
 		this->attenuation_quadratic = attenuation_quadratic;
 	}
 
-	Light::Light(Light::TYPE light_type, std::string name, Vector3 position, Vector3 direction, Color color_ambient, Color color_diffuse, Color color_specular, float cone_cutoff) : Light(light_type, name, position, color_ambient, color_diffuse, color_specular) {
+	Light::Light(Light::TYPE light_type, std::string name, Vector3 position, Vector3 direction, Color color_ambient, Color color_diffuse, Color color_specular) : Light(light_type, name, position, color_ambient, color_diffuse, color_specular) {
 		this->direction = direction;
-		this->cone_cutoff = cone_cutoff;
+	}
+
+	Light::Light(Light::TYPE light_type, std::string name, Vector3 position, Vector3 direction, Color color_ambient, Color color_diffuse, Color color_specular, float inner_cutoff, float outer_cutoff) : Light(light_type, name, position, direction, color_ambient, color_diffuse, color_specular) {
+		this->direction = direction;
+		this->inner_cutoff = inner_cutoff;
+		this->outer_cutoff = outer_cutoff;
 	}
 }

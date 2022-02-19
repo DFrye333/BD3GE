@@ -148,7 +148,8 @@ namespace BD3GE {
 			}
 
 			setUniform(light_group_name + "[" + light_index + "].direction", light->direction);
-			setUniform(light_group_name + "[" + light_index + "].cone_cutoff", cos(light->cone_cutoff));
+			setUniform(light_group_name + "[" + light_index + "].inner_cutoff", cos((float)((BD3GE::PI / 180) * light->inner_cutoff)));
+			setUniform(light_group_name + "[" + light_index + "].outer_cutoff", cos((float)((BD3GE::PI / 180) * light->outer_cutoff)));
 		}
 
 		setUniform(light_group_name + "[" + light_index + "].position", light->position);

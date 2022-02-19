@@ -66,7 +66,7 @@ namespace BD3GE {
 		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(102, 229, 102));
 		this->light_renderable = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
 
-		this->lights.push_back(new Light(Light::TYPE::SPOT, "Spot Light 0", this->light_renderable->get_position(), Vector3(0, 0, -1), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255), 25.0f));
+		this->lights.push_back(new Light(Light::TYPE::SPOT, "Spot Light 0", this->light_renderable->get_position(), Vector3(0, 0, -1), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
 		this->lights.push_back(new Light(Light::TYPE::POINT, "Point Light 0", this->light_renderable->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
 
 		this->camera = new Camera(Vector3(0, 0, 300));
@@ -107,13 +107,13 @@ namespace BD3GE {
 		}
 
 		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_X) != 0) {
-			camera->translate(Vector3(input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_X) * player_speed, 0, 0));
+			light_renderable->translate(Vector3(input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_X) * player_speed, 0, 0));
 		}
 		camera->translate(Vector3(input->get_key_state(BD3GE::KEY_CODE::LEFT) * -player_speed, 0, 0));
 		camera->translate(Vector3(input->get_key_state(BD3GE::KEY_CODE::RIGHT) * player_speed, 0, 0));
 
 		if (input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_Y) != 0) {
-			camera->translate(Vector3(0, input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_Y) * player_speed, 0));
+			light_renderable->translate(Vector3(0, input->get_gamepad_input_value(primary_gamepad_index, Gamepad::INPUT_CODE::RIGHT_STICK_Y) * player_speed, 0));
 		}
 		camera->translate(Vector3(0, input->get_key_state(BD3GE::KEY_CODE::UP) * player_speed, 0));
 		camera->translate(Vector3(0, input->get_key_state(BD3GE::KEY_CODE::DOWN) * -player_speed, 0));

@@ -18,7 +18,8 @@ struct SpotLight {
 	vec3 color_ambient;
 	vec3 color_diffuse;
 	vec3 color_specular;
-	float cone_cutoff;
+	float inner_cutoff;
+	float outer_cutoff;
 };
 
 struct SimpleMaterial {
@@ -55,7 +56,7 @@ void main(void) {
 	for (unsigned int i = 0; i < quantity_point_lights; ++i) {
 		PointLight light = point_lights[0];
 
-		if (!point_lights[i].is_active) { continue; }
+		if (!light.is_active) { continue; }
 
 		vec3 towards_light_direction = light.position - world_position.xyz;
 
@@ -76,9 +77,12 @@ void main(void) {
 	for (unsigned int i = 0; i < quantity_spot_lights; ++i) {
 		SpotLight light = spot_lights[0];
 
-		vec3 towards_light_direction = normalize(spot_lights[i].position - world_position.xyz);
+		if (!light.is_active) { continue; }
 
-		if (dot(light.direction, -towards_light_direction) > light.cone_cutoff) {
+		vec3 towards_light_direction = normalize(spot_lights[i].position - world_position.xyz);
+		float light_center_offset = dot(light.direction, -towards_light_direction);
+
+		if (light_center_offset > light.outer_cutoff) {
 			vec3 ambient_component = light.color_ambient * material.color_ambient;
 
 			vec3 diffuse_component = light.color_diffuse * max(0.0, dot(normal_vector, normalize(towards_light_direction))) * material.color_diffuse;
@@ -87,9 +91,9 @@ void main(void) {
 			float specular_factor = pow(max(0.0, dot(reflection_direction, view_direction)), material.gloss_factor);
 			vec3 specular_component = light.color_specular * specular_factor * material.color_specular;
 
-			float light_distance = length(towards_light_direction);
+			float intensity = clamp((light_center_offset - light.outer_cutoff) / (light.inner_cutoff - light.outer_cutoff), 0.0f, 1.0f);
 
-			fragment_color += vec4(ambient_component + diffuse_component + specular_component, 1.0);
+			fragment_color += vec4(intensity * (ambient_component + diffuse_component + specular_component), 1.0);
 		}
 	}
 }
