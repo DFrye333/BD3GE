@@ -46,7 +46,7 @@ namespace BD3GE {
 		lit_materials.push_back(brick_floor_material);
 
 		// Pillars
-		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 0, 0));
+		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(255, 0, 25));
 		for (unsigned int i = 0; i < 121; ++i) {
 			add_renderable(new BoxBrush(Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0), Vector3(2, 10, 2), pillar_material));
 		}
@@ -66,8 +66,10 @@ namespace BD3GE {
 		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_material_simple, &fragment_material_simple), Color(102, 229, 102));
 		this->light_renderable = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
 
-		this->lights.push_back(new Light(Light::TYPE::SPOT, "Spot Light 0", this->light_renderable->get_position(), Vector3(0, 0, -1), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
-		this->lights.push_back(new Light(Light::TYPE::POINT, "Point Light 0", this->light_renderable->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
+		this->lights.push_back(new SpotLight("White Spot Light", this->light_renderable->get_position(), Vector3(0, 0, -1), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
+		this->lights.push_back(new PointLight("White Point Light", this->light_renderable->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
+		this->lights.push_back(new PointLight("Blue Point Light", Vector3(-50, 50, 20), Color(25, 25, 25), Color(0, 0, 255), Color(255, 255, 255), 1.0f, 0.022, 0.0019f));
+		this->lights.push_back(new DirectionalLight("White Directional Light", Vector3(-1, 0, 0), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
 
 		this->camera = new Camera(Vector3(0, 0, 300));
 	}
@@ -234,12 +236,15 @@ namespace BD3GE {
 			lights[0]->is_active = !lights[0]->is_active;
 		}
 
-		this->lights[0]->position = this->light_renderable->get_position();
-		for (Material* lit_material : lit_materials) {
-			if (lit_material->shader) {
-				lit_material->shader->setLight(this->lights[0]);
-				lit_material->shader->setLight(this->lights[1]);
-				lit_material->shader->setUniform("viewer_position", this->camera->get_position());
+		if (!this->lights.empty()) {
+			((SpotLight*)this->lights[0])->position = this->light_renderable->get_position();
+			for (Material* lit_material : lit_materials) {
+				if (lit_material->shader) {
+					for (Light* light : lights) {
+						lit_material->shader->setLight(light);
+					}
+					lit_material->shader->setUniform("viewer_position", this->camera->get_position());
+				}
 			}
 		}
 

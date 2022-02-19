@@ -125,7 +125,18 @@ namespace BD3GE {
 		std::string light_group_name;
 		std::string light_index;
 
-		if (light->light_type == Light::TYPE::POINT) {
+		if (light->type == Light::TYPE::DIRECTIONAL) {
+			light_group_name = "directional_lights";
+			if (directional_lights.contains(light->name)) {
+				light_index = directional_lights[light->name];
+			}
+			else {
+				light_index = directional_lights[light->name] = std::to_string(quantity_directional_lights);
+				setUniform("quantity_directional_lights", (unsigned int)(++quantity_directional_lights));
+			}
+
+			setUniform(light_group_name + "[" + light_index + "].direction", ((DirectionalLight*)light)->direction);
+		} else if (light->type == Light::TYPE::POINT) {
 			light_group_name = "point_lights";
 			if (point_lights.contains(light->name)) {
 				light_index = point_lights[light->name];
@@ -134,10 +145,11 @@ namespace BD3GE {
 				setUniform("quantity_point_lights", (unsigned int)(++quantity_point_lights));
 			}
 
-			setUniform(light_group_name + "[" + light_index + "].attenuation_constant", light->attenuation_constant);
-			setUniform(light_group_name + "[" + light_index + "].attenuation_linear", light->attenuation_linear);
-			setUniform(light_group_name + "[" + light_index + "].attenuation_quadratic", light->attenuation_quadratic);
-		} else if (light->light_type == Light::TYPE::SPOT) {
+			setUniform(light_group_name + "[" + light_index + "].position", ((PointLight*)light)->position);
+			setUniform(light_group_name + "[" + light_index + "].attenuation_constant", ((PointLight*)light)->attenuation_constant);
+			setUniform(light_group_name + "[" + light_index + "].attenuation_linear", ((PointLight*)light)->attenuation_linear);
+			setUniform(light_group_name + "[" + light_index + "].attenuation_quadratic", ((PointLight*)light)->attenuation_quadratic);
+		} else if (light->type == Light::TYPE::SPOT) {
 			light_group_name = "spot_lights";
 			if (spot_lights.contains(light->name)) {
 				light_index = spot_lights[light->name];
@@ -147,12 +159,12 @@ namespace BD3GE {
 				setUniform("quantity_spot_lights", (unsigned int)(++quantity_spot_lights));
 			}
 
-			setUniform(light_group_name + "[" + light_index + "].direction", light->direction);
-			setUniform(light_group_name + "[" + light_index + "].inner_cutoff", cos((float)((BD3GE::PI / 180) * light->inner_cutoff)));
-			setUniform(light_group_name + "[" + light_index + "].outer_cutoff", cos((float)((BD3GE::PI / 180) * light->outer_cutoff)));
+			setUniform(light_group_name + "[" + light_index + "].position", ((SpotLight*)light)->position);
+			setUniform(light_group_name + "[" + light_index + "].direction", ((SpotLight*)light)->direction);
+			setUniform(light_group_name + "[" + light_index + "].inner_cutoff", cos((float)((BD3GE::PI / 180) * ((SpotLight*)light)->inner_cutoff)));
+			setUniform(light_group_name + "[" + light_index + "].outer_cutoff", cos((float)((BD3GE::PI / 180) * ((SpotLight*)light)->outer_cutoff)));
 		}
 
-		setUniform(light_group_name + "[" + light_index + "].position", light->position);
 		setUniform(light_group_name + "[" + light_index + "].is_active", light->is_active);
 		setUniform(light_group_name + "[" + light_index + "].color_ambient", light->color_ambient.rgb);
 		setUniform(light_group_name + "[" + light_index + "].color_diffuse", light->color_diffuse.rgb);
