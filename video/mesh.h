@@ -13,11 +13,12 @@
 #include "../video/renderable.h"
 #include "../video/shader.h"
 #include "../video/texture.h"
+#include "../video/vertex.h"
 
 namespace BD3GE {
 	class Mesh : public Renderable {
 		public:
-			Mesh(Vector3 position, const aiMesh* mesh, aiTexture* texture, SimpleMaterial* simpleMaterial, Vector3 scale);
+			Mesh(Vector3 position, const aiMesh* mesh, aiTexture* texture, SimpleMaterial* simple_material, Vector3 scale);
 
 			aiTexture* texture;
 	};

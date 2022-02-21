@@ -3,8 +3,9 @@
 namespace BD3GE {
 	GL::GL() : is_wireframe_mode_enabled(false) {
 		// Set the clear color of the screen.
-		Vector3 dark(0.25f, 0.25f, 0.25f);
-		glClearColor(dark.v.c.r, dark.v.c.g, dark.v.c.b, 1.0f);
+		Color dark(16, 16, 16);
+		Color gray(64, 64, 64);
+		glClearColor(dark.rgb.v.c.r, dark.rgb.v.c.g, dark.rgb.v.c.b, 1.0f);
 
 		// Enable depth testing.
 		glClearDepth(1.0f);

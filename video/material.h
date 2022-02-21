@@ -1,6 +1,8 @@
 #ifndef BD3GE_MATERIAL_H
 #define BD3GE_MATERIAL_H
 
+#include <assimp/material.h>
+
 #include "../utility/color.h"
 #include "../video/shader.h"
 #include "../video/texture.h"
@@ -23,6 +25,7 @@ namespace BD3GE {
 			SimpleMaterial(Shader* shader, Color color);
 			SimpleMaterial(Shader* shader, Color color_ambient, Color color_diffuse, Color color_specular);
 			SimpleMaterial(Shader* shader, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor);
+			SimpleMaterial(Shader* shader, aiMaterial* material);
 			void setup();
 			void prepForRender();
 

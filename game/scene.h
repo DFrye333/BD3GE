@@ -1,6 +1,7 @@
 #ifndef BD3GE_SCENE_H
 #define BD3GE_SCENE_H
 
+#include <cstdlib>
 #include <deque>
 #include <utility>
 #include <vector>
@@ -18,6 +19,7 @@
 #include "../video/camera.h"
 #include "../video/mesh.h"
 #include "../video/renderable.h"
+#include "../video/vertex.h"
 
 
 #include <cmath>
@@ -42,6 +44,7 @@ namespace BD3GE {
 			Camera* camera;
 			Renderable* player;
 			Renderable* scary_duck;
+			std::vector<Renderable*> little_ducks;
 			Renderable* light_renderable;
 	};
 }

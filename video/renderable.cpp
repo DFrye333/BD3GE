@@ -15,7 +15,7 @@ namespace BD3GE {
 
 	void Renderable::setup() {
 		// Generate VAO.
-		glGenVertexArrays(1, &vaoHandle);
+		glGenVertexArrays(1, &vao_handle);
 
 		// Generate VBOs.
 		GLuint vboHandle, iboHandle;
@@ -23,16 +23,24 @@ namespace BD3GE {
 		glGenBuffers(1, &iboHandle);
 
 		// Setup for VAO.
-		glBindVertexArray(vaoHandle);
+		glBindVertexArray(vao_handle);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vboHandle);
-		glBufferData(GL_ARRAY_BUFFER, sizePerVertex * numVertices * sizeof(GLfloat), vbo, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, num_vertices * sizeof(Vertex), vbo, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboHandle);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), ibo, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(GLuint), ibo, GL_DYNAMIC_DRAW);
 
 		// Positions
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizePerVertex * sizeof(GLfloat), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 		glEnableVertexAttribArray(0);
+
+		// Normals
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
+		glEnableVertexAttribArray(1);
+
+		// Mapped material
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, uv)));
+		glEnableVertexAttribArray(2);
 	}
 
 	void Renderable::render(Transform view_projection_transform) const {
@@ -47,8 +55,8 @@ namespace BD3GE {
 			// TODO: Change this?
 			material->prepForRender();
 			// Draw mesh using its VAO.
-			glBindVertexArray(vaoHandle);
-			glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(vao_handle);
+			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 
 			// Cleanup.

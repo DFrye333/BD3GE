@@ -7,6 +7,7 @@
 #include "../utility/vector.h"
 #include "../video/material.h"
 #include "../video/shader.h"
+#include "../video/vertex.h"
 
 namespace BD3GE {
 	class Renderable : public Object {
@@ -18,12 +19,11 @@ namespace BD3GE {
 			virtual void render(Transform view_projection_transform) const;
 
 			std::vector<Material*> materials;
-			GLuint vaoHandle;
-			GLfloat* vbo;
-			GLuint* ibo;
-			GLuint numVertices;
-			GLuint numIndices;
-			GLuint sizePerVertex;
+			unsigned int vao_handle;
+			Vertex* vbo;
+			unsigned int* ibo;
+			unsigned int num_vertices;
+			unsigned int num_indices;
 	};
 }
 

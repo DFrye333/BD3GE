@@ -24,6 +24,22 @@ namespace BD3GE {
 		setup();
 	}
 
+	SimpleMaterial::SimpleMaterial(Shader* shader, aiMaterial* material) : Material(shader) {
+		aiString name;
+		float ambient[4];
+		float diffuse[4];
+		float specular[4];
+		material->Get(AI_MATKEY_NAME, name);
+		material->Get(AI_MATKEY_COLOR_AMBIENT, ambient[0]);
+		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse[0]);
+		material->Get(AI_MATKEY_COLOR_SPECULAR, specular[0]);
+		this->color_ambient = Color(Vector3(ambient[0], ambient[1], ambient[2]), ambient[3]);
+		this->color_diffuse = Color(Vector3(diffuse[0], diffuse[1], diffuse[2]), diffuse[3]);
+		this->color_specular = Color(Vector3(specular[0], specular[1], specular[2]), specular[3]);
+
+		setup();
+	}
+
 	void SimpleMaterial::setup() {
 		if (this->shader) {
 			this->shader->setUniform("is_material_mapped", false);

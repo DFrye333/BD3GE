@@ -1,7 +1,7 @@
 #include "scene.h"
 
 namespace BD3GE {
-	Scene::Scene(const std::string modelsDirectory) {
+	Scene::Scene(const std::string modelsDirectory) : scary_duck(nullptr) {
 		Assimp::Importer planeImporter;
 		Assimp::Importer duckImporter;
 
@@ -20,6 +20,12 @@ namespace BD3GE {
 		// Ensure that asset importing succeeded.
 		if (plane && duck) {
 			g_log.write(BD3GE::LOG_TYPE::INFO, "Assimp scene loading succeeded!");
+			g_log.write(BD3GE::LOG_TYPE::INFO, "Loading mesh with:");
+			g_log.write(BD3GE::LOG_TYPE::INFO, "\tVertices: " + std::to_string(duck->mMeshes[0]->mNumVertices));
+			g_log.write(BD3GE::LOG_TYPE::INFO, "\tFaces: " + std::to_string(duck->mMeshes[0]->mNumFaces));
+			if (duck->HasMaterials()) {
+				g_log.write(BD3GE::LOG_TYPE::INFO, "\tMaterials Index: " + std::to_string(duck->mMeshes[0]->mMaterialIndex));
+			}
 		} else {
 			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
 		}
@@ -31,12 +37,26 @@ namespace BD3GE {
 		Texture* container_specular_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_specular.png");
 
 		// Scary duck
-		SimpleMaterial* duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(255, 255, 0));
-		this->scary_duck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, duck_material, Vector3(1, 1, 1)));
+		SimpleMaterial* scary_duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), duck->mMaterials[0]);
+		this->scary_duck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, scary_duck_material, Vector3(1, 1, 1)));
+		this->scary_duck->scale(Vector3(0.25f, 0.25f, 0.25f));
+		lit_materials.push_back(scary_duck_material);
+
+		// Little duck
+		SimpleMaterial* little_duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(0, 128, 128));
+		srand(time(nullptr));
+		for (unsigned int i = 0; i < 2500; ++i) {
+			Renderable* little_duck = add_renderable(new Mesh(Vector3(-100 + (rand() % 100) - 10, (rand() % 100) - 10, (rand() % 100) - 10), duck->mMeshes[0], nullptr, little_duck_material, Vector3(1, 1, 1)));
+			this->little_ducks.push_back(little_duck);
+			little_duck->scale(Vector3(0.01f, 0.01f, 0.01f));
+			little_duck->rotate(Vector3((rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180)));
+		}
+		lit_materials.push_back(little_duck_material);
 
 		// Cube
-		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(0, 255, 0));
+		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), cube->mMaterials[0]);
 		add_renderable(new Mesh(Vector3(-60, 0, 0), cube->mMeshes[0], nullptr, cube_material, Vector3(1, 1, 1)));
+		lit_materials.push_back(cube_material);
 
 		// Floor
 		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_default, &fragment_default), wall_texture, wall_texture, 32.0f);
@@ -230,8 +250,17 @@ namespace BD3GE {
 			camera->rotate(Vector3(1, 0, 0));
 		}
 		
-		if (input->consume_key_input(BD3GE::KEY_CODE::M)) {
+		if (input->consume_key_input(BD3GE::KEY_CODE::NUM_1)) {
 			lights[0]->is_active = !lights[0]->is_active;
+		}
+		if (input->consume_key_input(BD3GE::KEY_CODE::NUM_2)) {
+			lights[1]->is_active = !lights[1]->is_active;
+		}
+		if (input->consume_key_input(BD3GE::KEY_CODE::NUM_3)) {
+			lights[2]->is_active = !lights[2]->is_active;
+		}
+		if (input->consume_key_input(BD3GE::KEY_CODE::NUM_4)) {
+			lights[3]->is_active = !lights[3]->is_active;
 		}
 
 		if (!this->lights.empty()) {
@@ -246,7 +275,12 @@ namespace BD3GE {
 			}
 		}
 
-		scary_duck->rotate(Vector3(0, 0.001, 0));
+		if (scary_duck != nullptr) {
+			scary_duck->rotate(Vector3(0, 0.001, 0));
+		}
+		for (Renderable* little_duck : little_ducks) {
+			little_duck->rotate(Vector3(0, 0.01, 0));
+		}
 		//camera->rotate(Vector3(0, 0.1 / (180 / BD3GE::PI), 0));
 	}
 

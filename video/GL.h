@@ -6,7 +6,7 @@
 #include <glew/GL/glew.h>
 
 #include "../system/constants.h"
-#include "../utility/vector.h"
+#include "../utility/color.h"
 
 namespace BD3GE {
 	class GL {
