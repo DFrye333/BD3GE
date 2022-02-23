@@ -39,7 +39,7 @@ namespace BD3GE {
 		// Scary duck
 		SimpleMaterial* scary_duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), duck->mMaterials[0]);
 		this->scary_duck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, scary_duck_material, Vector3(1, 1, 1)));
-		this->scary_duck->scale(Vector3(0.25f, 0.25f, 0.25f));
+		this->scary_duck->set_scale(Vector3(0.25f, 0.25f, 0.25f));
 		lit_materials.push_back(scary_duck_material);
 
 		// Little duck
@@ -48,7 +48,7 @@ namespace BD3GE {
 		for (unsigned int i = 0; i < 2500; ++i) {
 			Renderable* little_duck = add_renderable(new Mesh(Vector3(-100 + (rand() % 100) - 10, (rand() % 100) - 10, (rand() % 100) - 10), duck->mMeshes[0], nullptr, little_duck_material, Vector3(1, 1, 1)));
 			this->little_ducks.push_back(little_duck);
-			little_duck->scale(Vector3(0.01f, 0.01f, 0.01f));
+			little_duck->set_scale(Vector3(0.01f, 0.01f, 0.01f));
 			little_duck->rotate(Vector3((rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180)));
 		}
 		lit_materials.push_back(little_duck_material);
@@ -197,8 +197,7 @@ namespace BD3GE {
 
 		if (input->get_key_state(BD3GE::KEY_CODE::R)) {
 			camera->set_position(Vector3(0, 0, 300));
-			// TODO: Finish this thought.
-			//camera->set_direction();
+			camera->set_orientation(Vector3(0, 0, 0));
 		}
 
 		if (input->get_key_state(BD3GE::KEY_CODE::J)) {
