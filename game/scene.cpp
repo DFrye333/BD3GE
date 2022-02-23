@@ -306,8 +306,9 @@ namespace BD3GE {
 		// Clear the color buffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		Transform view_projection_transform = camera->get_view_projection_transform();
 		for (auto& renderable : renderables) {
-			renderable->render(camera->get_view_projection_transform());
+			renderable->render(view_projection_transform);
 		}
 	}
 
