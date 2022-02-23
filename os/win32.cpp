@@ -155,86 +155,86 @@ namespace BD3GE {
 
 		BD3GE::Window::InputEvent input_event;
 		switch (messageCode) {
-		case WM_CREATE:
-		{
-			CREATESTRUCT* data_creation = reinterpret_cast<CREATESTRUCT*>(lParam);
-			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_creation->lpCreateParams);
-			SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)data);
+			case WM_CREATE:
+				{
+					CREATESTRUCT* data_creation = reinterpret_cast<CREATESTRUCT*>(lParam);
+					data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_creation->lpCreateParams);
+					SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)data);
 
-			HDC display_context = GetDC(hwnd);
+					HDC display_context = GetDC(hwnd);
 
-			PIXELFORMATDESCRIPTOR pixel_format_descriptor;
-			pixel_format_descriptor.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-			pixel_format_descriptor.nVersion = 1;
-			pixel_format_descriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-			pixel_format_descriptor.iPixelType = PFD_TYPE_RGBA;
-			pixel_format_descriptor.cColorBits = 8;
-			pixel_format_descriptor.cDepthBits = 24;
-			pixel_format_descriptor.cAccumBits = 0;
-			pixel_format_descriptor.cStencilBits = 0;
+					PIXELFORMATDESCRIPTOR pixel_format_descriptor;
+					pixel_format_descriptor.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+					pixel_format_descriptor.nVersion = 1;
+					pixel_format_descriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+					pixel_format_descriptor.iPixelType = PFD_TYPE_RGBA;
+					pixel_format_descriptor.cColorBits = 8;
+					pixel_format_descriptor.cDepthBits = 24;
+					pixel_format_descriptor.cAccumBits = 0;
+					pixel_format_descriptor.cStencilBits = 0;
 
-			int pixel_format = ChoosePixelFormat(display_context, &pixel_format_descriptor);
-			SetPixelFormat(display_context, pixel_format, &pixel_format_descriptor);
+					int pixel_format = ChoosePixelFormat(display_context, &pixel_format_descriptor);
+					SetPixelFormat(display_context, pixel_format, &pixel_format_descriptor);
 
-			HGLRC render_context = wglCreateContext(display_context);
-			wglMakeCurrent(display_context, render_context);
+					HGLRC render_context = wglCreateContext(display_context);
+					wglMakeCurrent(display_context, render_context);
 
-			ReleaseDC(hwnd, display_context);
-		}
+					ReleaseDC(hwnd, display_context);
+				}
 
-		data->window->set_window_exists(true);
+				data->window->set_window_exists(true);
 
-		break;
-		case WM_PAINT:
-			PAINTSTRUCT paint_struct;
-			BeginPaint(hwnd, &paint_struct);
-			EndPaint(hwnd, &paint_struct);
-			break;
-		case WM_KEYDOWN: input_event.key_state_map.insert({ WinAPI::key_code_map[wParam], true }); break;
-		case WM_KEYUP: input_event.key_state_map.insert({ WinAPI::key_code_map[wParam], false }); break;
-		case WM_LBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, true }); break;
-		case WM_RBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, true }); break;
-		case WM_MBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true }); break;
-		case WM_XBUTTONDOWN:
-			// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
-			//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
-			input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, true }); break;
-		case WM_LBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, false }); break;
-		case WM_RBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, false }); break;
-		case WM_MBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, false }); break;
-		case WM_XBUTTONUP:
-			// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
-			//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
-			input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
-		case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
-		case WM_MOUSEMOVE:
-		{
-			input_event.mouse_position.first = LOWORD(lParam); // X
-			input_event.mouse_position.second = HIWORD(lParam); // Y
+				break;
+			case WM_PAINT:
+				PAINTSTRUCT paint_struct;
+				BeginPaint(hwnd, &paint_struct);
+				EndPaint(hwnd, &paint_struct);
+				break;
+			case WM_KEYDOWN: input_event.key_state_map.insert({ WinAPI::key_code_map[wParam], true }); break;
+			case WM_KEYUP: input_event.key_state_map.insert({ WinAPI::key_code_map[wParam], false }); break;
+			case WM_LBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, true }); break;
+			case WM_RBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, true }); break;
+			case WM_MBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true }); break;
+			case WM_XBUTTONDOWN:
+				// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
+				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
+				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, true }); break;
+			case WM_LBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, false }); break;
+			case WM_RBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, false }); break;
+			case WM_MBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, false }); break;
+			case WM_XBUTTONUP:
+				// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
+				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
+				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
+			case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
+			case WM_MOUSEMOVE:
+				{
+					input_event.mouse_position.first = LOWORD(lParam); // X
+					input_event.mouse_position.second = HIWORD(lParam); // Y
 
-			// Clamps cursor within the window.
-			RECT window;
-			GetWindowRect(hwnd, &window);
-			POINT cursor;
-			GetCursorPos(&cursor);
-			short MARGIN = 200;
-			short TITLE_BAR_HEIGHT = 50;
-			if (cursor.x < window.left + MARGIN) { SetCursorPos(window.right - MARGIN, cursor.y); }
-			if (cursor.x > window.right - MARGIN) { SetCursorPos(window.left + MARGIN, cursor.y); }
-			if (cursor.y < window.top + MARGIN + TITLE_BAR_HEIGHT) { SetCursorPos(cursor.x, window.bottom - MARGIN); }
-			if (cursor.y > window.bottom - MARGIN) { SetCursorPos(cursor.x, window.top + MARGIN + TITLE_BAR_HEIGHT); }
-		}
-		break;
-		case WM_SIZE:
-			BD3GE::Window::ReshapeEvent reshape_event;
-			reshape_event.width = LOWORD(lParam);
-			reshape_event.height = HIWORD(lParam);
+					// Clamps cursor within the window.
+					RECT window;
+					GetWindowRect(hwnd, &window);
+					POINT cursor;
+					GetCursorPos(&cursor);
+					short MARGIN = 200;
+					short TITLE_BAR_HEIGHT = 50;
+					if (cursor.x < window.left + MARGIN) { SetCursorPos(window.right - MARGIN, cursor.y); }
+					if (cursor.x > window.right - MARGIN) { SetCursorPos(window.left + MARGIN, cursor.y); }
+					if (cursor.y < window.top + MARGIN + TITLE_BAR_HEIGHT) { SetCursorPos(cursor.x, window.bottom - MARGIN); }
+					if (cursor.y > window.bottom - MARGIN) { SetCursorPos(cursor.x, window.top + MARGIN + TITLE_BAR_HEIGHT); }
+				}
+				break;
+			case WM_SIZE:
+				BD3GE::Window::ReshapeEvent reshape_event;
+				reshape_event.width = LOWORD(lParam);
+				reshape_event.height = HIWORD(lParam);
 
-			data->window->push_reshape_event(reshape_event);
-			break;
-		case WM_CLOSE: DestroyWindow(hwnd); break;
-		case WM_DESTROY: PostQuitMessage(0); data->window->set_window_exists(false); break;
-		default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
+				data->window->push_reshape_event(reshape_event);
+				break;
+			case WM_CLOSE: DestroyWindow(hwnd); break;
+			case WM_DESTROY: PostQuitMessage(0); data->window->set_window_exists(false); break;
+			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
 		}
 
 		data->window->push_input_event(input_event);

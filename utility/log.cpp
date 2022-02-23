@@ -2,6 +2,7 @@
 
 namespace BD3GE {
 	// Construct a log that writes to a custom logging location.
+	// TODO: Need to ensure that the log directory and file and be created and written to, from scratch.
 	Log::Log(std::string logFilePath) {
 		log.open((logFilePath + DEFAULT_LOG_FILE).c_str(), std::ios::out);
 	}
