@@ -11,11 +11,17 @@ namespace BD3GE {
 		public:
 
 								Transform();
-								Transform(Matrix4 matrix);
+								Transform(const Matrix4& matrix);
+								Transform(const Transform& other);
 								~Transform();
-			void 				translate(Vector3 translation);
-			void				scale(float scaler);
-			void				scale(Vector3 scaler);
+			void 				set_position(Vector3 position);
+			void				set_scale_uniform(float scaler);
+			void				set_scale(Vector3 scaler);
+			void				set_orientation(Vector3 orientation);
+			void				set_orientation_x(float orientation);
+			void				set_orientation_y(float orientation);
+			void				set_orientation_z(float orientation);
+			void				translate(Vector3 translation);
 			void				rotate(Vector3 angle);
 			void				rotate_x(float angle);
 			void				rotate_y(float angle);

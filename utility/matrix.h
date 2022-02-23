@@ -25,6 +25,8 @@ namespace BD3GE {
 			const 			float operator()(unsigned short i, unsigned short j) const;
 			void 			operator()(unsigned short i, unsigned short j, float value);
 			const Matrix4& 	operator=(const Matrix4& other);
+			const Matrix4&	operator+=(const Matrix4& other);
+			const Matrix4	operator+(const Matrix4& other) const;
 			const Matrix4& 	operator*=(const Matrix4& other);
 			const Matrix4 	operator*(const Matrix4& other) const;
 

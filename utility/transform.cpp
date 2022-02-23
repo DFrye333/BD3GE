@@ -9,28 +9,68 @@ namespace BD3GE {
 		this->matrix = Matrix4::identity();
 	}
 
-	Transform::Transform(Matrix4 matrix) {
+	Transform::Transform(const Matrix4& matrix) {
 		this->matrix = matrix;
+	}
+
+	Transform::Transform(const Transform& other) {
+		this->matrix = other.get_matrix();
 	}
 
 	Transform::~Transform() {}
 
-	void Transform::translate(Vector3 translation) {
-		this->matrix(3, 0, translation.v.g.x);
-		this->matrix(3, 1, translation.v.g.y);
-		this->matrix(3, 2, translation.v.g.z);
+	void Transform::set_position(Vector3 position) {
+		this->matrix(3, 0, position.v.g.x);
+		this->matrix(3, 1, position.v.g.y);
+		this->matrix(3, 2, position.v.g.z);
 	}
 
-	void Transform::scale(float scaler) {
+	void Transform::set_scale_uniform(float scaler) {
 		this->matrix(0, 0, scaler);
 		this->matrix(1, 1, scaler);
 		this->matrix(2, 2, scaler);
 	}
 
-	void Transform::scale(Vector3 scaler) {
+	void Transform::set_scale(Vector3 scaler) {
 		this->matrix(0, 0, scaler.v.g.x);
 		this->matrix(1, 1, scaler.v.g.y);
 		this->matrix(2, 2, scaler.v.g.z);
+	}
+
+	void Transform::set_orientation(Vector3 orientation) {
+		set_orientation_x(orientation.v.g.x);
+		set_orientation_y(orientation.v.g.y);
+		set_orientation_z(orientation.v.g.z);
+	}
+
+	void Transform::set_orientation_x(float angle) {
+		this->matrix(1, 1, cos(angle));
+		this->matrix(1, 2, -sin(angle));
+		this->matrix(2, 1, sin(angle));
+		this->matrix(2, 2, cos(angle));
+	}
+
+	void Transform::set_orientation_y(float angle) {
+		this->matrix(0, 0, cos(angle));
+		this->matrix(0, 2, sin(angle));
+		this->matrix(2, 0, -sin(angle));
+		this->matrix(2, 2, cos(angle));
+	}
+
+	void Transform::set_orientation_z(float angle) {
+		this->matrix(0, 0, cos(angle));
+		this->matrix(0, 1, -sin(angle));
+		this->matrix(1, 0, sin(angle));
+		this->matrix(1, 1, cos(angle));
+	}
+
+	void Transform::translate(Vector3 translation) {
+		this->matrix += Matrix4(
+			0, 0, 0, translation.v.g.x,
+			0, 0, 0, translation.v.g.y,
+			0, 0, 0, translation.v.g.z,
+			0, 0, 0, 0
+		);
 	}
 
 	void Transform::rotate(Vector3 angle) {

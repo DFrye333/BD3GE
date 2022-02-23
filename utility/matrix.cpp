@@ -39,9 +39,7 @@ namespace BD3GE {
 	}
 
 	Matrix4::Matrix4(const Matrix4& source) {
-		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
-			elements[i] = source.elements[i];
-		}
+		*this = source;
 	}
 
 	void Matrix4::to_float_array(float* float_array) const {
@@ -221,6 +219,18 @@ namespace BD3GE {
 		}
 
 		return *this;
+	}
+
+	const Matrix4& Matrix4::operator+=(const Matrix4& other) {
+		for (unsigned short i = 0; i < NUMBER_ELEMENTS; ++i) {
+			this->elements[i] += other.elements[i];
+		}
+
+		return *this;
+	}
+
+	const Matrix4 Matrix4::operator+(const Matrix4& other) const {
+		return Matrix4(*this) += other;
 	}
 
 	const Matrix4& Matrix4::operator*=(const Matrix4& other) {
