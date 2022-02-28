@@ -2,7 +2,8 @@
 
 namespace BD3GE {
 	Scene::Scene() : scary_duck(nullptr), earth(nullptr), backpack(nullptr) {
-		size_t shader_id = ShaderManager::compile_shader(ShaderManifest("default.vert", "default.frag"));
+		size_t no_light_shader_id = ShaderManager::compile_shader(ShaderManifest("default.vert", "default.frag"));
+		size_t light_shader_id = ShaderManager::compile_shader(ShaderManifest("light.vert", "light.frag"));
 
 		size_t wall_texture_id = TextureManager::load_texture("wall.jpg");
 		size_t container_diffuse_texture_id = TextureManager::load_texture("container_diffuse.png");
@@ -47,13 +48,13 @@ namespace BD3GE {
 		this->earth->rotate(Vector3(0, 0, BD3GE::PI / 32));
 
 		// Floor
-		MappedMaterial* tile_floor_material = new MappedMaterial(shader_id, wall_texture_id, wall_texture_id, 32.0f);
+		MappedMaterial* tile_floor_material = new MappedMaterial(light_shader_id, wall_texture_id, wall_texture_id, 32.0f);
 		Renderable* tile_floor_brush_renderable = new Renderable();
 		tile_floor_brush_renderable->renderable_units.push_back(new RectangleBrush(tile_floor_material, Vector3(-5, 5, 0), 10, 10));
 		add_renderable_object(new RenderableObject(Vector3(-5, 5, 0), tile_floor_brush_renderable));
 
 		// Pillars
-		SimpleMaterial* pillar_material = new SimpleMaterial(shader_id, Color(255, 0, 25));
+		SimpleMaterial* pillar_material = new SimpleMaterial(light_shader_id, Color(255, 0, 25));
 		for (unsigned int i = 0; i < 121; ++i) {
 			Vector3 position = Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0);
 			Renderable* pillar_renderable = new Renderable();
@@ -62,19 +63,19 @@ namespace BD3GE {
 		}
 
 		// Mapped container
-		MappedMaterial* container_material = new MappedMaterial(shader_id, container_diffuse_texture_id, container_specular_texture_id, 32.0f);
+		MappedMaterial* container_material = new MappedMaterial(light_shader_id, container_diffuse_texture_id, container_specular_texture_id, 32.0f);
 		Renderable* container_brush_renderable = new Renderable();
 		container_brush_renderable->renderable_units.push_back(new RectangleBrush(container_material, Vector3(75, 0, 0), 5, 5));
 		add_renderable_object(new RenderableObject(Vector3(75, 0, 0), container_brush_renderable));
 
 		// Player
-		SimpleMaterial* player_material = new SimpleMaterial(shader_id, Color(10, 51, 102));
+		SimpleMaterial* player_material = new SimpleMaterial(light_shader_id, Color(10, 51, 102));
 		Renderable* player_brush_renderable = new Renderable();
 		player_brush_renderable->renderable_units.push_back(new BoxBrush(player_material, Vector3(5, 5, 0), Vector3(2, 2, 2)));
 		this->player = add_renderable_object(new RenderableObject(Vector3(5, 5, 0), player_brush_renderable));
 
 		// Light
-		SimpleMaterial* light_material = new SimpleMaterial(shader_id, Color(102, 229, 102));
+		SimpleMaterial* light_material = new SimpleMaterial(no_light_shader_id, Color(102, 229, 102));
 		Renderable* light_brush_renderable = new Renderable();
 		light_brush_renderable->renderable_units.push_back(new CircularBrush(light_material, Vector3(5, 5, 100), 1.5, 10));
 		this->light_renderable = add_renderable_object(new RenderableObject(Vector3(5, 5, 100), light_brush_renderable));

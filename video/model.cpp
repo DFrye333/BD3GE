@@ -35,7 +35,7 @@ namespace BD3GE {
 	}
 
 	void Model::process_tree(const aiScene* scene, aiNode* node, TransformNode* parent_transform_node) {
-		size_t shader_id = ShaderManager::get_shader_id(ShaderManifest("default.vert", "default.frag"));
+		size_t shader_id = ShaderManager::get_shader_id(ShaderManifest("light.vert", "light.frag"));
 
 		// Ensures that there's only one transformation matrix per level of the node hierarchy (excluding the identity matrix of the root node).
 		aiMatrix4x4t parent_transform_matrix = node->mTransformation;
