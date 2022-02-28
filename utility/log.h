@@ -27,13 +27,13 @@ namespace BD3GE {
 				ERR,
 			};
 
-					Log(std::string logFilePath = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY + DEFAULT_LOG_FILE);
+					Log(std::string log_file_path = DEFAULT_RELATIVE_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY + DEFAULT_LOG_FILE);
 					~Log();
-			void	write(Log::TYPE outputMode, std::string entry);
+			void	write(Log::TYPE logging_mode, std::string entry);
 
 		private:
 
-			std::ofstream	log;
+			std::ofstream	log_stream;
 	};
 }
 

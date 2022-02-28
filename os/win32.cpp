@@ -146,14 +146,54 @@ namespace BD3GE {
 		MoveWindow(window_handle, 0, 0, width, height, true);
 	}
 
+	std::string WinAPI::get_environment_variable(std::string environment_variable_name) {
+		char* environment_variable = getenv(environment_variable_name.c_str());
+		return std::string(environment_variable);
+	}
+
+	bool WinAPI::make_directory(std::string directory_path, std::string& result) {
+		WIN32_FILE_ATTRIBUTE_DATA file_attributes = {};
+		if (does_directory_exist(directory_path, &file_attributes)) {
+			result = file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ? "Directory already exists at path: " + directory_path : result = "File already exists at path: " + directory_path;
+			return false;
+		}
+
+		int result_code = _mkdir(directory_path.c_str());
+		result = (result_code == 0 ? "Directory creation success at: " : "Directory creation failure at: ") + directory_path;
+
+		return result_code == 0;
+	}
+
+	bool WinAPI::does_directory_exist(std::string directory_path) {
+		WIN32_FILE_ATTRIBUTE_DATA file_attributes = {};
+		return does_directory_exist(directory_path, &file_attributes);
+	}
+
+	bool WinAPI::does_directory_exist(std::string directory_path, WIN32_FILE_ATTRIBUTE_DATA* file_attributes) {
+		if (0 == get_file_info(directory_path, file_attributes)) {
+			// TODO: Handle errors.
+			//DWORD error = GetLastError();
+			//return "";
+		}
+
+		unsigned long long path_creation_time = (unsigned long long)((unsigned long long)(file_attributes->ftCreationTime.dwHighDateTime) << 8 * sizeof(unsigned long) | file_attributes->ftCreationTime.dwLowDateTime);
+		return 0 != path_creation_time;
+	}
+
+	BOOL WinAPI::get_file_info(std::string& absolute_file_path, WIN32_FILE_ATTRIBUTE_DATA* file_attributes) {
+		wchar_t absolute_file_path_utf16[260];
+		to_utf16(absolute_file_path, absolute_file_path_utf16);
+		return GetFileAttributesEx(absolute_file_path_utf16, GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard, file_attributes);
+	}
+
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT messageCode, WPARAM wParam, LPARAM lParam) {
-		BD3GE::WinAPIWindow::WindowProcData* data;
+		BD3GE::WinAPIWindow::WindowProcData* data = nullptr;
 		LONG_PTR data_long_ptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data_long_ptr != 0) {
 			data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_long_ptr);
 		}
 
-		BD3GE::Window::InputEvent input_event;
+		BD3GE::Window::InputEvent input_event = {};
 		switch (messageCode) {
 			case WM_CREATE:
 				{
@@ -163,7 +203,7 @@ namespace BD3GE {
 
 					HDC display_context = GetDC(hwnd);
 
-					PIXELFORMATDESCRIPTOR pixel_format_descriptor;
+					PIXELFORMATDESCRIPTOR pixel_format_descriptor = {};
 					pixel_format_descriptor.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 					pixel_format_descriptor.nVersion = 1;
 					pixel_format_descriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
@@ -226,12 +266,14 @@ namespace BD3GE {
 				}
 				break;
 			case WM_SIZE:
-				BD3GE::Window::ReshapeEvent reshape_event;
-				reshape_event.width = LOWORD(lParam);
-				reshape_event.height = HIWORD(lParam);
+				{
+					BD3GE::Window::ReshapeEvent reshape_event = {};
+					reshape_event.width = LOWORD(lParam);
+					reshape_event.height = HIWORD(lParam);
 
-				data->window->push_reshape_event(reshape_event);
-				break;
+					data->window->push_reshape_event(reshape_event);
+					break;
+				}
 			case WM_CLOSE: DestroyWindow(hwnd); break;
 			case WM_DESTROY: PostQuitMessage(0); data->window->set_window_exists(false); break;
 			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
@@ -247,7 +289,7 @@ namespace BD3GE {
 		wchar_t g_szClassName[32];
 		BD3GE::WinAPI::to_utf16(windowClassName, g_szClassName);
 
-		WNDCLASSEX wc;
+		WNDCLASSEX wc = {};
 		wc.cbSize = sizeof(WNDCLASSEX);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = WindowProc;
@@ -349,7 +391,7 @@ namespace BD3GE {
 	}
 
 	void WinAPIWindow::set_mouse_cursor_visibility(bool shouldBeVisible) {
-		CURSORINFO mouseCursorInfo;
+		CURSORINFO mouseCursorInfo = {};
 		mouseCursorInfo.cbSize = sizeof(CURSORINFO);
 		GetCursorInfo(&mouseCursorInfo);
 		if (shouldBeVisible && !(mouseCursorInfo.flags & CURSOR_SHOWING)) {

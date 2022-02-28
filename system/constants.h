@@ -8,10 +8,10 @@ namespace BD3GE {
 
 #ifdef __linux__
 	// TODO: Come up with a more permanent location for this
-	const std::string	DEFAULT_SYSTEM_DIRECTORY	=	"/home/david/.local/share/BD3GE/";
+	const std::string	DEFAULT_RELATIVE_SYSTEM_DIRECTORY	=	"/home/david/.local/share/BD3GE/";
 #elif _WIN32
-	// TODO: Come up with a more permanent location for this
-	const std::string	DEFAULT_SYSTEM_DIRECTORY	=	"./";
+	// Relative to Local AppData.
+	const std::string	DEFAULT_RELATIVE_SYSTEM_DIRECTORY	=	"BD3GE/";
 #endif
 	const std::string	DEFAULT_LOG_DIRECTORY		=	"log/";
 	const std::string	DEFAULT_LOG_FILE			=	"BD3GE.log";

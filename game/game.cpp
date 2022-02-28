@@ -1,27 +1,28 @@
 #include "game.h"
 
 namespace BD3GE {
-	Log g_log;
+	Log* g_log;
 
 	Game::Game(Window* window) {
-		g_log.write(Log::TYPE::INFO, "Starting up BD3GE now...");
+//#ifdef __linux__
+//			if (-1 == mkdir(DEFAULT_RELATIVE_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH))
 
-		DIR* default_system_directory_stream = opendir(DEFAULT_SYSTEM_DIRECTORY.c_str());
-		if (!default_system_directory_stream) {
-			// TODO: Ugly! Create a class to handle filesystem stuff.
-#ifdef __linux__
-			if (-1 == mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH)) {
-#elif _WIN32
-			if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str())) {
-#endif
-				g_log.write(Log::TYPE::ERR, "System directory creation failure.");
-			}
+		std::string result;
+		std::string system_directory_path = WinAPI::get_environment_variable("LOCALAPPDATA") + "/" + DEFAULT_RELATIVE_SYSTEM_DIRECTORY;
+		bool success = WinAPI::make_directory(system_directory_path, result);
+		if (!success) {
+			std::cout << "System directory creation failure: " + result << std::endl;
 		}
-		closedir(default_system_directory_stream);
 
-		// TODO: Consider platform independence here.
+		std::string log_directory_path = system_directory_path + DEFAULT_LOG_DIRECTORY;
+		success = WinAPI::make_directory(log_directory_path, result);
+
+		g_log = new Log(log_directory_path);
+		g_log->write(Log::TYPE::INFO, "Starting up BD3GE now...");
+		success ? g_log->write(Log::TYPE::INFO, "Log directory creation success at: " + log_directory_path) : g_log->write(Log::TYPE::ERR, "Log directory creation failure: " + result);
+
 		this->window = window;
-		window->set_mouse_cursor_visibility(false);
+		this->window->set_mouse_cursor_visibility(false);
 		this->al = new AL();
 		this->input = new Input(std::vector<Gamepad*>{ new XInputGamepad(0), new XInputGamepad(1) });
 
@@ -33,7 +34,7 @@ namespace BD3GE {
 	}
 
 	Game::~Game() {
-		g_log.write(Log::TYPE::INFO, "Shutting down BD3GE now...");
+		g_log->write(Log::TYPE::INFO, "Shutting down BD3GE now...");
 
 		delete window;
 		window = nullptr;
@@ -94,8 +95,6 @@ namespace BD3GE {
 
 			// Check render timer.
 			if (render_timer->is_due()) {
-				//std::cout << "FRAME" << std::endl;
-
 				// Process a rendering frame.
 				renderer->render();
 

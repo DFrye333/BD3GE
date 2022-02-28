@@ -5,7 +5,6 @@
 #include <sys/types.h>
 
 //#include <sys/time.h>
-#include <dirent.h>
 
 #include "../audio/AL.h"
 #include "../input/gamepad.h"

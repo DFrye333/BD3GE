@@ -20,16 +20,16 @@ namespace BD3GE {
 		Assimp::Importer model_importer;
 		const aiScene* scene = model_importer.ReadFile(model_file_path, importer_options);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-			g_log.write(Log::TYPE::ERR, "Model load failure: " + model_file_path);
+			g_log->write(Log::TYPE::ERR, "Model load failure: " + model_file_path);
 			return;
 		}
 
-		g_log.write(Log::TYPE::INFO, "Model loading success: " + model_file_path);
-		g_log.write(Log::TYPE::INFO, "Loading mesh with:");
-		g_log.write(Log::TYPE::INFO, "\tVertices: " + std::to_string(scene->mMeshes[0]->mNumVertices));
-		g_log.write(Log::TYPE::INFO, "\tFaces: " + std::to_string(scene->mMeshes[0]->mNumFaces));
-		g_log.write(Log::TYPE::INFO, "\tMaterials: " + std::to_string(scene->mNumMaterials));
-		g_log.write(Log::TYPE::INFO, "\tTextures: " + std::to_string(scene->mNumTextures));
+		g_log->write(Log::TYPE::INFO, "Model loading success: " + model_file_path);
+		g_log->write(Log::TYPE::INFO, "Loading mesh with:");
+		g_log->write(Log::TYPE::INFO, "\tVertices: " + std::to_string(scene->mMeshes[0]->mNumVertices));
+		g_log->write(Log::TYPE::INFO, "\tFaces: " + std::to_string(scene->mMeshes[0]->mNumFaces));
+		g_log->write(Log::TYPE::INFO, "\tMaterials: " + std::to_string(scene->mNumMaterials));
+		g_log->write(Log::TYPE::INFO, "\tTextures: " + std::to_string(scene->mNumTextures));
 
 		process_tree(scene, scene->mRootNode, nullptr);
 	}

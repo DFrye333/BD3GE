@@ -8,10 +8,10 @@ namespace BD3GE {
 		// TODO: Solve the issue of shared textures - don't want a separate load for umpteen identical textures
 		this->data = stbi_load(texture_file_path.c_str(), &this->width, &this->height, &this->quantity_channels, this->desired_quantity_channels);
 		if (this->data == nullptr) {
-			g_log.write(Log::TYPE::ERR, "Texture load failure: " + std::string(texture_file_path));
+			g_log->write(Log::TYPE::ERR, "Texture load failure: " + std::string(texture_file_path));
 			return;
 		}
-		g_log.write(Log::TYPE::INFO, "Texture load success: " + std::string(texture_file_path));
+		g_log->write(Log::TYPE::INFO, "Texture load success: " + std::string(texture_file_path));
 	}
 
 	Texture::Texture(Texture& other) : Texture() {

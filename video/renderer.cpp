@@ -4,7 +4,7 @@ namespace BD3GE {
 	Renderer::Renderer() : Renderer(nullptr) {}
 
 	Renderer::Renderer(Scene* scene) : scene(scene) {
-		g_log.write(Log::TYPE::INFO, "Renderer initializing...");
+		g_log->write(Log::TYPE::INFO, "Renderer initializing...");
 		gl.print_info();
 		load_scene(scene);
 	}

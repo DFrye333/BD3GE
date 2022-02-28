@@ -5,6 +5,7 @@
 #include <string>
 
 #include <Windows.h>
+#include <direct.h>
 
 #include "../system/constants.h"
 #include "../utility/timer.h"
@@ -18,6 +19,11 @@ namespace BD3GE {
 			static void to_utf16(std::string input, LPWSTR output, int length);
 			static void display_message_box(HWND window_handle, std::string caption, std::string message);
 			static void resize_window(HWND window_handle, int width, int height);
+			static std::string get_environment_variable(std::string environment_variable_name);
+			static bool make_directory(std::string directory_path, std::string& result);
+			static bool does_directory_exist(std::string directory_path);
+			static bool does_directory_exist(std::string directory_path, WIN32_FILE_ATTRIBUTE_DATA* file_attributes);
+			static BOOL get_file_info(std::string& absolute_file_path, WIN32_FILE_ATTRIBUTE_DATA* file_attributes);
 
 			static std::map<int, BD3GE::KEY_CODE> key_code_map;
 	};

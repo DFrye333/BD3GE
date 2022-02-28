@@ -46,7 +46,7 @@ namespace BD3GE {
 	}
 
 	const void GL::print_info(void) {
-		g_log.write(
+		g_log->write(
 			Log::TYPE::INFO,
 			std::string("OpenGL information:\n") +
 			"\t\t\t\t\t\tVendor: " + std::string((char*)get_vendor()) + "\n" +
