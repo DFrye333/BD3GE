@@ -32,8 +32,11 @@ namespace BD3GE {
 				case GL_FRAGMENT_SHADER: str_shader_type = "fragment"; break;
 			}
 
-			g_log.write(Log::TYPE::ERR, "Shader compiler failure in " + std::string(str_shader_type) + " shader:\n " + std::string(information_log_string));
+			g_log.write(Log::TYPE::ERR, "Shader compilation failure in " + std::string(str_shader_type) + " shader '" + std::string(shader_source_path) + "':\n " + std::string(information_log_string));
 			delete[] information_log_string;
+		}
+		else {
+			g_log.write(Log::TYPE::INFO, "Shader compilation success: " + std::string(shader_source_path));
 		}
 	}
 
@@ -87,6 +90,8 @@ namespace BD3GE {
 			glGetProgramInfoLog(this->program_ID, information_log_length, NULL, information_log_string);
 			g_log.write(Log::TYPE::ERR, "Shader linker failure: " + std::string(information_log_string));
 			delete[] information_log_string;
+		} else {
+			g_log.write(Log::TYPE::INFO, "Shader linker success.");
 		}
 
 		for (size_t i = 0; i < shader_object_IDs.size(); ++i) {

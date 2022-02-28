@@ -48,10 +48,11 @@ namespace BD3GE {
 	const void GL::print_info(void) {
 		g_log.write(
 			Log::TYPE::INFO,
-			"\n\tVendor: " + std::string((char*)get_vendor()) + "\n" +
-			"\tRenderer: " + std::string((char*)get_renderer()) + "\n" +
-			"\tVersion: " + std::string((char*)get_version()) + "\n" +
-			"\tShading Language Version: " + std::string((char*)get_shading_language_version())
+			std::string("OpenGL information:\n") +
+			"\t\t\t\t\t\tVendor: " + std::string((char*)get_vendor()) + "\n" +
+			"\t\t\t\t\t\tRenderer: " + std::string((char*)get_renderer()) + "\n" +
+			"\t\t\t\t\t\tVersion: " + std::string((char*)get_version()) + "\n" +
+			"\t\t\t\t\t\tShading Language Version: " + std::string((char*)get_shading_language_version())
 		);
 	}
 
