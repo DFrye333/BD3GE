@@ -1,66 +1,56 @@
 #include "renderable.h"
 
 namespace BD3GE {
-	Renderable::Renderable() {}
+	RenderableUnit::RenderableUnit() : material(nullptr), transform_node(nullptr) {}
 
-	Renderable::Renderable(Vector3 position) : Object(position) {}
+	RenderableUnit::RenderableUnit(Material* material) : material(material), transform_node(nullptr) {}
 
-	Renderable::~Renderable() {
-		delete[] vbo;
-		vbo = nullptr;
+	RenderableUnit::RenderableUnit(Material* material, TransformNode* transform_node) : material(material), transform_node(transform_node) {}
 
-		delete[] ibo;
-		ibo = nullptr;
+	RenderableUnit::RenderableUnit(const RenderableUnit& other) : RenderableUnit() {
+		*this = other;
 	}
 
-	void Renderable::setup() {
-		// Generate VAO.
-		glGenVertexArrays(1, &vao_handle);
+	RenderableUnit::~RenderableUnit() {
+		delete[] geometry.vbo;
+		geometry.vbo = nullptr;
 
-		// Generate VBOs.
-		GLuint vboHandle, iboHandle;
-		glGenBuffers(1, &vboHandle);
-		glGenBuffers(1, &iboHandle);
+		delete[] geometry.ibo;
+		geometry.ibo = nullptr;
 
-		// Setup for VAO.
-		glBindVertexArray(vao_handle);
+		delete material;
+		material = nullptr;
 
-		glBindBuffer(GL_ARRAY_BUFFER, vboHandle);
-		glBufferData(GL_ARRAY_BUFFER, num_vertices * sizeof(Vertex), vbo, GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboHandle);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(GLuint), ibo, GL_DYNAMIC_DRAW);
-
-		// Positions
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-		glEnableVertexAttribArray(0);
-
-		// Normals
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
-		glEnableVertexAttribArray(1);
-
-		// Mapped material
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, uv)));
-		glEnableVertexAttribArray(2);
+		delete transform_node;
+		transform_node = nullptr;
 	}
 
-	void Renderable::render(Transform view_projection_transform) const {
-		for (Material* material : this->materials) {
-			// Setup for shader program.
-			material->shader->enable();
+	const RenderableUnit& RenderableUnit::operator=(const RenderableUnit& other) {
+		this->geometry.vao_handle = other.geometry.vao_handle;
+		this->geometry.num_vertices = other.geometry.num_vertices;
+		this->geometry.num_indices = other.geometry.num_indices;
 
-			material->shader->setUniform("world_transform", this->world_transform.get_matrix());
-			material->shader->setUniform("inverse_world_transform", this->world_transform.get_matrix().inverse());
-			material->shader->setUniform("view_projection_transform", view_projection_transform.get_matrix());
-
-			// TODO: Change this?
-			material->prepForRender();
-			// Draw mesh using its VAO.
-			glBindVertexArray(vao_handle);
-			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-
-			// Cleanup.
-			material->shader->disable();
+		if (other.geometry.vbo) {
+			delete this->geometry.vbo;
+			this->geometry.vbo = new Vertex[sizeof(other.geometry.vbo)];
+			*(this->geometry.vbo) = *(other.geometry.vbo);
 		}
+		if (other.geometry.ibo) {
+			delete this->geometry.ibo;
+			this->geometry.ibo = new unsigned int[sizeof(other.geometry.ibo)];
+			*(this->geometry.ibo) = *(other.geometry.ibo);
+		}
+		if (other.material) {
+			delete this->material;
+			this->material = other.material->clone();
+		}
+		if (other.transform_node) {
+			delete this->transform_node;
+			this->transform_node = new TransformNode;
+			this->transform_node->parent = other.transform_node->parent;
+			this->transform_node->transform = other.transform_node->transform;
+		}
+
+		return *this;
 	}
 }

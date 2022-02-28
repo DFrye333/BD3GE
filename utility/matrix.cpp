@@ -256,4 +256,18 @@ namespace BD3GE {
 	const Matrix4 Matrix4::operator*(const Matrix4& other) const {
 		return Matrix4(*this) *= other;
 	}
+
+	bool operator==(const Matrix4& lhs, const Matrix4& rhs) {
+		for (unsigned short i = 0; i < Matrix4::NUMBER_ELEMENTS; ++i) {
+			if ((lhs.elements[i] - rhs.elements[i]) > Matrix4::EPSILON) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool operator!=(const Matrix4& lhs, const Matrix4& rhs) {
+		return !(lhs == rhs);
+	}
 }

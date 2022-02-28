@@ -35,10 +35,17 @@ namespace BD3GE {
 			const Transform& 	operator=(const Transform& other);
 			const Transform& 	operator*=(const Transform& other);
 			const Transform 	operator*(const Transform& other) const;
+			friend bool			operator==(const Transform& lhs, const Transform& rhs);
+			friend bool			operator!=(const Transform& lhs, const Transform& rhs);
 
 		private:
 
 			Matrix4 matrix;
+	};
+
+	struct TransformNode {
+		TransformNode* parent;
+		Transform transform;
 	};
 }
 

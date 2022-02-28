@@ -43,8 +43,8 @@ struct SimpleMaterial {
 };
 
 struct MappedMaterial {
-	sampler2D map_diffuse;
-	sampler2D map_specular;
+	sampler2D map_diffuse[8];
+	sampler2D map_specular[8];
 	float gloss_factor;
 };
 
@@ -75,9 +75,9 @@ void main(void) {
 	float material_gloss_factor;
 
 	if (is_material_mapped) {
-		material_component_ambient = vec3(texture(mapped_material.map_diffuse, texture_coordinates));
-		material_component_diffuse = vec3(texture(mapped_material.map_diffuse, texture_coordinates));
-		material_component_specular = vec3(texture(mapped_material.map_specular, texture_coordinates));
+		material_component_ambient = vec3(texture(mapped_material.map_diffuse[0], texture_coordinates));
+		material_component_diffuse = vec3(texture(mapped_material.map_diffuse[0], texture_coordinates));
+		material_component_specular = vec3(texture(mapped_material.map_specular[0], texture_coordinates));
 		material_gloss_factor = mapped_material.gloss_factor;
 	} else {
 		material_component_ambient = simple_material.color_ambient;

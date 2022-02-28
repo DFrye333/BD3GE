@@ -6,8 +6,12 @@
 namespace BD3GE {
 	class Matrix4 {
 		public:
+			static const short NUMBER_ROWS = 4;
+			static const short NUMBER_COLUMNS = 4;
+			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
+			static constexpr float EPSILON = 1.0e-12f;
 
-			static Matrix4 identity(void);
+			static Matrix4 identity();
 
 							Matrix4();
 							Matrix4(float* elements);
@@ -29,14 +33,12 @@ namespace BD3GE {
 			const Matrix4	operator+(const Matrix4& other) const;
 			const Matrix4& 	operator*=(const Matrix4& other);
 			const Matrix4 	operator*(const Matrix4& other) const;
+			friend bool		operator==(const Matrix4& lhs, const Matrix4& rhs);
+			friend bool		operator!=(const Matrix4& lhs, const Matrix4& rhs);
 
 		private:
 
 			const float compute_determinant(void) const;
-
-			static const short NUMBER_ROWS = 4;
-			static const short NUMBER_COLUMNS = 4;
-			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
 
 			float elements[NUMBER_ELEMENTS];
 	};

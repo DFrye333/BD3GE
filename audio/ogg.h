@@ -11,6 +11,7 @@
 
 #include "../system/constants.h"
 #include "../system/globals.h"
+#include "../utility/log.h"
 
 namespace BD3GE {
 	class Ogg {

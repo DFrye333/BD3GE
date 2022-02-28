@@ -25,8 +25,6 @@ namespace BD3GE {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return Vector2(*this / magnitude);
-		} else {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
 
@@ -34,8 +32,6 @@ namespace BD3GE {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return *this /= magnitude;
-		} else {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
 
@@ -148,8 +144,6 @@ namespace BD3GE {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return Vector3(*this / magnitude);
-		} else {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
 
@@ -157,8 +151,6 @@ namespace BD3GE {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return *this /= magnitude;
-		} else {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Vector magnitude <= EPSILON");
 		}
 	}
 

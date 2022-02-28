@@ -1,8 +1,10 @@
 #include "game.h"
 
 namespace BD3GE {
-	Game::Game(BD3GE::Window* window) {
-		g_log.write(BD3GE::LOG_TYPE::INFO, "Starting up BD3GE now...");
+	Log g_log;
+
+	Game::Game(Window* window) {
+		g_log.write(Log::TYPE::INFO, "Starting up BD3GE now...");
 
 		DIR* default_system_directory_stream = opendir(DEFAULT_SYSTEM_DIRECTORY.c_str());
 		if (!default_system_directory_stream) {
@@ -12,7 +14,7 @@ namespace BD3GE {
 #elif _WIN32
 			if (-1 == _mkdir(DEFAULT_SYSTEM_DIRECTORY.c_str())) {
 #endif
-				g_log.write(BD3GE::LOG_TYPE::ERR, "System directory creation failure.");
+				g_log.write(Log::TYPE::ERR, "System directory creation failure.");
 			}
 		}
 		closedir(default_system_directory_stream);
@@ -20,28 +22,27 @@ namespace BD3GE {
 		// TODO: Consider platform independence here.
 		this->window = window;
 		window->set_mouse_cursor_visibility(false);
-		this->gl = new GL();
-		this->gl->print_info();
 		this->al = new AL();
 		this->input = new Input(std::vector<Gamepad*>{ new XInputGamepad(0), new XInputGamepad(1) });
 
 		glewExperimental = GL_TRUE;
 		glewInit();
 
-		this->scene = new Scene(DEFAULT_RESOURCE_DIRECTORY + "models/");
+		this->scene = new Scene();
+		this->renderer = new Renderer(scene);
 	}
 
 	Game::~Game() {
-		g_log.write(BD3GE::LOG_TYPE::INFO, "Shutting down BD3GE now...");
+		g_log.write(Log::TYPE::INFO, "Shutting down BD3GE now...");
 
 		delete window;
 		window = nullptr;
 
-		delete gl;
-		gl = nullptr;
-
 		delete al;
 		al = nullptr;
+
+		delete renderer;
+		renderer = nullptr;
 
 		delete input;
 		input = nullptr;
@@ -57,7 +58,7 @@ namespace BD3GE {
 		// Initialize the logic and rendering timers.
 		Timer* render_timer = new WinAPITimer("Render", FRAME_RATE);
 		Timer* logic_timer = new WinAPITimer("Logic", TICK_RATE);
-		Timer* mouse_move_timer = new WinAPITimer("Mouse Move", 10 * TICK_RATE);
+		Timer* mouse_move_timer = new WinAPITimer("Mouse Move", TICK_RATE);
 		render_timer->start();
 		logic_timer->start();
 		mouse_move_timer->start();
@@ -76,7 +77,7 @@ namespace BD3GE {
 
 			// Enables toggling of wireframe mode.
 			if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_1)) {
-				gl->toggle_wireframe_mode();
+				renderer->toggle_wireframe_mode();
 			}
 
 			// Check logic timer.
@@ -96,7 +97,7 @@ namespace BD3GE {
 				//std::cout << "FRAME" << std::endl;
 
 				// Process a rendering frame.
-				scene->render();
+				renderer->render();
 
 				// Swap the frame buffers.
 				window->swap_buffers();
@@ -120,8 +121,7 @@ namespace BD3GE {
 		// Pass window reshape events.
 		Message<Window::ReshapeEvent> reshape_event = window->pull_reshape_event();
 		if (reshape_event.get_data() != nullptr) {
-			gl->reshape(reshape_event.get_data()->width, reshape_event.get_data()->height);
-			scene->get_camera()->set_viewport(gl->get_viewport_width(), gl->get_viewport_height());
+			renderer->reshape_viewport(reshape_event.get_data()->width, reshape_event.get_data()->height);
 		}
 	}
 }

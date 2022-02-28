@@ -3,31 +3,36 @@
 
 #include <assimp/material.h>
 
+#include "../management/texture_manager.h"
+#include "../system/globals.h"
 #include "../utility/color.h"
-#include "../video/shader.h"
-#include "../video/texture.h"
+#include "../utility/log.h"
 
 namespace BD3GE {
 	class Material {
 		public:
-			Material();
-			Material(Shader* shader);
-			Material(Shader* shader, int gloss_factor);
-			~Material();
-			virtual void prepForRender() = 0;
+			enum class TYPE {
+				SIMPLE,
+				MAPPED
+			};
 
-			Shader* shader;
+			Material();
+			Material(size_t shader_id);
+			Material(size_t shader_id, float gloss_factor);
+			virtual Material* clone() = 0;
+
+			Material::TYPE type;
+			size_t shader_id;
 			float gloss_factor = 32.0f;
 	};
 
 	class SimpleMaterial : public Material {
 		public:
-			SimpleMaterial(Shader* shader, Color color);
-			SimpleMaterial(Shader* shader, Color color_ambient, Color color_diffuse, Color color_specular);
-			SimpleMaterial(Shader* shader, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor);
-			SimpleMaterial(Shader* shader, aiMaterial* material);
-			void setup();
-			void prepForRender();
+			SimpleMaterial(size_t shader_id, Color color);
+			SimpleMaterial(size_t shader_id, Color color_ambient, Color color_diffuse, Color color_specular);
+			SimpleMaterial(size_t shader_id, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor);
+			SimpleMaterial(size_t shader_id, aiMaterial* material);
+			Material* clone() override;
 
 			Color color_ambient = Color(0.1f, 0.1f, 0.1f);
 			Color color_diffuse = Color(1.0f, 1.0f, 1.0f);
@@ -37,11 +42,12 @@ namespace BD3GE {
 	class MappedMaterial : public Material {
 		public:
 			MappedMaterial();
-			MappedMaterial(Shader* shader, Texture* map_diffuse, Texture* map_specular, float gloss_factor);
-			void prepForRender() override;
+			MappedMaterial(size_t shader_id, size_t map_diffuse_id, size_t map_specular_id, float gloss_factor);
+			MappedMaterial(size_t shader_id, aiMaterial* material);
+			Material* clone() override;
 
-			Texture* map_diffuse;
-			Texture* map_specular;
+			size_t map_diffuse_id;
+			size_t map_specular_id;
 	};
 }
 

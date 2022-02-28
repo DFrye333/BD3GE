@@ -17,7 +17,7 @@ namespace BD3GE {
 			float z_far = 10000.0f;
 
 			this->projection_transform = Transform(Matrix4(
-				frustum_scale / ((GLfloat)viewport_width / (GLfloat)viewport_height), 0, 0, 0,
+				frustum_scale / ((float)viewport_width / (float)viewport_height), 0, 0, 0,
 				0.0f, frustum_scale, 0.0f, 0.0f,
 				0.0f, 0.0f, ((z_near + z_far) / (z_near - z_far)), ((2 * z_near * z_far) / (z_near - z_far)),
 				0.0f, 0.0f, -1.0f, 0.0f

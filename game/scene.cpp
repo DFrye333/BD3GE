@@ -1,88 +1,83 @@
 #include "scene.h"
 
 namespace BD3GE {
-	Scene::Scene(const std::string modelsDirectory) : scary_duck(nullptr) {
-		Assimp::Importer planeImporter;
-		Assimp::Importer duckImporter;
+	Scene::Scene() : scary_duck(nullptr), earth(nullptr), backpack(nullptr) {
+		size_t shader_id = ShaderManager::compile_shader(ShaderManifest("default.vert", "default.frag"));
 
-		// Import asset residing at given file path.
-		unsigned int importer_options = 
-			aiProcess_CalcTangentSpace | 
-			aiProcess_JoinIdenticalVertices | 
-			aiProcess_Triangulate | 
-			aiProcess_SortByPType | 
-			aiProcess_FlipWindingOrder;
+		size_t wall_texture_id = TextureManager::load_texture("wall.jpg");
+		size_t container_diffuse_texture_id = TextureManager::load_texture("container_diffuse.png");
+		size_t container_specular_texture_id = TextureManager::load_texture("container_specular.png");
+		size_t backpack_diffuse_texture_id = TextureManager::load_texture("1001_albedo.jpg");
+		size_t backpack_specular_texture_id = TextureManager::load_texture("1001_metallic.jpg");
+		size_t duck_texture_id = TextureManager::load_texture("duckCM.tga");
 
-		const aiScene* plane = planeImporter.ReadFile(modelsDirectory + "plane.dae", importer_options);
-		const aiScene* cube = planeImporter.ReadFile(modelsDirectory + "cube.dae", importer_options);
-		const aiScene* duck = duckImporter.ReadFile(modelsDirectory + "duck.dae", importer_options);
+		size_t backpack_model_id = ModelManager::load_model("Survival_BackPack_2.fbx");
+		size_t duck_model_id = ModelManager::load_model("duck.dae");
+		size_t cube_model_id = ModelManager::load_model("cube.dae");
+		size_t earth_model_id = ModelManager::load_model("earthCylindrical.dae");
 
-		// Ensure that asset importing succeeded.
-		if (plane && duck) {
-			g_log.write(BD3GE::LOG_TYPE::INFO, "Assimp scene loading succeeded!");
-			g_log.write(BD3GE::LOG_TYPE::INFO, "Loading mesh with:");
-			g_log.write(BD3GE::LOG_TYPE::INFO, "\tVertices: " + std::to_string(duck->mMeshes[0]->mNumVertices));
-			g_log.write(BD3GE::LOG_TYPE::INFO, "\tFaces: " + std::to_string(duck->mMeshes[0]->mNumFaces));
-			if (duck->HasMaterials()) {
-				g_log.write(BD3GE::LOG_TYPE::INFO, "\tMaterials Index: " + std::to_string(duck->mMeshes[0]->mMaterialIndex));
-			}
-		} else {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "Assimp scene loading failed...");
+		// Backpack
+		this->backpack = add_renderable_object(new RenderableObject(Vector3(75, 50, 0), backpack_model_id));
+		this->backpack->set_scale(Vector3(0.1f, 0.1f, 0.1f));
+		this->backpack->renderable = ModelManager::get_model(backpack_model_id);
+		for (RenderableUnit* renderable_unit : this->backpack->renderable->renderable_units) {
+			((MappedMaterial*)renderable_unit->material)->map_diffuse_id = backpack_diffuse_texture_id;
+			((MappedMaterial*)renderable_unit->material)->map_specular_id = backpack_specular_texture_id;
+			lit_materials.push_back(renderable_unit->material);
 		}
-
-		ShaderObject vertex_default = ShaderObject(GL_VERTEX_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.vert");
-		ShaderObject fragment_default = ShaderObject(GL_FRAGMENT_SHADER, DEFAULT_RESOURCE_DIRECTORY + "shaders/default.frag");
-		Texture* wall_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/wall.jpg");
-		Texture* container_diffuse_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_diffuse.png");
-		Texture* container_specular_texture = new Texture(DEFAULT_RESOURCE_DIRECTORY + "textures/container_specular.png");
 
 		// Scary duck
-		SimpleMaterial* scary_duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), duck->mMaterials[0]);
-		this->scary_duck = add_renderable(new Mesh(Vector3(0, 0, -500), duck->mMeshes[0], nullptr, scary_duck_material, Vector3(1, 1, 1)));
-		this->scary_duck->set_scale(Vector3(0.25f, 0.25f, 0.25f));
-		lit_materials.push_back(scary_duck_material);
+		this->scary_duck = add_renderable_object(new RenderableObject(Vector3(0, 0, -500), duck_model_id));
+		this->scary_duck->set_scale(Vector3(50.0f, 50.0f, 50.0f));
 
-		// Little duck
-		SimpleMaterial* little_duck_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(0, 128, 128));
+		// Little ducks
 		srand(time(nullptr));
 		for (unsigned int i = 0; i < 2500; ++i) {
-			Renderable* little_duck = add_renderable(new Mesh(Vector3(-100 + (rand() % 100) - 10, (rand() % 100) - 10, (rand() % 100) - 10), duck->mMeshes[0], nullptr, little_duck_material, Vector3(1, 1, 1)));
+			RenderableObject* little_duck = add_renderable_object(new RenderableObject(Vector3(-100 + (rand() % 100) - 10, (rand() % 100) - 10, (rand() % 100) - 10), duck_model_id));
 			this->little_ducks.push_back(little_duck);
-			little_duck->set_scale(Vector3(0.01f, 0.01f, 0.01f));
 			little_duck->rotate(Vector3((rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180)));
 		}
-		lit_materials.push_back(little_duck_material);
 
 		// Cube
-		SimpleMaterial* cube_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), cube->mMaterials[0]);
-		add_renderable(new Mesh(Vector3(-60, 0, 0), cube->mMeshes[0], nullptr, cube_material, Vector3(1, 1, 1)));
-		lit_materials.push_back(cube_material);
+		RenderableObject* cube = add_renderable_object(new RenderableObject(Vector3(0, -60, 0), cube_model_id));
+
+		// Earth
+		this->earth = add_renderable_object(new RenderableObject(Vector3(75, -25, 0), earth_model_id));
+		this->earth->set_scale(Vector3(50.0f, 50.0f, 50.0f));
+		this->earth->rotate(Vector3(0, 0, BD3GE::PI / 32));
 
 		// Floor
-		MappedMaterial* brick_floor_material = new MappedMaterial(new Shader(&vertex_default, &fragment_default), wall_texture, wall_texture, 32.0f);
-		add_renderable(new SquareBrush(Vector3(-5, 5, 0), 10, 10, brick_floor_material));
-		lit_materials.push_back(brick_floor_material);
+		MappedMaterial* tile_floor_material = new MappedMaterial(shader_id, wall_texture_id, wall_texture_id, 32.0f);
+		Renderable* tile_floor_brush_renderable = new Renderable();
+		tile_floor_brush_renderable->renderable_units.push_back(new RectangleBrush(tile_floor_material, Vector3(-5, 5, 0), 10, 10));
+		add_renderable_object(new RenderableObject(Vector3(-5, 5, 0), tile_floor_brush_renderable));
 
 		// Pillars
-		SimpleMaterial* pillar_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(255, 0, 25));
+		SimpleMaterial* pillar_material = new SimpleMaterial(shader_id, Color(255, 0, 25));
 		for (unsigned int i = 0; i < 121; ++i) {
-			add_renderable(new BoxBrush(Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0), Vector3(2, 10, 2), pillar_material));
+			Vector3 position = Vector3((float)(10 * (i % 11)) - 50, (float)(10 * (i / 11)) - 50, 0);
+			Renderable* pillar_renderable = new Renderable();
+			pillar_renderable->renderable_units.push_back(new BoxBrush(pillar_material, position, Vector3(2, 10, 2)));
+			add_renderable_object(new RenderableObject(position, pillar_renderable));
 		}
-		lit_materials.push_back(pillar_material);
 
 		// Mapped container
-		MappedMaterial* container_material = new MappedMaterial(new Shader(&vertex_default, &fragment_default), container_diffuse_texture, container_specular_texture, 32.0f);
-		add_renderable(new SquareBrush(Vector3(75, 0, 0), 5, 5, container_material));
-		lit_materials.push_back(container_material);
+		MappedMaterial* container_material = new MappedMaterial(shader_id, container_diffuse_texture_id, container_specular_texture_id, 32.0f);
+		Renderable* container_brush_renderable = new Renderable();
+		container_brush_renderable->renderable_units.push_back(new RectangleBrush(container_material, Vector3(75, 0, 0), 5, 5));
+		add_renderable_object(new RenderableObject(Vector3(75, 0, 0), container_brush_renderable));
 
 		// Player
-		SimpleMaterial* player_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(10, 51, 102));
-		this->player = add_renderable(new BoxBrush(Vector3(5, 5, 0), Vector3(2, 2, 2), player_material));
-		lit_materials.push_back(player_material);
+		SimpleMaterial* player_material = new SimpleMaterial(shader_id, Color(10, 51, 102));
+		Renderable* player_brush_renderable = new Renderable();
+		player_brush_renderable->renderable_units.push_back(new BoxBrush(player_material, Vector3(5, 5, 0), Vector3(2, 2, 2)));
+		this->player = add_renderable_object(new RenderableObject(Vector3(5, 5, 0), player_brush_renderable));
 
 		// Light
-		SimpleMaterial* light_material = new SimpleMaterial(new Shader(&vertex_default, &fragment_default), Color(102, 229, 102));
-		this->light_renderable = add_renderable(new CircularBrush(Vector3(5, 5, 100), 1.5, 10, light_material));
+		SimpleMaterial* light_material = new SimpleMaterial(shader_id, Color(102, 229, 102));
+		Renderable* light_brush_renderable = new Renderable();
+		light_brush_renderable->renderable_units.push_back(new CircularBrush(light_material, Vector3(5, 5, 100), 1.5, 10));
+		this->light_renderable = add_renderable_object(new RenderableObject(Vector3(5, 5, 100), light_brush_renderable));
 
 		this->lights.push_back(new SpotLight("White Spot Light", this->light_renderable->get_position(), Vector3(0, 0, -1), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
 		this->lights.push_back(new PointLight("White Point Light", this->light_renderable->get_position(), Color(25, 25, 25), Color(128, 128, 128), Color(255, 255, 255)));
@@ -95,16 +90,11 @@ namespace BD3GE {
 	Scene::~Scene() {
 		delete camera;
 		camera = nullptr;
-
-		for (auto& renderable : renderables) {
-			delete renderable;
-			renderable = nullptr;
-		}
 	}
 
-	Renderable* Scene::add_renderable(Renderable* renderable) {
-		renderables.push_back(renderable);
-		return renderable;
+	RenderableObject* Scene::add_renderable_object(RenderableObject* renderable_object) {
+		renderable_objects.push_back(renderable_object);
+		return renderable_object;
 	}
 
 	void Scene::tick(Input* input) {
@@ -262,25 +252,20 @@ namespace BD3GE {
 			lights[3]->is_active = !lights[3]->is_active;
 		}
 
-		if (!this->lights.empty()) {
-			((SpotLight*)this->lights[0])->position = this->light_renderable->get_position();
-			for (Material* lit_material : lit_materials) {
-				if (lit_material->shader) {
-					for (Light* light : lights) {
-						lit_material->shader->setLight(light);
-					}
-					lit_material->shader->setUniform("viewer_position", this->camera->get_position());
-				}
-			}
-		}
-
-		if (scary_duck != nullptr) {
+		if (scary_duck) {
 			scary_duck->rotate(Vector3(0, 0.001, 0));
 		}
-		for (Renderable* little_duck : little_ducks) {
+		if (earth) {
+			earth->rotate(Vector3(0, 0.1 / (180 / BD3GE::PI), 0));
+		}
+		if (backpack) {
+			backpack->rotate(Vector3(0, -(0.2 / (180 / BD3GE::PI)), 0));
+		}
+		for (RenderableObject* little_duck : little_ducks) {
 			little_duck->rotate(Vector3(0, 0.01, 0));
 		}
-		//camera->rotate(Vector3(0, 0.1 / (180 / BD3GE::PI), 0));
+
+		((SpotLight*)this->lights[0])->position = this->light_renderable->get_position();
 	}
 
 	void Scene::mouse_move(Input* input) {
@@ -291,7 +276,7 @@ namespace BD3GE {
 			Vector3 previous_mouse_vector = Vector3(-previous_mouse_position.first, previous_mouse_position.second, 0);
 			Vector3 mouse_translation = current_mouse_vector - previous_mouse_vector;
 
-			if (mouse_translation.get_magnitude() < 100) {
+			if (mouse_translation.get_magnitude() < 500) {
 				Vector3 mouse_rotation = mouse_translation * (float)(180 / BD3GE::PI);
 				camera->rotate(Vector3(-mouse_translation.v.g.y, mouse_translation.v.g.x, 0) * 0.0001);
 
@@ -300,19 +285,5 @@ namespace BD3GE {
 				}
 			}
 		}
-	}
-
-	void Scene::render(void) {
-		// Clear the color buffer.
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		Transform view_projection_transform = camera->get_view_projection_transform();
-		for (auto& renderable : renderables) {
-			renderable->render(view_projection_transform);
-		}
-	}
-
-	Camera* Scene::get_camera(void) {
-		return camera;
 	}
 }

@@ -6,14 +6,19 @@
 #include <glew/GL/glew.h>
 
 #include "../system/constants.h"
+#include "../system/globals.h"
 #include "../utility/color.h"
+#include "../utility/log.h"
 
 namespace BD3GE {
 	class GL {
 		public:
 
 							GL();
-			void			reshape(unsigned int x, unsigned int y);
+
+			void			create_texture_handle(unsigned int* texture_handle);
+			void			clear_buffers();
+			void			reshape_viewport(unsigned int x, unsigned int y);
 			const void		print_info();
 			const GLubyte*	get_vendor();
 			const GLubyte*	get_renderer();

@@ -24,12 +24,20 @@ namespace BD3GE {
 		glEnable(GL_BLEND);
 
 		// Set the window shape.
-		reshape(WINDOW_WIDTH, WINDOW_HEIGHT);
+		reshape_viewport(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		glFlush();
 	}
 
-	void GL::reshape(unsigned int width, unsigned int height) {
+	void GL::create_texture_handle(unsigned int* texture_handle) {
+		glGenTextures(1, texture_handle);
+	}
+
+	void GL::clear_buffers() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	}
+
+	void GL::reshape_viewport(unsigned int width, unsigned int height) {
 		if (width > 0 && width < SCREEN_WIDTH && height > 0 && height < SCREEN_HEIGHT) {
 			viewport_width = width;
 			viewport_height = height;
@@ -39,7 +47,7 @@ namespace BD3GE {
 
 	const void GL::print_info(void) {
 		g_log.write(
-			BD3GE::LOG_TYPE::INFO,
+			Log::TYPE::INFO,
 			"\n\tVendor: " + std::string((char*)get_vendor()) + "\n" +
 			"\tRenderer: " + std::string((char*)get_renderer()) + "\n" +
 			"\tVersion: " + std::string((char*)get_version()) + "\n" +

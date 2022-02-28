@@ -1,7 +1,10 @@
 #ifndef BD3GE_RENDERABLE_H
 #define BD3GE_RENDERABLE_H
 
+#include <vector>
+
 #include <glew/GL/glew.h>
+
 #include "../utility/object.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"
@@ -10,20 +13,31 @@
 #include "../video/vertex.h"
 
 namespace BD3GE {
-	class Renderable : public Object {
-		public:
-			Renderable();
-			Renderable(Vector3 position);
-			virtual ~Renderable();
-			void setup();
-			virtual void render(Transform view_projection_transform) const;
+	struct RenderableGeometry {
+		unsigned int vao_handle;
+		unsigned int num_vertices;
+		unsigned int num_indices;
+		unsigned int* ibo = nullptr;
+		Vertex* vbo = nullptr;
+	};
 
-			std::vector<Material*> materials;
-			unsigned int vao_handle;
-			Vertex* vbo;
-			unsigned int* ibo;
-			unsigned int num_vertices;
-			unsigned int num_indices;
+	class RenderableUnit {
+		public:
+			RenderableUnit();
+			RenderableUnit(Material* material);
+			RenderableUnit(Material* material, TransformNode* transform_node);
+			RenderableUnit(const RenderableUnit& other);
+			virtual ~RenderableUnit();
+			const RenderableUnit& operator=(const RenderableUnit& other);
+
+			RenderableGeometry geometry;
+			Material* material = nullptr;
+			TransformNode* transform_node;
+	};
+
+	class Renderable {
+		public:
+			std::vector<RenderableUnit*> renderable_units;
 	};
 }
 

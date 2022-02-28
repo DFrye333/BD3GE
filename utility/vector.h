@@ -4,8 +4,6 @@
 #include <cmath>
 #include <iostream>
 
-#include "../system/globals.h"
-
 namespace BD3GE {
 	class Vector2 {
 		public:

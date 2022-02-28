@@ -8,8 +8,6 @@
 #include <string>
 #include <utility>
 
-#include <glew/GL/glew.h>
-
 #ifdef __linux__
 
 #include <unistd.h>

@@ -10,19 +10,21 @@
 #include "../audio/AL.h"
 #include "../input/gamepad.h"
 #include "../input/input.h"
-#include "../utility/timer.h"
 #include "../game/scene.h"
 #include "../os/win32.h"
 #include "../system/window.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
+#include "../utility/log.h"
+#include "../utility/timer.h"
 #include "../video/GL.h"
+#include "../video/renderer.h"
 
 namespace BD3GE {
 	class Game {
 		public:
 
-					Game(BD3GE::Window* window);
+					Game(Window* window);
 					~Game();
 			void 	run();
 			void	bus_messages();
@@ -31,7 +33,7 @@ namespace BD3GE {
 
 			Window*				window;
 			Scene*				scene;
-			GL*					gl;
+			Renderer*			renderer;
 			AL*					al;
 			Input*				input;
 	};

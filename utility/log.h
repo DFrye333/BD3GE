@@ -18,13 +18,18 @@
 #include "../system/constants.h"
 
 namespace BD3GE {
+	// TODO: Make this static?
 	// Logs all output to log files, and standard streams if appropriate.
 	class Log {
 		public:
+			enum class TYPE {
+				INFO,
+				ERR,
+			};
 
 					Log(std::string logFilePath = DEFAULT_SYSTEM_DIRECTORY + DEFAULT_LOG_DIRECTORY + DEFAULT_LOG_FILE);
 					~Log();
-			void	write(BD3GE::LOG_TYPE outputMode, std::string entry);
+			void	write(Log::TYPE outputMode, std::string entry);
 
 		private:
 

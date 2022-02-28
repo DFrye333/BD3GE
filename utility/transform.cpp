@@ -146,4 +146,12 @@ namespace BD3GE {
 	const Transform Transform::operator*(const Transform& other) const {
 		return Transform(this->matrix * other.get_matrix());
 	}
+
+	bool operator==(const Transform& lhs, const Transform& rhs) {
+		return lhs.matrix == rhs.matrix;
+	}
+
+	bool operator!=(const Transform& lhs, const Transform& rhs) {
+		return !(lhs == rhs);
+	}
 }

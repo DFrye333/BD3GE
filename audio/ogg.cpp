@@ -37,7 +37,7 @@ namespace BD3GE {
 		int success;
 
 		if (true == loaded) {
-			g_log.write(BD3GE::LOG_TYPE::ERR, "File object already loaded.");
+			g_log.write(Log::TYPE::ERR, "File object already loaded.");
 			return;
 		}
 
@@ -46,35 +46,35 @@ namespace BD3GE {
 
 		switch (success) {
 			case OV_EREAD:
-				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - OV_EREAD");
+				g_log.write(Log::TYPE::ERR, "Cannot open Ogg - OV_EREAD");
 				break;
 			case OV_ENOTVORBIS:
-				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - OV_ENOTVORBIS");
+				g_log.write(Log::TYPE::ERR, "Cannot open Ogg - OV_ENOTVORBIS");
 				break;
 			case OV_EVERSION:
-				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - OV_EVERSION");
+				g_log.write(Log::TYPE::ERR, "Cannot open Ogg - OV_EVERSION");
 				break;
 			case OV_EBADHEADER:
-				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - OV_EBADHEADER");
+				g_log.write(Log::TYPE::ERR, "Cannot open Ogg - OV_EBADHEADER");
 				break;
 			case OV_EFAULT:
-				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - OV_EFAULT");
+				g_log.write(Log::TYPE::ERR, "Cannot open Ogg - OV_EFAULT");
 				break;
 			case 0:
-				g_log.write(BD3GE::LOG_TYPE::INFO, "Ogg file opened successfully.");
+				g_log.write(Log::TYPE::INFO, "Ogg file opened successfully.");
 				break;
 			default:
-				g_log.write(BD3GE::LOG_TYPE::ERR, "Cannot open Ogg - Unknown Ogg error.");
+				g_log.write(Log::TYPE::ERR, "Cannot open Ogg - Unknown Ogg error.");
 		}
 
 		info = ov_info(&file, -1);
 		switch (info->channels) {
 			case 1:
 				format = AL_FORMAT_MONO16;
-				g_log.write(BD3GE::LOG_TYPE::INFO, "Format is mono-16.");
+				g_log.write(Log::TYPE::INFO, "Format is mono-16.");
 				break;
 			case 2:
-				g_log.write(BD3GE::LOG_TYPE::INFO, "Format is stereo-16.");
+				g_log.write(Log::TYPE::INFO, "Format is stereo-16.");
 				format = AL_FORMAT_STEREO16;
 				break;
 		}

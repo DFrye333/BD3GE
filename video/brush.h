@@ -11,30 +11,25 @@
 #include "../video/texture.h"
 
 namespace BD3GE {
-	class Brush : public Renderable {
+	class Brush : public RenderableUnit {
 		public:
 			Brush();
-			Brush(Vector3 position);
-			virtual ~Brush();
-
-			Texture* texture;
-		protected:
+			Brush(Material* material);
 	};
 
-	class SquareBrush : public Brush {
+	class RectangleBrush : public Brush {
 		public:
-			SquareBrush(Vector3 position, float width, float height, SimpleMaterial* simple_material);
-			SquareBrush(Vector3 position, float width, float height, MappedMaterial* mapped_material);
+			RectangleBrush(Material* material, Vector3 position, float width, float height);
 	};
 
 	class CircularBrush : public Brush {
 		public:
-			CircularBrush(Vector3 position, float radius, int resolution, SimpleMaterial* simple_material);
+			CircularBrush(Material* material, Vector3 position, float radius, int resolution);
 	};
 
 	class BoxBrush : public Brush {
 		public:
-			BoxBrush(Vector3 position, Vector3 dimensions, SimpleMaterial* color);
+			BoxBrush(Material* material, Vector3 position, Vector3 dimensions);
 	};
 }
 

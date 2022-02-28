@@ -16,6 +16,9 @@ namespace BD3GE {
 	const std::string	DEFAULT_LOG_DIRECTORY		=	"log/";
 	const std::string	DEFAULT_LOG_FILE			=	"BD3GE.log";
 	const std::string	DEFAULT_RESOURCE_DIRECTORY	=	"resources/";
+	const std::string	DEFAULT_MODEL_DIRECTORY		=	DEFAULT_RESOURCE_DIRECTORY + "models/";
+	const std::string	DEFAULT_SHADER_DIRECTORY	=	DEFAULT_RESOURCE_DIRECTORY + "shaders/";
+	const std::string	DEFAULT_TEXTURE_DIRECTORY	=	DEFAULT_RESOURCE_DIRECTORY + "textures/";
 	const std::string	LOG_PRINT_INFORMATION		=	"(BD3GE | Information): ";
 	const std::string	LOG_PRINT_ERROR				=	"(BD3GE | Error): ";
 
@@ -26,11 +29,6 @@ namespace BD3GE {
 
 	const float			PLAYER_SPEED = 1.0f;
 	const float			CAMERA_SPEED = 1.0f;
-
-	typedef enum {
-		INFO,
-		ERR,
-	} LOG_TYPE;
 
 	// Number of ticks to be processed per-second.
 	const float			TICK_RATE = 60.0f;
@@ -43,6 +41,7 @@ namespace BD3GE {
 	const float			FRAME_TIME = (1.0f / FRAME_RATE) * 1000.0f;
 
 	constexpr double	PI = 3.1415926535;
+	constexpr float		FLOAT_EPSILON = 1.0e-12f;
 
 	// Keystring mappings.
 	enum class KEY_CODE {

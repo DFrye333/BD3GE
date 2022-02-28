@@ -2,25 +2,18 @@
 #define BD3GE_MESH_H
 
 #include <assimp/mesh.h>
-#include <assimp/texture.h>
+#include <assimp/scene.h>
 #include <assimp/vector3.h>
-#include <glew/GL/glew.h>
 
-#include "../system/globals.h"
-#include "../utility/matrix.h"
-#include "../utility/transform.h"
 #include "../utility/vector.h"
 #include "../video/renderable.h"
-#include "../video/shader.h"
-#include "../video/texture.h"
-#include "../video/vertex.h"
 
 namespace BD3GE {
-	class Mesh : public Renderable {
+	class Mesh : public RenderableUnit {
 		public:
-			Mesh(Vector3 position, const aiMesh* mesh, aiTexture* texture, SimpleMaterial* simple_material, Vector3 scale);
-
-			aiTexture* texture;
+			Mesh();
+			Mesh(Material* material);
+			Mesh(Material* material, const aiMesh* mesh, TransformNode* transform_node);
 	};
 }
 
