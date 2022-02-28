@@ -33,7 +33,7 @@ namespace BD3GE {
 
 		// Little ducks
 		srand(time(nullptr));
-		for (unsigned int i = 0; i < 2500; ++i) {
+		for (unsigned int i = 0; i < 1000; ++i) {
 			RenderableObject* little_duck = add_renderable_object(new RenderableObject(Vector3(-100 + (rand() % 100) - 10, (rand() % 100) - 10, (rand() % 100) - 10), duck_model_id));
 			this->little_ducks.push_back(little_duck);
 			little_duck->rotate(Vector3((rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180), (rand() % 90) * (BD3GE::PI / 180)));
