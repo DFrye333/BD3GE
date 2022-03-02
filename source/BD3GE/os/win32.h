@@ -52,7 +52,7 @@ namespace BD3GE {
 			Message<Window::InputEvent>						pull_input_event() override;
 			void											push_reshape_event(Window::ReshapeEvent reshape_event) override;
 			Message<Window::ReshapeEvent>					pull_reshape_event() override;
-			void											set_mouse_cursor_visibility(bool shouldBeVisible) override;
+			void											set_mouse_cursor_visibility(bool should_be_visible) override;
 
 		private:
 

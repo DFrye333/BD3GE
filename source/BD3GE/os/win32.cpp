@@ -186,7 +186,7 @@ namespace BD3GE {
 		return GetFileAttributesEx(absolute_file_path_utf16, GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard, file_attributes);
 	}
 
-	LRESULT CALLBACK WindowProc(HWND hwnd, UINT messageCode, WPARAM wParam, LPARAM lParam) {
+	LRESULT CALLBACK WindowProc(HWND hwnd, UINT message_code, WPARAM w_param, LPARAM l_param) {
 		BD3GE::WinAPIWindow::WindowProcData* data = nullptr;
 		LONG_PTR data_long_ptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data_long_ptr != 0) {
@@ -194,10 +194,10 @@ namespace BD3GE {
 		}
 
 		BD3GE::Window::InputEvent input_event = {};
-		switch (messageCode) {
+		switch (message_code) {
 			case WM_CREATE:
 				{
-					CREATESTRUCT* data_creation = reinterpret_cast<CREATESTRUCT*>(lParam);
+					CREATESTRUCT* data_creation = reinterpret_cast<CREATESTRUCT*>(l_param);
 					data = reinterpret_cast<BD3GE::WinAPIWindow::WindowProcData*>(data_creation->lpCreateParams);
 					SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)data);
 
@@ -230,27 +230,27 @@ namespace BD3GE {
 				BeginPaint(hwnd, &paint_struct);
 				EndPaint(hwnd, &paint_struct);
 				break;
-			case WM_KEYDOWN: input_event.key_state_map.insert({ WinAPI::key_code_map[wParam], true }); break;
-			case WM_KEYUP: input_event.key_state_map.insert({ WinAPI::key_code_map[wParam], false }); break;
+			case WM_KEYDOWN: input_event.key_state_map.insert({ WinAPI::key_code_map[w_param], true }); break;
+			case WM_KEYUP: input_event.key_state_map.insert({ WinAPI::key_code_map[w_param], false }); break;
 			case WM_LBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, true }); break;
 			case WM_RBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, true }); break;
 			case WM_MBUTTONDOWN: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, true }); break;
 			case WM_XBUTTONDOWN:
 				// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
-				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
-				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, true }); break;
+				//std::cout << std::hex << GET_KEYSTATE_WPARAM(w_param) << std::endl;
+				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(w_param) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, true }); break;
 			case WM_LBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_LEFTBUTTON, false }); break;
 			case WM_RBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_RIGHTBUTTON, false }); break;
 			case WM_MBUTTONUP: input_event.key_state_map.insert({ BD3GE::KEY_CODE::MOUSE_MIDDLEBUTTON, false }); break;
 			case WM_XBUTTONUP:
 				// TODO: Add support for context-awareness (i.e. knowing if other buttons are being used as this event comes in).
-				//std::cout << std::hex << GET_KEYSTATE_WPARAM(wParam) << std::endl;
-				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
-			case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
+				//std::cout << std::hex << GET_KEYSTATE_WPARAM(w_param) << std::endl;
+				input_event.key_state_map.insert({ GET_XBUTTON_WPARAM(w_param) == XBUTTON1 ? BD3GE::KEY_CODE::MOUSE_X1BUTTON : BD3GE::KEY_CODE::MOUSE_X2BUTTON, false }); break;
+			case WM_MOUSEWHEEL: input_event.key_state_map.insert({ GET_WHEEL_DELTA_WPARAM(w_param) > 0 ? BD3GE::KEY_CODE::MOUSE_WHEELUP : BD3GE::KEY_CODE::MOUSE_WHEELDOWN, true }); break;
 			case WM_MOUSEMOVE:
 				{
-					input_event.mouse_position.first = LOWORD(lParam); // X
-					input_event.mouse_position.second = HIWORD(lParam); // Y
+					input_event.mouse_position.first = LOWORD(l_param); // X
+					input_event.mouse_position.second = HIWORD(l_param); // Y
 
 					// Clamps cursor within the window.
 					RECT window;
@@ -268,15 +268,15 @@ namespace BD3GE {
 			case WM_SIZE:
 				{
 					BD3GE::Window::ReshapeEvent reshape_event = {};
-					reshape_event.width = LOWORD(lParam);
-					reshape_event.height = HIWORD(lParam);
+					reshape_event.width = LOWORD(l_param);
+					reshape_event.height = HIWORD(l_param);
 
 					data->window->push_reshape_event(reshape_event);
 					break;
 				}
 			case WM_CLOSE: DestroyWindow(hwnd); break;
 			case WM_DESTROY: PostQuitMessage(0); data->window->set_window_exists(false); break;
-			default: return DefWindowProc(hwnd, messageCode, wParam, lParam);
+			default: return DefWindowProc(hwnd, message_code, w_param, l_param);
 		}
 
 		data->window->push_input_event(input_event);
@@ -390,14 +390,14 @@ namespace BD3GE {
 		return reshape_message;
 	}
 
-	void WinAPIWindow::set_mouse_cursor_visibility(bool shouldBeVisible) {
+	void WinAPIWindow::set_mouse_cursor_visibility(bool should_be_visible) {
 		CURSORINFO mouseCursorInfo = {};
 		mouseCursorInfo.cbSize = sizeof(CURSORINFO);
 		GetCursorInfo(&mouseCursorInfo);
-		if (shouldBeVisible && !(mouseCursorInfo.flags & CURSOR_SHOWING)) {
+		if (should_be_visible && !(mouseCursorInfo.flags & CURSOR_SHOWING)) {
 			ShowCursor(true);
 		}
-		else if (!shouldBeVisible && (mouseCursorInfo.flags & CURSOR_SHOWING)) {
+		else if (!should_be_visible && (mouseCursorInfo.flags & CURSOR_SHOWING)) {
 			ShowCursor(false);
 		}
 	}
