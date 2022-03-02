@@ -13,7 +13,7 @@ namespace BD3GE {
 	const Transform Camera::get_projection_transform() {
 		if (should_recalculate_projection_transform) {
 			float frustum_scale = 5.0f;
-			float z_near = 0.01f;
+			float z_near = 1.0f;
 			float z_far = 10000.0f;
 
 			this->projection_transform = Transform(Matrix4(
