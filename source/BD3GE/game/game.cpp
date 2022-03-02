@@ -7,19 +7,25 @@ namespace BD3GE {
 //#ifdef __linux__
 //			if (-1 == mkdir(DEFAULT_RELATIVE_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH))
 
-		std::string result;
 		std::string system_directory_path = WinAPI::get_environment_variable("LOCALAPPDATA") + "/" + DEFAULT_RELATIVE_SYSTEM_DIRECTORY;
-		bool success = WinAPI::make_directory(system_directory_path, result);
-		if (!success) {
-			std::cout << "System directory creation failure: " + result << std::endl;
-		}
-
 		std::string log_directory_path = system_directory_path + DEFAULT_LOG_DIRECTORY;
-		success = WinAPI::make_directory(log_directory_path, result);
+		if (!WinAPI::does_directory_exist(log_directory_path)) {
+			std::string result;
+			bool success = WinAPI::make_directory(system_directory_path, result);
+			if (!success) {
+				std::cout << "System directory creation failure: " + result << std::endl;
+			}
 
-		g_log = new Log(log_directory_path);
-		g_log->write(Log::TYPE::INFO, "Starting up BD3GE now...");
-		success ? g_log->write(Log::TYPE::INFO, "Log directory creation success at: " + log_directory_path) : g_log->write(Log::TYPE::ERR, "Log directory creation failure: " + result);
+			success = WinAPI::make_directory(log_directory_path, result);
+
+			g_log = new Log(log_directory_path);
+			g_log->write(Log::TYPE::INFO, "Starting up BD3GE now...");
+
+			success ? g_log->write(Log::TYPE::INFO, "Log directory creation success at: " + log_directory_path) : g_log->write(Log::TYPE::ERR, "Log directory creation failure: " + result);
+		} else {
+			g_log = new Log(log_directory_path);
+			g_log->write(Log::TYPE::INFO, "Starting up BD3GE now...");
+		}
 
 		this->window = window;
 		this->window->set_mouse_cursor_visibility(false);
