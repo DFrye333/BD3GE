@@ -15,6 +15,7 @@ namespace BD3GE {
 		glDepthRange(0.0f, 1.0f);
 
 		// Enable back-face culling.
+		// TODO: This should not *always* be enabled, as some objects may need both faces rendered to display properly (e.g. two-sided textures).
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glFrontFace(GL_CW);
