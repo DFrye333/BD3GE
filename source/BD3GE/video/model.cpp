@@ -20,7 +20,7 @@ namespace BD3GE {
 		Assimp::Importer model_importer;
 		const aiScene* scene = model_importer.ReadFile(model_file_path, importer_options);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-			g_log->write(Log::TYPE::ERR, "Model load failure: " + model_file_path);
+			g_log->write(Log::TYPE::ERR, "Model load failure at '" + model_file_path + "': " + model_importer.GetErrorString());
 			return;
 		}
 
