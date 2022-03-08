@@ -32,10 +32,10 @@ namespace BD3GE {
 		public:
 
 			struct WinAPIEntryArgs {
-				HINSTANCE hInstance;
-				HINSTANCE hPrevInstance;
-				LPSTR lpCmdLine;
-				int nCmdShow;
+				HINSTANCE instance;
+				HINSTANCE previous_instance;
+				LPSTR command_line;
+				int command_show;
 			};
 
 			struct WindowProcData {

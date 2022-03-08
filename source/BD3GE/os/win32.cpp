@@ -295,7 +295,7 @@ namespace BD3GE {
 		wc.lpfnWndProc = WindowProc;
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
-		wc.hInstance = winAPIEntryArgs.hInstance;
+		wc.hInstance = winAPIEntryArgs.instance;
 		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -320,7 +320,7 @@ namespace BD3GE {
 			window_title,
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT, CW_USEDEFAULT, BD3GE::WINDOW_WIDTH, BD3GE::WINDOW_HEIGHT,
-			NULL, NULL, winAPIEntryArgs.hInstance,
+			NULL, NULL, winAPIEntryArgs.instance,
 			window_proc_data
 		);
 
@@ -329,11 +329,11 @@ namespace BD3GE {
 			return;
 		}
 
-		ShowWindow(window_handle, winAPIEntryArgs.nCmdShow);
+		ShowWindow(window_handle, winAPIEntryArgs.command_show);
 		UpdateWindow(window_handle);
 
 		std::cout << "Command line arguments: ";
-		std::cout << winAPIEntryArgs.lpCmdLine << std::endl;
+		std::cout << winAPIEntryArgs.command_line << std::endl;
 	}
 
 	WinAPIWindow::~WinAPIWindow() {}
