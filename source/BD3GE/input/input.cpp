@@ -78,7 +78,7 @@ namespace BD3GE {
 	}
 
 	Gamepad* Input::get_gamepad(short gamepad_index) {
-		return gamepads[gamepad_index];
+		return gamepads.contains(gamepad_index) ? gamepads[gamepad_index] : nullptr;
 	}
 
 	short Input::get_quantity_gamepads_connected() {
