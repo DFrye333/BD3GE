@@ -16,12 +16,13 @@
 
 #endif
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
 #include "../utility/message.h"
 
 namespace BD3GE {
-	class Window {
+	class BD3GE_API Window {
 		public:
 
 			typedef struct InputEvent {

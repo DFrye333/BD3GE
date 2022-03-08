@@ -7,12 +7,13 @@
 #include <Windows.h>
 #include <direct.h>
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../utility/timer.h"
 #include "../system/window.h"
 
 namespace BD3GE {
-	class WinAPI {
+	class BD3GE_API WinAPI {
 		public:
 			static int get_quantity_utf16_characters(std::string input);
 			static void to_utf16(std::string input, LPWSTR output);
@@ -28,7 +29,7 @@ namespace BD3GE {
 			static std::map<int, BD3GE::KEY_CODE> key_code_map;
 	};
 
-	class WinAPIWindow : public Window {
+	class BD3GE_API WinAPIWindow : public Window {
 		public:
 
 			struct WinAPIEntryArgs {

@@ -11,22 +11,23 @@
 #include "../input/input.h"
 #include "../game/scene.h"
 #include "../os/win32.h"
-#include "../system/window.h"
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
+#include "../system/window.h"
 #include "../utility/log.h"
 #include "../utility/timer.h"
 #include "../video/GL.h"
 #include "../video/renderer.h"
 
 namespace BD3GE {
-	class Game {
+	class BD3GE_API Game {
 		public:
 
-					Game(Window* window);
-					~Game();
-			void 	run();
-			void	bus_messages();
+			Game(Window* window);
+			virtual ~Game();
+			virtual void run();
+			void bus_messages();
 
 		private:
 
