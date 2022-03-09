@@ -4,6 +4,7 @@
 #include <assimp/material.h>
 
 #include "../management/texture_manager.h"
+#include "../system/api.h"
 #include "../system/globals.h"
 #include "../utility/color.h"
 #include "../utility/log.h"
@@ -26,7 +27,7 @@ namespace BD3GE {
 			float gloss_factor = 32.0f;
 	};
 
-	class SimpleMaterial : public Material {
+	extern "C" class BD3GE_API SimpleMaterial : public Material {
 		public:
 			SimpleMaterial(size_t shader_id, Color color);
 			SimpleMaterial(size_t shader_id, Color color_ambient, Color color_diffuse, Color color_specular);
@@ -39,7 +40,7 @@ namespace BD3GE {
 			Color color_specular = Color(0.5f, 0.5f, 0.5f);
 	};
 
-	class MappedMaterial : public Material {
+	extern "C" class BD3GE_API MappedMaterial : public Material {
 		public:
 			MappedMaterial();
 			MappedMaterial(size_t shader_id, size_t map_diffuse_id, size_t map_specular_id, float gloss_factor);

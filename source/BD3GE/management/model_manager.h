@@ -6,11 +6,12 @@
 
 #include <glew/GL/glew.h>
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../video/model.h"
 
 namespace BD3GE {
-	class ModelManager {
+	extern "C" class BD3GE_API ModelManager {
 		public:
 			static const size_t load_model(std::string relative_file_path);
 			static Model* get_model(std::string relative_file_path);

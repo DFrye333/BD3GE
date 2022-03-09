@@ -21,15 +21,18 @@
 #include "../video/renderer.h"
 
 namespace BD3GE {
-	class BD3GE_API Game {
+	extern "C" class BD3GE_API Game {
 		public:
 
 			Game(Window* window);
 			virtual ~Game();
+			virtual void load_scene(Scene* scene);
 			virtual void run();
 			void bus_messages();
+			virtual void tick(Input* input) = 0;
+			virtual void mouse_move(Input* input) = 0;
 
-		private:
+		protected:
 
 			Window*				window;
 			Scene*				scene;

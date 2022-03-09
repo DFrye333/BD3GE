@@ -6,11 +6,12 @@
 
 #include <glew/GL/glew.h>
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../video/texture.h"
 
 namespace BD3GE {
-	class TextureManager {
+	extern "C" class BD3GE_API TextureManager {
 		public:
 			static const size_t load_texture(std::string relative_file_path);
 			static Texture* get_texture(std::string relative_file_path);

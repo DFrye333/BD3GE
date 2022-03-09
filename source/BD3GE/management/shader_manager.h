@@ -6,11 +6,12 @@
 
 #include <glew/GL/glew.h>
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../video/shader.h"
 
 namespace BD3GE {
-	class ShaderManager {
+	extern "C" class BD3GE_API ShaderManager {
 		public:
 			static const size_t compile_shader(ShaderManifest shader_manifest);
 			static Shader* get_shader(ShaderManifest shader_manifest);

@@ -34,9 +34,6 @@ namespace BD3GE {
 
 		glewExperimental = GL_TRUE;
 		glewInit();
-
-		this->scene = new Scene();
-		this->renderer = new Renderer(scene);
 	}
 
 	Game::~Game() {
@@ -56,6 +53,11 @@ namespace BD3GE {
 
 		delete scene;
 		scene = nullptr;
+	}
+
+	void Game::load_scene(Scene* scene) {
+		this->scene = scene;
+		this->renderer = new Renderer(scene);
 	}
 
 	void Game::run() {
@@ -82,30 +84,34 @@ namespace BD3GE {
 				return;
 			}
 
-			// Enables toggling of wireframe mode.
-			if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_1)) {
-				renderer->toggle_wireframe_mode();
+			if (scene) {
+				// Check logic timer.
+				if (logic_timer->is_due()) {
+					// Process a logic tick.
+					tick(input);
+				}
+
+				// Check mouse drag timer.
+				if (mouse_move_timer->is_due()) {
+					// Process a logic tick.
+					mouse_move(input);
+				}
 			}
 
-			// Check logic timer.
-			if (logic_timer->is_due()) {
-				// Process a logic tick.
-				scene->tick(input);
-			}
+			if (renderer) {
+				// Enables toggling of wireframe mode.
+				if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_1)) {
+					renderer->toggle_wireframe_mode();
+				}
 
-			// Check mouse drag timer.
-			if (mouse_move_timer->is_due()) {
-				// Process a logic tick.
-				scene->mouse_move(input);
-			}
+				// Check render timer.
+				if (render_timer->is_due()) {
+					// Process a rendering frame.
+					renderer->render();
 
-			// Check render timer.
-			if (render_timer->is_due()) {
-				// Process a rendering frame.
-				renderer->render();
-
-				// Swap the frame buffers.
-				window->swap_buffers();
+					// Swap the frame buffers.
+					window->swap_buffers();
+				}
 			}
 		}
 		// ========================================================================

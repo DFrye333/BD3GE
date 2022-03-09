@@ -3,10 +3,11 @@
 
 #include <algorithm>
 
+#include "../system/api.h"
 #include "../utility/vector.h"
 
 namespace BD3GE {
-	class Color {
+	class BD3GE_API Color {
 		public:
 			Color();
 			Color(Vector3 rgb, float a);

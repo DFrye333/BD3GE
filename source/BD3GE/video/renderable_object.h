@@ -1,12 +1,13 @@
 #ifndef BD3GE_RENDERABLE_OBJECT_H
 #define BD3GE_RENDERABLE_OBJECT_H
 
+#include "../system/api.h"
 #include "../utility/object.h"
 #include "../utility/vector.h"
 #include "../video/renderable.h"
 
 namespace BD3GE {
-	class RenderableObject : public Object {
+	class BD3GE_API RenderableObject : public Object {
 		public:
 			RenderableObject();
 			RenderableObject(Vector3 position, Renderable* renderable);

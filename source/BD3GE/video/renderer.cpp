@@ -12,6 +12,8 @@ namespace BD3GE {
 	void Renderer::load_scene(Scene* scene) {
 		if (!scene) { return; }
 
+		this->scene = scene;
+
 		unsigned int renderable_units_count = 0;
 		for (RenderableObject* renderable_object : scene->renderable_objects) {
 			// Lazy-loads renderables.

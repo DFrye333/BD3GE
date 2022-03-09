@@ -4,8 +4,10 @@
 #include <cmath>
 #include <iostream>
 
+#include "../system/api.h"
+
 namespace BD3GE {
-	class Vector2 {
+	class BD3GE_API Vector2 {
 		public:
 			Vector2();
 			Vector2(const float a[2]);
@@ -48,7 +50,7 @@ namespace BD3GE {
 			} v;
 	};
 
-	class Vector3 {
+	class BD3GE_API Vector3 {
 		public:
 			Vector3();
 			Vector3(const float a[3]);

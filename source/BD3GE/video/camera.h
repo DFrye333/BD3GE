@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../utility/matrix.h"
 #include "../utility/object.h"
@@ -10,7 +11,7 @@
 #include "../utility/vector.h"
 
 namespace BD3GE {
-	class Camera : public Object {
+	extern "C" class BD3GE_API Camera : public Object {
 		public:
 
 								Camera(Vector3 position);

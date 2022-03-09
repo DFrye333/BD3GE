@@ -22,7 +22,7 @@
 #include "../utility/message.h"
 
 namespace BD3GE {
-	class BD3GE_API Window {
+	class Window {
 		public:
 
 			typedef struct InputEvent {

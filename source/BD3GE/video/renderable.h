@@ -5,6 +5,7 @@
 
 #include <glew/GL/glew.h>
 
+#include "../system/api.h"
 #include "../utility/object.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"
@@ -35,7 +36,7 @@ namespace BD3GE {
 			TransformNode* transform_node;
 	};
 
-	class Renderable {
+	class BD3GE_API Renderable {
 		public:
 			std::vector<RenderableUnit*> renderable_units;
 	};

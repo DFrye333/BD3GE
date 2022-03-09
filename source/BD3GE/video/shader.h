@@ -9,6 +9,7 @@
 
 #include <glew/GL/glew.h>
 
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
 #include "../utility/log.h"
@@ -17,7 +18,7 @@
 #include "../video/light.h"
 
 namespace BD3GE {
-	class ShaderManifest {
+	class BD3GE_API ShaderManifest {
 		public:
 			ShaderManifest(std::string vertex_shader_object, std::string fragment_shader_object);
 

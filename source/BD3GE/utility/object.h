@@ -1,11 +1,12 @@
 #ifndef BD3GE_OBJECT_H
 #define BD3GE_OBJECT_H
 
+#include "../system/api.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"
 
 namespace BD3GE {
-	class Object {
+	extern "C" class BD3GE_API Object {
 		public:
 
 							Object();

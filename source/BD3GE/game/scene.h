@@ -6,11 +6,7 @@
 #include <utility>
 #include <vector>
 
-// TODO: Can I eliminate this dependency on input.h?
-#include "../input/input.h"
-#include "../management/model_manager.h"
-#include "../management/shader_manager.h"
-#include "../management/texture_manager.h"
+#include "../system/api.h"
 #include "../utility/color.h"
 #include "../video/brush.h"
 #include "../video/camera.h"
@@ -21,24 +17,16 @@
 #include "../video/shader.h"
 
 namespace BD3GE {
-	class Scene {
+	extern "C" class BD3GE_API Scene {
 		public:
 			Scene();
 			~Scene();
 			RenderableObject* add_renderable_object(RenderableObject* renderable_object);
-			void tick(Input* input);
-			void mouse_move(Input* input);
 
 			Camera* camera;
 			std::vector<RenderableObject*> renderable_objects;
 			std::vector<Light*> lights;
 			std::vector<Material*> lit_materials;
-			RenderableObject* player;
-			RenderableObject* scary_duck;
-			RenderableObject* light_renderable;
-			RenderableObject* earth;
-			RenderableObject* backpack;
-			std::vector<RenderableObject*> little_ducks;
 	};
 }
 

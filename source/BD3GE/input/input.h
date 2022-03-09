@@ -7,13 +7,14 @@
 #include <utility>
 
 #include "../input/gamepad.h"
+#include "../system/api.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
 #include "../system/window.h"
 #include "../utility/message.h"
 
 namespace BD3GE {
-	class Input {
+	extern "C" class BD3GE_API Input {
 		public:
 
 									Input();
