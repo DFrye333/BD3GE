@@ -29,6 +29,7 @@ namespace BD3GE {
 
 		this->window = window;
 		this->window->set_mouse_cursor_visibility(false);
+		this->renderer = new Renderer();
 		this->al = new AL();
 		this->input = new Input(std::vector<Gamepad*>{ new XInputGamepad(0), new XInputGamepad(1) });
 
@@ -57,7 +58,7 @@ namespace BD3GE {
 
 	void Game::load_scene(Scene* scene) {
 		this->scene = scene;
-		this->renderer = new Renderer(scene);
+		this->renderer->load_scene(scene);
 	}
 
 	void Game::run() {

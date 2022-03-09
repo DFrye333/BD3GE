@@ -1,12 +1,9 @@
 #include "renderer.h"
 
 namespace BD3GE {
-	Renderer::Renderer() : Renderer(nullptr) {}
-
-	Renderer::Renderer(Scene* scene) : scene(scene) {
+	Renderer::Renderer() : scene(nullptr) {
 		g_log->write(Log::TYPE::INFO, "Renderer initializing...");
 		gl.print_info();
-		load_scene(scene);
 	}
 
 	void Renderer::load_scene(Scene* scene) {

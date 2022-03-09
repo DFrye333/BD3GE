@@ -17,7 +17,6 @@ namespace BD3GE {
 	class Renderer {
 		public:
 			Renderer();
-			Renderer(Scene* scene);
 			void load_scene(Scene* scene);
 			void render();
 			void initialize_texture(size_t texture_id);
