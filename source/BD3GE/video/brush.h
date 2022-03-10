@@ -20,17 +20,17 @@ namespace BD3GE {
 
 	extern "C" class BD3GE_API RectangleBrush : public Brush {
 		public:
-			RectangleBrush(Material* material, Vector3 position, float width, float height);
+			RectangleBrush(Material* material, float width, float height);
 	};
 
 	extern "C" class BD3GE_API CircularBrush : public Brush {
 		public:
-			CircularBrush(Material* material, Vector3 position, float radius, int resolution);
+			CircularBrush(Material* material, float radius, int resolution);
 	};
 
 	extern "C" class BD3GE_API BoxBrush : public Brush {
 		public:
-			BoxBrush(Material* material, Vector3 position, Vector3 dimensions);
+			BoxBrush(Material* material, Vector3 dimensions);
 	};
 }
 

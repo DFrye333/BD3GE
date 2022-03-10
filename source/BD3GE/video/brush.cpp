@@ -5,7 +5,7 @@ namespace BD3GE {
 
 	Brush::Brush(Material* material) : RenderableUnit(material) {}
 
-	RectangleBrush::RectangleBrush(Material* material, Vector3 position, float width, float height) : Brush(material) {
+	RectangleBrush::RectangleBrush(Material* material, float width, float height) : Brush(material) {
 		geometry.num_vertices = 4;
 		geometry.vbo = new Vertex[geometry.num_vertices];
 
@@ -47,7 +47,7 @@ namespace BD3GE {
 		geometry.ibo[5] = (GLuint)3;
 	}
 
-	CircularBrush::CircularBrush(Material* material, Vector3 position, float radius, int resolution) : Brush(material) {
+	CircularBrush::CircularBrush(Material* material, float radius, int resolution) : Brush(material) {
 		geometry.num_vertices = (4 * resolution) + 1;
 		geometry.vbo = new Vertex[geometry.num_vertices];
 
@@ -79,7 +79,7 @@ namespace BD3GE {
 		}
 	}
 
-	BoxBrush::BoxBrush(Material* material, Vector3 position, Vector3 dimensions) : Brush(material) {
+	BoxBrush::BoxBrush(Material* material, Vector3 dimensions) : Brush(material) {
 		geometry.num_vertices = 8;
 		geometry.vbo = new Vertex[geometry.num_vertices];
 
