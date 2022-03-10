@@ -19,6 +19,8 @@ Let's build a game from the ground up. Rendering, physics, audio, input - all of
 * Convert static libs to dynamic where as appropriate.
 * Replace std::map usages with a custom hash table?
 * Start thinking about DOD...
+* Add an orthogonal camera mode.
+* Create a wrapper for the brushes.
 
 **Linux Installation Dependencies:**
 
