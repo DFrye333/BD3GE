@@ -1,7 +1,7 @@
 #include "scene.h"
 
 namespace BD3GE {
-	Scene::Scene() {}
+	Scene::Scene() : camera(nullptr) {}
 
 	Scene::~Scene() {
 		delete camera;

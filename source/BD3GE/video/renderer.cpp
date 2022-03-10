@@ -74,7 +74,7 @@ namespace BD3GE {
 	}
 
 	void Renderer::render() {
-		if (!scene) { return; }
+		if (!scene || !scene->camera) { return; }
 
 		gl.clear_buffers();
 
@@ -177,7 +177,7 @@ namespace BD3GE {
 	void Renderer::reshape_viewport(unsigned int width, unsigned int height) {
 		gl.reshape_viewport(width, height);
 
-		if (scene) {
+		if (scene && scene->camera) {
 			scene->camera->set_viewport(gl.get_viewport_width(), gl.get_viewport_height());
 		}
 	}
