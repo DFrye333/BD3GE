@@ -94,7 +94,8 @@ namespace BD3GE {
 
 				// Check mouse drag timer.
 				if (mouse_move_timer->is_due()) {
-					// Process a logic tick.
+					// Process a mouse move tick.
+					// TODO: Figure out a better solution for these rigid calls - they should probably be callbacks from the game?
 					mouse_move(input);
 				}
 			}
