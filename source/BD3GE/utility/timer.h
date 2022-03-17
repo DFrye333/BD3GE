@@ -8,8 +8,11 @@ namespace BD3GE {
 		public:
 
 			virtual ~Timer() {}
-			virtual void start(void) = 0;
-			virtual bool is_due(void) = 0;
+			virtual void start() = 0;
+			virtual void pause() = 0;
+			virtual void unpause() = 0;
+			virtual void toggle_pause() = 0;
+			virtual bool is_due() = 0;
 
 		private:
 

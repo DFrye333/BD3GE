@@ -422,6 +422,18 @@ namespace BD3GE {
 		is_running = true;
 	}
 
+	void WinAPITimer::pause() {
+		is_running = false;
+	}
+
+	void WinAPITimer::unpause() {
+		is_running = true;
+	}
+
+	void WinAPITimer::toggle_pause() {
+		is_running = !is_running;
+	}
+
 	bool WinAPITimer::is_due() {
 		bool is_due = false;
 
