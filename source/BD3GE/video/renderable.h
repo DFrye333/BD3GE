@@ -32,7 +32,7 @@ namespace BD3GE {
 			const RenderableUnit& operator=(const RenderableUnit& other);
 
 			RenderableGeometry geometry;
-			Material* material = nullptr;
+			Material* material;
 			TransformNode* transform_node;
 	};
 
