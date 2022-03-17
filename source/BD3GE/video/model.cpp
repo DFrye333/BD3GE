@@ -37,15 +37,14 @@ namespace BD3GE {
 	void Model::process_tree(const aiScene* scene, aiNode* node, TransformNode* parent_transform_node) {
 		size_t shader_id = ShaderManager::get_shader_id(ShaderManifest("light.vert", "light.frag"));
 
-		// Ensures that there's only one transformation matrix per level of the node hierarchy (excluding the identity matrix of the root node).
-		aiMatrix4x4t parent_transform_matrix = node->mTransformation;
+		aiMatrix4x4t transform_matrix = node->mTransformation;
 		TransformNode* transform_node = new TransformNode;
 		transform_node->parent = parent_transform_node;
 		transform_node->transform = Transform(Matrix4(
-			parent_transform_matrix.a1, parent_transform_matrix.a2, parent_transform_matrix.a3, parent_transform_matrix.a4,
-			parent_transform_matrix.b1, parent_transform_matrix.b2, parent_transform_matrix.b3, parent_transform_matrix.b4,
-			parent_transform_matrix.c1, parent_transform_matrix.c2, parent_transform_matrix.c3, parent_transform_matrix.c4,
-			parent_transform_matrix.d1, parent_transform_matrix.d2, parent_transform_matrix.d3, parent_transform_matrix.d4
+			transform_matrix.a1, transform_matrix.a2, transform_matrix.a3, transform_matrix.a4,
+			transform_matrix.b1, transform_matrix.b2, transform_matrix.b3, transform_matrix.b4,
+			transform_matrix.c1, transform_matrix.c2, transform_matrix.c3, transform_matrix.c4,
+			transform_matrix.d1, transform_matrix.d2, transform_matrix.d3, transform_matrix.d4
 		));
 		for (unsigned short i = 0; i < node->mNumMeshes; ++i) {
 			Mesh* current_mesh = new Mesh(
