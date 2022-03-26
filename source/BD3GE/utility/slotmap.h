@@ -48,11 +48,10 @@ namespace BD3GE {
 				}
 
 				// Grabs the data key index of the on-deck free storage space.
-				unsigned short data_key_index = free_head;
-				SlotmapKey& data_key = data_keys[data_key_index];
+				SlotmapKey& data_key = data_keys[free_head];
 
 				// Determines where the next free storage space will be after the current insertion, either advancing through the data key indices sequentially or by following the index trail.
-				unsigned short free_next = (data_key.version > 0 || (data_key_index + 1) >= size) ? data_key.index : data_key_index + 1;
+				unsigned short free_next = (data_key.version > 0 || (free_head + 1) >= size) ? data_key.index : free_head + 1;
 
 				// Sets up the return user key.
 				SlotmapKey map_key;
@@ -81,11 +80,11 @@ namespace BD3GE {
 			void remove(SlotmapKey map_key) {
 				// Grabs the proper data key for the given user map key.
 				SlotmapKey& data_key = data_keys[map_key.index];
-				// If the user's map key version does not match that of the indicated index, the key is expired or otherwise invalid.
-				if (map_key.version != data_key.version) { return; }
+				// If the user's map key version does not match that of the indicated index, or the provided user map key's version is zero, the key is expired or otherwise invalid.
+				if (map_key.version != data_key.version || map_key.version == 0) { return; }
 
 				// Increments the current data key's version in order to invalidate previous, existing generations of this key, indicating that they are no longer to be accepted as valid from the user.
-				map_key.version = ++data_key.version;
+				++data_key.version;
 
 				// Performs a swap-and-pop on the outgoing datum, along with its corresponding erase entry. This allows data to be efficiently compacted.
 				std::swap(data[data_key.index], data[data.size() - 1]);
@@ -111,6 +110,10 @@ namespace BD3GE {
 				// Returns the datum indicated by the provided user key.
 				return &(data[data_key.index]);
 			};
+
+			T* operator[](SlotmapKey map_key) {
+				return get(map_key);
+			}
 
 			void print() {
 				std::cout << "Slotmap:" << "\n";
@@ -165,7 +168,9 @@ namespace BD3GE {
 
 			void resize(unsigned short size) {
 				// If an invalid size is provided, do not accept it.
-				if (size <= 0) { return; }
+				if (size <= 0) {
+					size = 100;
+				}
 
 				// Updates the sizes of the underlying data structures and pulls the free tail to the new end of the storage.
 				this->size = size;
