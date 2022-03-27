@@ -31,12 +31,12 @@ namespace BD3GE {
 		this->geometry.num_indices = other.geometry.num_indices;
 
 		if (other.geometry.vbo) {
-			delete this->geometry.vbo;
+			delete[] this->geometry.vbo;
 			this->geometry.vbo = new Vertex[sizeof(other.geometry.vbo)];
 			*(this->geometry.vbo) = *(other.geometry.vbo);
 		}
 		if (other.geometry.ibo) {
-			delete this->geometry.ibo;
+			delete[] this->geometry.ibo;
 			this->geometry.ibo = new unsigned int[sizeof(other.geometry.ibo)];
 			*(this->geometry.ibo) = *(other.geometry.ibo);
 		}

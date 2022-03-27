@@ -16,8 +16,9 @@ namespace BD3GE {
 		renderable = nullptr;
 	}
 
-	RenderableObject& RenderableObject::operator=(RenderableObject& other) {
+	const RenderableObject& RenderableObject::operator=(const RenderableObject& other) {
 		this->world_transform = other.world_transform;
+		this->renderable_id = other.renderable_id;
 		if (other.renderable) {
 			delete this->renderable;
 			this->renderable = new Renderable(*(other.renderable));

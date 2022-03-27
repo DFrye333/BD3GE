@@ -14,7 +14,7 @@ namespace BD3GE {
 			RenderableObject(Vector3 position, size_t renderable_id);
 			RenderableObject(RenderableObject& other);
 			~RenderableObject();
-			RenderableObject& operator=(RenderableObject& other);
+			const RenderableObject& operator=(const RenderableObject& other);
 
 			Renderable* renderable;
 			size_t renderable_id;
