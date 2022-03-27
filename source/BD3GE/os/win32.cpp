@@ -402,31 +402,31 @@ namespace BD3GE {
 		}
 	}
 
-	WinAPITimer::WinAPITimer(std::string name, uint64_t timer_frequency_Hz) {
-		this->name = name;
-		this->timer_frequency_Hz = timer_frequency_Hz;
-	}
+	WinAPITimer::WinAPITimer(std::string name) : WinAPITimer(name, 0) {}
 
-	WinAPITimer::~WinAPITimer() {}
+	WinAPITimer::WinAPITimer(std::string name, uint64_t timer_frequency_Hz) : Timer(name, timer_frequency_Hz) {}
 
 	void WinAPITimer::start() {
 		LARGE_INTEGER frequency;
 		QueryPerformanceFrequency(&frequency);
 		system_frequency_Hz = frequency.QuadPart;
 
-		LARGE_INTEGER current_count;
-		QueryPerformanceCounter(&current_count);
-
-		start_stamp = (current_count.QuadPart * 1000) / system_frequency_Hz;
+		start_stamp = get_current_timestamp();
+		lap_stamp = start_stamp;
 
 		is_running = true;
 	}
 
 	void WinAPITimer::pause() {
+		fresh_pause_duration = get_current_timestamp();
+
 		is_running = false;
 	}
 
 	void WinAPITimer::unpause() {
+		fresh_pause_duration = get_current_timestamp() - fresh_pause_duration;
+		total_pause_duration += fresh_pause_duration;
+
 		is_running = true;
 	}
 
@@ -434,20 +434,33 @@ namespace BD3GE {
 		is_running = !is_running;
 	}
 
+	uint64_t WinAPITimer::elapsed() {
+		return get_current_timestamp() - total_pause_duration - start_stamp;
+	}
+
 	bool WinAPITimer::is_due() {
 		bool is_due = false;
 
-		if (is_running) {
-			LARGE_INTEGER current_count;
-			QueryPerformanceCounter(&current_count);
-			uint64_t current_stamp = (current_count.QuadPart * 1000) / system_frequency_Hz;
+		if (is_running && timer_frequency_Hz > 0) {
+			uint64_t current_stamp = get_current_timestamp();
+			uint64_t elapsed_since_last_check = current_stamp - lap_stamp;
+			if (fresh_pause_duration > 0) {
+				elapsed_since_last_check -= fresh_pause_duration;
+				fresh_pause_duration = 0;
+			}
 
-			if ((current_stamp - start_stamp) >= ((1.0f / timer_frequency_Hz) * 1000)) {
-				start_stamp = current_stamp;
+			if (elapsed_since_last_check >= ((1.0f / timer_frequency_Hz) * 1000)) {
+				lap_stamp = current_stamp;
 				is_due = true;
 			}
 		}
 
 		return is_due;
+	}
+
+	uint64_t WinAPITimer::get_current_timestamp() {
+		LARGE_INTEGER current_timestamp;
+		QueryPerformanceCounter(&current_timestamp);
+		return (current_timestamp.QuadPart * 1000) / system_frequency_Hz;
 	}
 }

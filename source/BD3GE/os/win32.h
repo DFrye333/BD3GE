@@ -65,21 +65,18 @@ namespace BD3GE {
 	class WinAPITimer : public Timer {
 		public:
 
+			WinAPITimer(std::string name);
 			WinAPITimer(std::string name, uint64_t timer_frequency_Hz);
-			~WinAPITimer();
 			void start() override;
 			void pause() override;
 			void unpause() override;
 			void toggle_pause() override;
+			uint64_t elapsed() override;
 			bool is_due() override;
 
 		private:
 
-			std::string			name;
-			bool				is_running;
-			uint64_t			timer_frequency_Hz;
-			uint64_t			system_frequency_Hz;
-			uint64_t			start_stamp;
+			uint64_t get_current_timestamp();
 	};
 }
 
