@@ -11,10 +11,11 @@ namespace BD3GE {
 	// The key consists of two elements:
 	//	* Index: A value used by the Slotmap internally to address the desired datum.
 	//	* Version: A value used to control the datum's lifetime, preventing duplicate deletion or access to an element that has recycled the desired element's storage.
-	class SlotmapKey {
+	class BD3GE_API SlotmapKey {
 		public:
 			SlotmapKey() {}
 			SlotmapKey(unsigned short index, unsigned short version) : index(index), version(version) {}
+			bool is_initialized() { return version > 0; }
 			friend std::ostream& operator<<(std::ostream& out, const SlotmapKey& key) {
 				return out << "(Index: " << key.index << ", Version: " << key.version << ")";
 			}
@@ -51,7 +52,7 @@ namespace BD3GE {
 				SlotmapKey& data_key = data_keys[free_head];
 
 				// Determines where the next free storage space will be after the current insertion, either advancing through the data key indices sequentially or by following the index trail.
-				unsigned short free_next = (data_key.version > 0 || (free_head + 1) >= size) ? data_key.index : free_head + 1;
+				unsigned short free_next = (data_key.is_initialized() || (free_head + 1) >= size) ? data_key.index : free_head + 1;
 
 				// Sets up the return user key.
 				SlotmapKey map_key;
