@@ -106,7 +106,7 @@ namespace BD3GE {
 				// Grabs the proper data key for the given user map key.
 				SlotmapKey& data_key = data_keys[map_key.index];
 				// If the user's map key version does not match that of the indicated index, the key is expired or otherwise invalid.
-				if (map_key.version != data_key.version) { return nullptr; }
+				if (map_key.version != data_key.version || map_key.version == 0) { return nullptr; }
 
 				// Returns the datum indicated by the provided user key.
 				return &(data[data_key.index]);
