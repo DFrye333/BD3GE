@@ -1,7 +1,6 @@
 #ifndef BD3GE_RENDERER_H
 #define BD3GE_RENDERER_H
 
-#include <map>
 #include <set>
 
 #include <glew/GL/glew.h>
@@ -29,7 +28,6 @@ namespace BD3GE {
 
 			Scene* scene;
 			GL gl;
-			std::map<const size_t, unsigned int> texture_id_to_handle;
 			std::set<size_t> shader_ids;
 	};
 }

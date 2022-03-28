@@ -27,55 +27,16 @@ namespace BD3GE {
 				++renderable_units_count;
 			}
 		}
-		GLuint* vao_handles = new GLuint[renderable_units_count];
-		GLuint* vbo_handles = new GLuint[renderable_units_count];
-		GLuint* ibo_handles = new GLuint[renderable_units_count];
+		
+		gl.delete_buffers();
+		gl.create_buffers(renderable_units_count);
 
-		// Generates VAOs.
-		glGenVertexArrays(renderable_units_count, vao_handles);
-
-		// Generates VBOs.
-		glGenBuffers(renderable_units_count, vbo_handles);
-		glGenBuffers(renderable_units_count, ibo_handles);
-
-		unsigned int current_renderable_unit_index = 0;
 		for (SlotmapKey scene_node_key : scene->renderable_objects) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
 			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
 
-			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
-				renderable_unit->geometry.vao_handle = vao_handles[current_renderable_unit_index];
-
-				// Setup for VAO.
-				glBindVertexArray(renderable_unit->geometry.vao_handle);
-
-				glBindBuffer(GL_ARRAY_BUFFER, vbo_handles[current_renderable_unit_index]);
-				glBufferData(GL_ARRAY_BUFFER, renderable_unit->geometry.num_vertices * sizeof(Vertex), renderable_unit->geometry.vbo, GL_DYNAMIC_DRAW);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_handles[current_renderable_unit_index]);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderable_unit->geometry.num_indices * sizeof(GLuint), renderable_unit->geometry.ibo, GL_DYNAMIC_DRAW);
-
-				// Positions
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-				glEnableVertexAttribArray(0);
-
-				// Normals
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
-				glEnableVertexAttribArray(1);
-
-				// UVs
-				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, uv)));
-				glEnableVertexAttribArray(2);
-
-				Material* material = renderable_unit->material;
-				if (material->type == Material::TYPE::MAPPED) {
-					MappedMaterial* mapped_material = (MappedMaterial*)material;
-					initialize_texture(mapped_material->map_diffuse_id);
-					initialize_texture(mapped_material->map_specular_id);
-				}
-
-				++current_renderable_unit_index;
-			}
+			gl.setup_vaos(renderable->renderable_units);
 		}
 
 		cache_resources();
@@ -101,6 +62,7 @@ namespace BD3GE {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
 
+			// Stacks transforms up the scene hierarchy.
 			Transform scene_object_transform = *scene_object.get_world_transform();
 			SceneNode* parent_node = scene->scene_nodes.get(scene_node->parent);
 			Transform* parent_node_transform = parent_node != nullptr ? parent_node->object.get_world_transform() : nullptr;
@@ -112,7 +74,7 @@ namespace BD3GE {
 
 			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
 			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
-				// Stacks transforms hierarchically, from the current renderable unit all the way up to the world.
+				// Stacks transforms up the renderable hierarchy.
 				Transform world_transform_stack = Transform();
 				TransformNode* current_transform_node = renderable_unit->transform_node;
 				while (current_transform_node) {
@@ -159,39 +121,11 @@ namespace BD3GE {
 	}
 
 	void Renderer::initialize_texture(size_t texture_id) {
-		unsigned int texture_handle;
-		if (!texture_id_to_handle.contains(texture_id)) {
-			gl.create_texture_handle(&texture_handle);
-			texture_id_to_handle[texture_id] = texture_handle;
-		}
-		texture_handle = texture_id_to_handle[texture_id];
-
-		glBindTexture(GL_TEXTURE_2D, texture_handle);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		Texture* texture = TextureManager::get_texture(texture_id);
-		if (!texture) { return; }
-
-		GLint format = 0;
-		switch (texture->quantity_channels) {
-			case 1: format = GL_RED; break;
-			case 3: format = GL_RGB; break;
-			case 4: format = GL_RGBA; break;
-		}
-
-		glTexImage2D(GL_TEXTURE_2D, 0, format, texture->width, texture->height, 0, format, GL_UNSIGNED_BYTE, texture->data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		gl.initialize_texture(texture_id);
 	}
 
 	void Renderer::enable_texture(size_t texture_id, unsigned int index) {
-		unsigned int texture_handle = texture_id_to_handle[texture_id];
-		// TODO: Make this dynamic.
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, texture_handle);
+		gl.enable_texture(texture_id, index);
 	}
 
 	void Renderer::reshape_viewport(unsigned int width, unsigned int height) {

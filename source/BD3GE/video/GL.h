@@ -2,21 +2,30 @@
 #define BD3GE_GL_H
 
 #include <iostream>
+#include <map>
 
 #include <glew/GL/glew.h>
 
+#include "../management/texture_manager.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
 #include "../utility/color.h"
 #include "../utility/log.h"
+#include "../video/renderable.h"
 
 namespace BD3GE {
 	class GL {
 		public:
 
 							GL();
-
+							~GL();
+			void			create_buffers(unsigned int buffers_quantity);
+			void			delete_buffers();
+			void			setup_vaos(std::vector<RenderableUnit*> renderable_units);
+			void			setup_vao(RenderableUnit* renderable_unit);
 			void			create_texture_handle(unsigned int* texture_handle);
+			void			initialize_texture(size_t texture_id);
+			void			enable_texture(size_t texture_id, unsigned int index);
 			void			clear_buffers();
 			void			reshape_viewport(unsigned int x, unsigned int y);
 			const void		print_info();
@@ -34,6 +43,11 @@ namespace BD3GE {
 			unsigned int	viewport_width;
 			unsigned int	viewport_height;
 			bool			is_wireframe_mode_enabled;
+			std::map<const size_t, unsigned int> texture_id_to_handle;
+			GLuint* vao_handles;
+			GLuint* vbo_handles;
+			GLuint* ibo_handles;
+			unsigned int renderables_quantity;
 	};
 }
 

@@ -1,7 +1,7 @@
 #include "GL.h"
 
 namespace BD3GE {
-	GL::GL() : is_wireframe_mode_enabled(false) {
+	GL::GL() : vao_handles(nullptr), vbo_handles(nullptr), ibo_handles(nullptr), renderables_quantity(0), is_wireframe_mode_enabled(false) {
 		// Set the clear color of the screen.
 		Color dark(16, 16, 16);
 		Color gray(64, 64, 64);
@@ -30,8 +30,110 @@ namespace BD3GE {
 		glFlush();
 	}
 
+	GL::~GL() {
+		delete_buffers();
+	}
+
+	void GL::create_buffers(unsigned int buffers_quantity) {
+		vao_handles = new GLuint[buffers_quantity];
+		vbo_handles = new GLuint[buffers_quantity];
+		ibo_handles = new GLuint[buffers_quantity];
+		
+		// Generates VAOs.
+		glGenVertexArrays(buffers_quantity, vao_handles);
+
+		// Generates VBOs.
+		glGenBuffers(buffers_quantity, vbo_handles);
+		glGenBuffers(buffers_quantity, ibo_handles);
+	}
+
+	void GL::delete_buffers() {
+		delete[] vao_handles;
+		vao_handles = nullptr;
+
+		delete[] vbo_handles;
+		vbo_handles = nullptr;
+
+		delete[] ibo_handles;
+		ibo_handles = nullptr;
+	}
+
+	void GL::setup_vaos(std::vector<RenderableUnit*> renderable_units) {
+		for (RenderableUnit* renderable_unit : renderable_units) {
+			setup_vao(renderable_unit);
+		}
+	}
+
+	void GL::setup_vao(RenderableUnit* renderable_unit) {
+		renderable_unit->geometry.vao_handle = vao_handles[renderables_quantity];
+
+		glBindVertexArray(renderable_unit->geometry.vao_handle);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_handles[renderables_quantity]);
+		glBufferData(GL_ARRAY_BUFFER, renderable_unit->geometry.num_vertices * sizeof(Vertex), renderable_unit->geometry.vbo, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_handles[renderables_quantity]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderable_unit->geometry.num_indices * sizeof(GLuint), renderable_unit->geometry.ibo, GL_DYNAMIC_DRAW);
+
+		// Positions
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+		glEnableVertexAttribArray(0);
+
+		// Normals
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
+		glEnableVertexAttribArray(1);
+
+		// UVs
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, uv)));
+		glEnableVertexAttribArray(2);
+
+		Material* material = renderable_unit->material;
+		if (material->type == Material::TYPE::MAPPED) {
+			MappedMaterial* mapped_material = (MappedMaterial*)material;
+			initialize_texture(mapped_material->map_diffuse_id);
+			initialize_texture(mapped_material->map_specular_id);
+		}
+
+		++renderables_quantity;
+	}
+
 	void GL::create_texture_handle(unsigned int* texture_handle) {
 		glGenTextures(1, texture_handle);
+	}
+
+	void GL::initialize_texture(size_t texture_id) {
+		unsigned int texture_handle;
+		if (!texture_id_to_handle.contains(texture_id)) {
+			create_texture_handle(&texture_handle);
+			texture_id_to_handle[texture_id] = texture_handle;
+		}
+		texture_handle = texture_id_to_handle[texture_id];
+
+		glBindTexture(GL_TEXTURE_2D, texture_handle);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		Texture* texture = TextureManager::get_texture(texture_id);
+		if (!texture) { return; }
+
+		GLint format = 0;
+		switch (texture->quantity_channels) {
+			case 1: format = GL_RED; break;
+			case 3: format = GL_RGB; break;
+			case 4: format = GL_RGBA; break;
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, format, texture->width, texture->height, 0, format, GL_UNSIGNED_BYTE, texture->data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	void GL::enable_texture(size_t texture_id, unsigned int index) {
+		unsigned int texture_handle = texture_id_to_handle[texture_id];
+		// TODO: Make this dynamic.
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, texture_handle);
 	}
 
 	void GL::clear_buffers() {
