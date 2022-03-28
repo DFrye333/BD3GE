@@ -7,7 +7,9 @@ namespace BD3GE {
 	const size_t ModelManager::load_model(std::string relative_file_path) {
 		size_t relative_file_path_hash = get_model_hash(relative_file_path);
 		if (!ModelManager::models.contains(relative_file_path_hash)) {
-			ModelManager::models[relative_file_path_hash] = new Model(DEFAULT_MODEL_DIRECTORY + relative_file_path);
+			Model* new_model = new Model(DEFAULT_MODEL_DIRECTORY + relative_file_path);
+			new_model->renderable_id = relative_file_path_hash;
+			ModelManager::models[relative_file_path_hash] = new_model;
 		}
 
 		return relative_file_path_hash;

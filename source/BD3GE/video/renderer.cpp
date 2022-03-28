@@ -12,12 +12,16 @@ namespace BD3GE {
 		this->scene = scene;
 
 		unsigned int renderable_units_count = 0;
-		for (RenderableObject* renderable_object : scene->renderable_objects) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
+			Object& scene_object = scene_node->object;
+			Renderable* renderable = scene_object.get_renderable();
+
 			// Lazy-loads renderables.
-			if (!renderable_object->renderable) {
-				renderable_object->renderable = ModelManager::get_model(renderable_object->renderable_id);
+			if (renderable->renderable_units.empty()) {
+				renderable = ModelManager::get_model(renderable->renderable_id);
+				scene_object.set_renderable(*renderable);
 			}
-			Renderable* renderable = renderable_object->renderable;
 
 			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				++renderable_units_count;
@@ -35,8 +39,12 @@ namespace BD3GE {
 		glGenBuffers(renderable_units_count, ibo_handles);
 
 		unsigned int current_renderable_unit_index = 0;
-		for (RenderableObject* renderable_object : scene->renderable_objects) {
-			for (RenderableUnit* renderable_unit : renderable_object->renderable->renderable_units) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
+			Object& scene_object = scene_node->object;
+			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
+
+			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				renderable_unit->geometry.vao_handle = vao_handles[current_renderable_unit_index];
 
 				// Setup for VAO.
@@ -78,7 +86,8 @@ namespace BD3GE {
 
 		gl.clear_buffers();
 
-		Vector3 camera_position = scene->camera->get_position();
+		Transform* camera_transform = scene->camera->get_world_transform();
+		Vector3 camera_position = camera_transform->get_position();
 		for (Light* light : scene->lights) {
 			for (size_t shader_id : shader_ids) {
 				Shader* shader = ShaderManager::get_shader(shader_id);
@@ -88,12 +97,21 @@ namespace BD3GE {
 		}
 
 		Transform view_projection_transform = scene->camera->get_view_projection_transform();
-		for (RenderableObject* renderable_object : scene->renderable_objects) {
-			for (RenderableUnit* renderable_unit : renderable_object->renderable->renderable_units) {
-				Shader* shader = ShaderManager::get_shader(renderable_unit->material->shader_id);
+		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
+			Object& scene_object = scene_node->object;
 
-				shader->enable();
+			Transform scene_object_transform = *scene_object.get_world_transform();
+			SceneNode* parent_node = scene->scene_nodes.get(scene_node->parent);
+			Transform* parent_node_transform = parent_node != nullptr ? parent_node->object.get_world_transform() : nullptr;
+			while (parent_node_transform != nullptr) {
+				scene_object_transform = *parent_node_transform * scene_object_transform;
+				parent_node = scene->scene_nodes.get(parent_node->parent);
+				parent_node_transform = parent_node != nullptr ? parent_node->object.get_world_transform() : nullptr;
+			}
 
+			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
+			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				// Stacks transforms hierarchically, from the current renderable unit all the way up to the world.
 				Transform world_transform_stack = Transform();
 				TransformNode* current_transform_node = renderable_unit->transform_node;
@@ -101,7 +119,10 @@ namespace BD3GE {
 					world_transform_stack = current_transform_node->transform * world_transform_stack;
 					current_transform_node = current_transform_node->parent;
 				}
-				world_transform_stack = renderable_object->get_transform() * world_transform_stack;
+				world_transform_stack = scene_object_transform * world_transform_stack;
+
+				Shader* shader = ShaderManager::get_shader(renderable_unit->material->shader_id);
+				shader->enable();
 
 				shader->set_uniform("world_transform", world_transform_stack.get_matrix());
 				shader->set_uniform("inverse_world_transform", world_transform_stack.get_matrix().inverse());
@@ -131,7 +152,6 @@ namespace BD3GE {
 				// Draw!
 				glBindVertexArray(renderable_unit->geometry.vao_handle);
 				glDrawElements(GL_TRIANGLES, renderable_unit->geometry.num_indices, GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
 
 				shader->disable();
 			}
@@ -189,8 +209,12 @@ namespace BD3GE {
 	void Renderer::cache_resources() {
 		shader_ids.clear();
 
-		for (RenderableObject* renderable_object : scene->renderable_objects) {
-			for (RenderableUnit* renderable_unit : renderable_object->renderable->renderable_units) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
+			Object& scene_object = scene_node->object;
+			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
+
+			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				shader_ids.insert(renderable_unit->material->shader_id);
 			}
 		}

@@ -17,24 +17,27 @@ namespace BD3GE {
 		this->matrix = other.get_matrix();
 	}
 
+	Transform::Transform(const Vector3& position) : Transform() {
+		set_position(position);
+	}
+
+	Transform::Transform(const Vector3& position, const Vector3& orientation) : Transform() {
+		set_position(position);
+		set_orientation(orientation);
+	}
+
+	Transform::Transform(const Vector3& position, const Vector3& orientation, const Vector3& scale) : Transform() {
+		set_position(position);
+		set_orientation(orientation);
+		set_scale(scale);
+	}
+
 	Transform::~Transform() {}
 
 	void Transform::set_position(Vector3 position) {
 		this->matrix(3, 0, position.v.g.x);
 		this->matrix(3, 1, position.v.g.y);
 		this->matrix(3, 2, position.v.g.z);
-	}
-
-	void Transform::set_scale_uniform(float scaler) {
-		this->matrix(0, 0, scaler);
-		this->matrix(1, 1, scaler);
-		this->matrix(2, 2, scaler);
-	}
-
-	void Transform::set_scale(Vector3 scaler) {
-		this->matrix(0, 0, scaler.v.g.x);
-		this->matrix(1, 1, scaler.v.g.y);
-		this->matrix(2, 2, scaler.v.g.z);
 	}
 
 	void Transform::set_orientation(Vector3 orientation) {
@@ -62,6 +65,18 @@ namespace BD3GE {
 		this->matrix(0, 1, -sin(angle));
 		this->matrix(1, 0, sin(angle));
 		this->matrix(1, 1, cos(angle));
+	}
+
+	void Transform::set_scale_uniform(float scaler) {
+		this->matrix(0, 0, scaler);
+		this->matrix(1, 1, scaler);
+		this->matrix(2, 2, scaler);
+	}
+
+	void Transform::set_scale(Vector3 scaler) {
+		this->matrix(0, 0, scaler.v.g.x);
+		this->matrix(1, 1, scaler.v.g.y);
+		this->matrix(2, 2, scaler.v.g.z);
 	}
 
 	void Transform::translate(Vector3 translation) {

@@ -6,7 +6,6 @@
 #include <glew/GL/glew.h>
 
 #include "../system/api.h"
-#include "../utility/object.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"
 #include "../video/material.h"
@@ -38,6 +37,7 @@ namespace BD3GE {
 
 	class BD3GE_API Renderable {
 		public:
+			size_t renderable_id;
 			std::vector<RenderableUnit*> renderable_units;
 	};
 }

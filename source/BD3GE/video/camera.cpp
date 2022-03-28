@@ -1,12 +1,11 @@
 #include "camera.h"
 
 namespace BD3GE {
-	Camera::Camera(Vector3 position) : Object(position) {
-		viewport_width = WINDOW_WIDTH;
-		viewport_height = WINDOW_HEIGHT;
+	Camera::Camera(Transform world_transform) : viewport_width(WINDOW_WIDTH), viewport_height(WINDOW_HEIGHT) {
+		this->world_transform = ComponentManager::add_transform(world_transform);
 	}
 
-	Camera::Camera() : Camera(Vector3(0, 0, 0)) {}
+	Camera::Camera() : Camera(Transform()) {}
 
 	Camera::~Camera() {}
 
@@ -29,7 +28,7 @@ namespace BD3GE {
 	}
 
 	const Transform Camera::get_view_transform() const {
-		return this->world_transform.inverse();
+		return ComponentManager::get_transform(this->world_transform)->inverse();
 	}
 
 	const Transform Camera::get_view_projection_transform() {

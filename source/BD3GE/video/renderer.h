@@ -6,6 +6,7 @@
 
 #include <glew/GL/glew.h>
 
+#include "../management/component_manager.h"
 #include "../management/model_manager.h"
 #include "../management/shader_manager.h"
 #include "../management/texture_manager.h"

@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "../management/component_manager.h"
 #include "../system/api.h"
 #include "../system/constants.h"
 #include "../utility/matrix.h"
@@ -14,7 +15,7 @@ namespace BD3GE {
 	extern "C" class BD3GE_API Camera : public Object {
 		public:
 
-								Camera(Vector3 position);
+								Camera(Transform world_transform);
 								Camera();
 								~Camera();
 			const Transform		get_projection_transform(void);
