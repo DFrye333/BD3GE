@@ -82,9 +82,9 @@ namespace BD3GE {
 	}
 
 	void Renderer::render() {
-		if (!scene || !scene->camera) { return; }
-
 		gl.clear_buffers();
+
+		if (!scene || !scene->camera) { return; }
 
 		Transform* camera_transform = scene->camera->get_world_transform();
 		Vector3 camera_position = camera_transform->get_position();
