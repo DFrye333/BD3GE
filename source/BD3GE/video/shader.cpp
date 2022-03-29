@@ -64,7 +64,9 @@ namespace BD3GE {
 
 	Shader::Shader(const ShaderObject* vertex_shader_object, const ShaderObject* fragment_shader_object) : Shader(std::vector<const ShaderObject*>{ vertex_shader_object, fragment_shader_object }) {}
 
-	Shader::~Shader() {}
+	Shader::~Shader() {
+		glDeleteProgram(program_ID);
+	}
 
 	void Shader::compile_shader(std::vector<const ShaderObject*> shader_objects) {
 		this->program_ID = glCreateProgram();
