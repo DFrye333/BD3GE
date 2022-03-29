@@ -28,7 +28,6 @@ namespace BD3GE {
 			}
 		}
 		
-		gl.delete_buffers();
 		gl.create_buffers(renderable_units_count);
 
 		for (SlotmapKey scene_node_key : scene->renderable_objects) {

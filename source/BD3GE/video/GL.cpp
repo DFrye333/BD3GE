@@ -35,6 +35,11 @@ namespace BD3GE {
 	}
 
 	void GL::create_buffers(unsigned int buffers_quantity) {
+		delete_buffers();
+
+		this->buffers_quantity = buffers_quantity;
+		this->renderables_quantity = 0;
+
 		vao_handles = new GLuint[buffers_quantity];
 		vbo_handles = new GLuint[buffers_quantity];
 		ibo_handles = new GLuint[buffers_quantity];
@@ -48,14 +53,19 @@ namespace BD3GE {
 	}
 
 	void GL::delete_buffers() {
-		delete[] vao_handles;
-		vao_handles = nullptr;
+		if (buffers_quantity > 0) {
+			glDeleteVertexArrays(buffers_quantity, vao_handles);
+			delete[] vao_handles;
+			vao_handles = nullptr;
 
-		delete[] vbo_handles;
-		vbo_handles = nullptr;
+			glDeleteBuffers(buffers_quantity, vbo_handles);
+			delete[] vbo_handles;
+			vbo_handles = nullptr;
 
-		delete[] ibo_handles;
-		ibo_handles = nullptr;
+			glDeleteBuffers(buffers_quantity, ibo_handles);
+			delete[] ibo_handles;
+			ibo_handles = nullptr;
+		}
 	}
 
 	void GL::setup_vaos(std::vector<RenderableUnit*> renderable_units) {

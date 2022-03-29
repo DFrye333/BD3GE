@@ -47,6 +47,7 @@ namespace BD3GE {
 			GLuint* vao_handles;
 			GLuint* vbo_handles;
 			GLuint* ibo_handles;
+			unsigned int buffers_quantity;
 			unsigned int renderables_quantity;
 	};
 }
