@@ -116,6 +116,31 @@ namespace BD3GE {
 				return get(map_key);
 			}
 
+			void clear() {
+				data.clear();
+				data_keys.clear();
+				erase.clear();
+
+				free_head = 0;
+				resize(size);
+			}
+
+			void resize(unsigned short size) {
+				// If an invalid size is provided, do not accept it.
+				if (size <= 0) {
+					size = 100;
+				}
+
+				// Updates the sizes of the underlying data structures and pulls the free tail to the new end of the storage.
+				this->size = size;
+				// Reserves memory for the data.
+				data.reserve(size);
+				erase.reserve(size);
+				// Performs an actual resize, initializing the data keys.
+				data_keys.resize(size);
+				free_tail = size - 1;
+			}
+
 			void print() {
 				std::cout << "Slotmap:" << "\n";
 				std::cout << "----------" << "\n";
@@ -165,22 +190,6 @@ namespace BD3GE {
 				std::cout << "----------" << "\n";
 				
 				std::cout << std::endl;
-			}
-
-			void resize(unsigned short size) {
-				// If an invalid size is provided, do not accept it.
-				if (size <= 0) {
-					size = 100;
-				}
-
-				// Updates the sizes of the underlying data structures and pulls the free tail to the new end of the storage.
-				this->size = size;
-				// Reserves memory for the data.
-				data.reserve(size);
-				erase.reserve(size);
-				// Performs an actual resize, initializing the data keys.
-				data_keys.resize(size);
-				free_tail = size - 1;
 			}
 
 		private:
