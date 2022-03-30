@@ -82,20 +82,24 @@ namespace BD3GE {
 				// Grabs the proper data key for the given user map key.
 				SlotmapKey& data_key = data_keys[map_key.index];
 				// If the user's map key version does not match that of the indicated index, or the provided user map key's version is zero, the key is expired or otherwise invalid.
-				if (map_key.version != data_key.version || map_key.version == 0) { return; }
+				if (map_key.version != data_key.version || map_key.version == 0 || data_key.index >= data.size()) { return; }
 
 				// Increments the current data key's version in order to invalidate previous, existing generations of this key, indicating that they are no longer to be accepted as valid from the user.
 				++data_key.version;
 
-				// Performs a swap-and-pop on the outgoing datum, along with its corresponding erase entry. This allows data to be efficiently compacted.
-				std::swap(data[data_key.index], data[data.size() - 1]);
-				data.pop_back();
-				std::swap(erase[data_key.index], erase[erase.size() - 1]);
-				erase.pop_back();
+				// If the datum being removed is at the end of the data collection, then no swap or data key index rewriting should be performed.
+				if (data_key.index != data.size() - 1) {
+					// Performs a swap on the outgoing datum, along with its corresponding erase entry. This allows data to be efficiently compacted.
+					std::swap(data[data_key.index], data[data.size() - 1]);
+					std::swap(erase[data_key.index], erase[erase.size() - 1]);
 
-				// Updates the index of the other datum (unrelated to that being deleted) that is moved by the deletion operation.
-				// This is key part of the magic of the Slotmap data structure, and allows user-facing map keys to continue to be valid even when its underlying datum is relocated.
-				data_keys[erase[data_key.index]].index = data_key.index;
+					// Updates the index of the other datum (unrelated to that being deleted) that is moved by the deletion operation.
+					// This is key part of the magic of the Slotmap data structure, and allows user-facing map keys to continue to be valid even when its underlying datum is relocated.
+					data_keys[erase[data_key.index]].index = data_key.index;
+				}
+				// Pops the outgoing datum.
+				data.pop_back();
+				erase.pop_back();
 
 				// Advances the free tail to consume the newly-vacated storage, leaving a breadcrumb behind to allow the free head to follow in its path.
 				data_keys[free_tail].index = map_key.index;
