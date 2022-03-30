@@ -32,6 +32,7 @@ namespace BD3GE {
 			void read_file(const std::string file_path, std::string* shader_text);
 
 			GLuint object_ID;
+			bool has_compiled_successfully = false;
 	};
 
 	class Shader {

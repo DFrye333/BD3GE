@@ -11,6 +11,7 @@ namespace BD3GE {
 
 		std::string shader_string;
 		read_file(shader_source_path, &shader_string);
+		if (shader_string.empty()) { return; }
 
 		const char* shaderText = shader_string.c_str();
 		glShaderSource(object_ID, 1, &shaderText, NULL);
@@ -34,8 +35,8 @@ namespace BD3GE {
 
 			g_log->write(Log::TYPE::ERR, "Shader compilation failure in " + std::string(str_shader_type) + " shader '" + std::string(shader_source_path) + "':\n " + std::string(information_log_string));
 			delete[] information_log_string;
-		}
-		else {
+		} else {
+			has_compiled_successfully = true;
 			g_log->write(Log::TYPE::INFO, "Shader compilation success: " + std::string(shader_source_path));
 		}
 	}
@@ -73,8 +74,11 @@ namespace BD3GE {
 
 		std::vector<GLuint> shader_object_IDs;
 		for (const ShaderObject* shader_object : shader_objects) {
-			shader_object_IDs.push_back(shader_object->object_ID);
+			if (shader_object->has_compiled_successfully) {
+				shader_object_IDs.push_back(shader_object->object_ID);
+			}
 		}
+		if (shader_object_IDs.empty()) { return; }
 
 		for (size_t i = 0; i < shader_object_IDs.size(); ++i) {
 			glAttachShader(this->program_ID, shader_object_IDs[i]);
