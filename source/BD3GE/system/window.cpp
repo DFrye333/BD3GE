@@ -177,7 +177,7 @@ namespace BD3GE {
 
 		// Create the window.
 		m_window = XCreateWindow(m_display, DefaultRootWindow(m_display),
-				SCREEN_WIDTH - WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT,
+				SCREEN_WIDTH - DEFAULT_WINDOW_WIDTH, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
 				0, m_visual_information->depth, InputOutput, m_visual_information->visual, window_attribute_mask, &m_window_attributes);
 		m_GLX_context = glXCreateNewContext(m_display, m_framebuffer_configuration[0], GLX_RGBA_TYPE, NULL, true);
 		m_GLX_window = glXCreateWindow(m_display, m_framebuffer_configuration[0], (unsigned long int)m_window, NULL);
@@ -187,7 +187,7 @@ namespace BD3GE {
 		XSelectInput(m_display, (unsigned long int)m_window, input_mask);
 
 		// Set the window's name.
-		XStoreName(m_display, (unsigned long int)m_window, WINDOW_TITLE.c_str());
+		XStoreName(m_display, (unsigned long int)m_window, DEFAULT_WINDOW_TITLE.c_str());
 
 		// Map the new window.
 		XMapWindow(m_display, (unsigned long int)m_window);

@@ -25,7 +25,7 @@ namespace BD3GE {
 		glEnable(GL_BLEND);
 
 		// Set the window shape.
-		reshape_viewport(WINDOW_WIDTH, WINDOW_HEIGHT);
+		reshape_viewport(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
 		glFlush();
 	}

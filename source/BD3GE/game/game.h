@@ -10,6 +10,7 @@
 #include "../input/gamepad.h"
 #include "../input/input.h"
 #include "../game/scene.h"
+#include "../management/config_manager.h"
 #include "../os/win32.h"
 #include "../system/api.h"
 #include "../system/constants.h"
@@ -24,7 +25,7 @@ namespace BD3GE {
 	extern "C" class BD3GE_API Game {
 		public:
 
-			Game(Window* window);
+			Game(Window::EntryArgs* entry_args);
 			virtual ~Game();
 			virtual void load_scene(Scene* scene);
 			virtual void run();

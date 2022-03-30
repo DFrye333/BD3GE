@@ -7,10 +7,11 @@
 #include <Windows.h>
 #include <direct.h>
 
+#include "../management/config_manager.h"
 #include "../system/api.h"
 #include "../system/constants.h"
-#include "../utility/timer.h"
 #include "../system/window.h"
+#include "../utility/timer.h"
 
 namespace BD3GE {
 	class WinAPI {
@@ -32,7 +33,7 @@ namespace BD3GE {
 	extern "C" class BD3GE_API WinAPIWindow : public Window {
 		public:
 
-			struct WinAPIEntryArgs {
+			struct WinAPIEntryArgs : public EntryArgs {
 				HINSTANCE instance;
 				HINSTANCE previous_instance;
 				LPSTR command_line;
@@ -43,7 +44,7 @@ namespace BD3GE {
 				WinAPIWindow* window;
 			};
 
-			WinAPIWindow(WinAPIEntryArgs winAPIEntryArgs);
+			WinAPIWindow(WinAPIEntryArgs* winAPIEntryArgs);
 			~WinAPIWindow();
 			bool											get_window_exists() override;
 			void											set_window_exists(bool does_window_exist) override;

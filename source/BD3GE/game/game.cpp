@@ -3,11 +3,15 @@
 namespace BD3GE {
 	Log* g_log;
 
-	Game::Game(Window* window) : window(window), scene(nullptr) {
-//#ifdef __linux__
-//			if (-1 == mkdir(DEFAULT_RELATIVE_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH))
+	Game::Game(Window::EntryArgs* entry_args) : scene(nullptr) {
+		ConfigManager::load_config();
 
-		std::string system_directory_path = WinAPI::get_environment_variable("LOCALAPPDATA") + "/" + DEFAULT_RELATIVE_SYSTEM_DIRECTORY;
+#ifdef __linux__
+#elif _WIN32
+		this->window = new BD3GE::WinAPIWindow((WinAPIWindow::WinAPIEntryArgs*)entry_args);
+#endif
+
+		std::string system_directory_path = ConfigManager::get_config_value_string("system_directory_path");
 		std::string log_directory_path = system_directory_path + DEFAULT_LOG_DIRECTORY;
 		if (!WinAPI::does_directory_exist(log_directory_path)) {
 			std::string result;

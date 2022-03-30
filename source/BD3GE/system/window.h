@@ -24,6 +24,7 @@
 namespace BD3GE {
 	class Window {
 		public:
+			struct EntryArgs {};
 
 			typedef struct InputEvent {
 				// TODO: Make this a set?

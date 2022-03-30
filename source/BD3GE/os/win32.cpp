@@ -284,7 +284,7 @@ namespace BD3GE {
 		return EXIT_SUCCESS;
 	}
 
-	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs winAPIEntryArgs) {
+	WinAPIWindow::WinAPIWindow(BD3GE::WinAPIWindow::WinAPIEntryArgs* winAPIEntryArgs) {
 		std::string windowClassName = "BD3GEWindowClass";
 		wchar_t g_szClassName[32];
 		BD3GE::WinAPI::to_utf16(windowClassName, g_szClassName);
@@ -295,7 +295,7 @@ namespace BD3GE {
 		wc.lpfnWndProc = WindowProc;
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
-		wc.hInstance = winAPIEntryArgs.instance;
+		wc.hInstance = winAPIEntryArgs->instance;
 		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -308,8 +308,12 @@ namespace BD3GE {
 			return;
 		}
 
+		unsigned int config_window_width = ConfigManager::get_config_value_int("window_width");
+		unsigned int config_window_height = ConfigManager::get_config_value_int("window_height");
+		std::string config_window_title = ConfigManager::get_config_value_string("window_title");
+
 		wchar_t window_title[256];
-		BD3GE::WinAPI::to_utf16(BD3GE::WINDOW_TITLE, window_title);
+		BD3GE::WinAPI::to_utf16(config_window_title.size() > 0 ? config_window_title : BD3GE::DEFAULT_WINDOW_TITLE, window_title);
 
 		window_proc_data = new BD3GE::WinAPIWindow::WindowProcData;
 		window_proc_data->window = this;
@@ -319,8 +323,11 @@ namespace BD3GE {
 			g_szClassName,
 			window_title,
 			WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, BD3GE::WINDOW_WIDTH, BD3GE::WINDOW_HEIGHT,
-			NULL, NULL, winAPIEntryArgs.instance,
+			CW_USEDEFAULT,
+			CW_USEDEFAULT,
+			config_window_width > 0 ? config_window_width : BD3GE::DEFAULT_WINDOW_WIDTH,
+			config_window_height > 0 ? config_window_height : BD3GE::DEFAULT_WINDOW_HEIGHT,
+			NULL, NULL, winAPIEntryArgs->instance,
 			window_proc_data
 		);
 
@@ -329,11 +336,11 @@ namespace BD3GE {
 			return;
 		}
 
-		ShowWindow(window_handle, winAPIEntryArgs.command_show);
+		ShowWindow(window_handle, winAPIEntryArgs->command_show);
 		UpdateWindow(window_handle);
 
 		std::cout << "Command line arguments: ";
-		std::cout << winAPIEntryArgs.command_line << std::endl;
+		std::cout << winAPIEntryArgs->command_line << std::endl;
 	}
 
 	WinAPIWindow::~WinAPIWindow() {}

@@ -1,7 +1,7 @@
 #include "camera.h"
 
 namespace BD3GE {
-	Camera::Camera(Transform world_transform) : viewport_width(WINDOW_WIDTH), viewport_height(WINDOW_HEIGHT) {
+	Camera::Camera(Transform world_transform) : viewport_width(DEFAULT_WINDOW_WIDTH), viewport_height(DEFAULT_WINDOW_HEIGHT) {
 		this->world_transform = ComponentManager::add_transform(world_transform);
 	}
 
