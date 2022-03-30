@@ -52,4 +52,8 @@ namespace BD3GE {
 		SceneNode* node = scene_nodes[node_key];
 		return node != nullptr ? &(node->object) : nullptr;
 	}
+
+	void Scene::remove_object(SlotmapKey node_key) {
+		scene_nodes.remove(node_key);
+	}
 }

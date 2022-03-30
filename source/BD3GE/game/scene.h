@@ -38,6 +38,7 @@ namespace BD3GE {
 			SlotmapKey add_renderable_object(Object new_node);
 			SlotmapKey add_renderable_object(Object new_node, SlotmapKey parent_node);
 			Object* get_object(SlotmapKey node_key);
+			void remove_object(SlotmapKey node_key);
 
 			Camera* camera;
 			SlotmapKey root_scene_node;
