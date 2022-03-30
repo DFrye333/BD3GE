@@ -38,9 +38,12 @@ namespace BD3GE {
 	}
 
 	const size_t ShaderManager::load_shader_object(GLenum shader_type, std::string relative_file_path) {
+		std::string config_shader_directory = ConfigManager::get_config_value_string("resource_shaders_directory");
+		std::string shader_directory = config_shader_directory.size() > 0 ? config_shader_directory : DEFAULT_SHADER_DIRECTORY;
 		size_t relative_file_path_hash = get_hash(relative_file_path);
+
 		if (!ShaderManager::shader_objects.contains(relative_file_path_hash)) {
-			ShaderManager::shader_objects[relative_file_path_hash] = new ShaderObject(shader_type, DEFAULT_SHADER_DIRECTORY + relative_file_path);
+			ShaderManager::shader_objects[relative_file_path_hash] = new ShaderObject(shader_type, shader_directory + relative_file_path);
 		}
 
 		return relative_file_path_hash;
