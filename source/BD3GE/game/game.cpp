@@ -3,7 +3,7 @@
 namespace BD3GE {
 	Log* g_log;
 
-	Game::Game(Window* window) {
+	Game::Game(Window* window) : window(window), scene(nullptr) {
 //#ifdef __linux__
 //			if (-1 == mkdir(DEFAULT_RELATIVE_SYSTEM_DIRECTORY.c_str(), S_IRWXU | S_IRWXG | S_IROTH))
 
@@ -27,7 +27,6 @@ namespace BD3GE {
 			g_log->write(Log::TYPE::INFO, "Starting up BD3GE now...");
 		}
 
-		this->window = window;
 		this->window->set_mouse_cursor_visibility(false);
 		this->renderer = new Renderer();
 		this->al = new AL();
@@ -106,7 +105,7 @@ namespace BD3GE {
 
 			if (renderer) {
 				// Enables toggling of wireframe mode.
-				if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::DPAD_UP)) {
+				if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::FACE_3)) {
 					renderer->toggle_wireframe_mode();
 				}
 
