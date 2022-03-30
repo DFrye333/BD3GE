@@ -19,4 +19,9 @@ namespace BD3GE {
 	Renderable* ComponentManager::get_renderable(SlotmapKey renderable_key) {
 		return renderables.get(renderable_key);
 	}
+
+	void ComponentManager::clear_all() {
+		transforms.clear();
+		renderables.clear();
+	}
 }

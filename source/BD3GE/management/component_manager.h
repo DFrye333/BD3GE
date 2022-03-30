@@ -13,6 +13,7 @@ namespace BD3GE {
 			static SlotmapKey add_renderable(Renderable renderable);
 			static Transform* get_transform(SlotmapKey transform_key);
 			static Renderable* get_renderable(SlotmapKey renderable_key);
+			static void clear_all();
 
 		private:
 			static Slotmap<Transform> transforms;
