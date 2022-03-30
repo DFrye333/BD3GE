@@ -10,6 +10,7 @@ namespace BD3GE {
 		if (!scene) { return; }
 
 		this->scene = scene;
+		this->scene->camera->set_viewport(gl.get_viewport_width(), gl.get_viewport_height());
 
 		unsigned int renderable_units_count = 0;
 		for (SlotmapKey scene_node_key : scene->renderable_objects) {
@@ -59,9 +60,10 @@ namespace BD3GE {
 		Transform view_projection_transform = scene->camera->get_view_projection_transform();
 		for (SlotmapKey scene_node_key : scene->renderable_objects) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
-			Object& scene_object = scene_node->object;
+			if (!scene_node) { continue; }
 
 			// Stacks transforms up the scene hierarchy.
+			Object& scene_object = scene_node->object;
 			Transform scene_object_transform = *scene_object.get_world_transform();
 			SceneNode* parent_node = scene->scene_nodes.get(scene_node->parent);
 			Transform* parent_node_transform = parent_node != nullptr ? parent_node->object.get_world_transform() : nullptr;
