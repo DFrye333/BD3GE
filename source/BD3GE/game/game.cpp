@@ -84,11 +84,11 @@ namespace BD3GE {
 			short primary_gamepad_index = input->get_primary_connected_gamepad_index();
 
 			// Quits the program if necessary.
-			if (!window->get_window_exists() || input->get_key_state(BD3GE::KEY_CODE::ESCAPE) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_1)) {
+			if (!window->get_window_exists() || input->get_key_state(Input::KEY_CODE::ESCAPE) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_1)) {
 				return;
 			}
 			// Pauses the program if necessary.
-			if (input->get_key_state(BD3GE::KEY_CODE::F1) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
+			if (input->get_key_state(Input::KEY_CODE::F1) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
 				logic_timer->toggle_pause();
 			}
 
@@ -109,7 +109,7 @@ namespace BD3GE {
 
 			if (renderer) {
 				// Enables toggling of wireframe mode.
-				if (input->consume_key_input(BD3GE::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::FACE_3)) {
+				if (input->consume_key_input(Input::KEY_CODE::F3) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::FACE_3)) {
 					renderer->toggle_wireframe_mode();
 				}
 
@@ -131,9 +131,9 @@ namespace BD3GE {
 		window->message_listener();
 
 		// Pass window input events.
-		Message<Window::InputEvent> window_input_message = window->pull_input_event();
+		Message<Input::InputEvent> window_input_message = window->pull_input_event();
 		if (window_input_message.get_data() != nullptr) {
-			input->handle(Window::InputEvent(*(window_input_message.get_data())));
+			input->handle(Input::InputEvent(*(window_input_message.get_data())));
 		}
 
 		input->update();
