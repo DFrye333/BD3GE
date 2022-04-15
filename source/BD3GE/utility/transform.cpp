@@ -41,9 +41,9 @@ namespace BD3GE {
 	}
 
 	void Transform::set_orientation(Vector3 orientation) {
-		set_orientation_x(orientation.v.g.x);
-		set_orientation_y(orientation.v.g.y);
 		set_orientation_z(orientation.v.g.z);
+		set_orientation_y(orientation.v.g.y);
+		set_orientation_x(orientation.v.g.x);
 	}
 
 	void Transform::set_orientation_x(float angle) {
