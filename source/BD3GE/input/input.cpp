@@ -120,7 +120,9 @@ namespace BD3GE {
 		{ VK_XBUTTON2, Input::KEY_CODE::MOUSE_X2BUTTON },
 	};
 
-	Input::Input() : is_mouse_position_fresh(false) {
+	Input::Input() : Input(1000) {}
+
+	Input::Input(unsigned short debounce_duration) : debounce_duration(debounce_duration), is_mouse_position_fresh(false) {
 		timer = Factory::createTimer("Input");
 		timer->start();
 	}
@@ -182,7 +184,7 @@ namespace BD3GE {
 	}
 
 	bool Input::consume_key_input(KEY_CODE key_code, bool should_debounce) {
-		if (!get_key_state(key_code) || (should_debounce && keys[key_code] != 0 && (timer->elapsed() - keys[key_code] <= 1000))) { return false; }
+		if (!get_key_state(key_code) || (should_debounce && keys[key_code] != 0 && (timer->elapsed() - keys[key_code] <= debounce_duration))) { return false; }
 
 		if (keys[key_code] == 0) {
 			keys[key_code] = timer->elapsed();
@@ -266,7 +268,7 @@ namespace BD3GE {
 		if (gamepad_inputs.contains(gamepad_index)) {
 			float gamepad_input = gamepad_inputs[gamepad_index][input_code];
 			uint64_t gamepad_input_consumption_stamp = gamepad_input_consumption_stamps[gamepad_index][input_code];
-			if (gamepad_input != 0.0f && ((gamepad_input_consumption_stamp == 0) || (timer->elapsed() - gamepad_input_consumption_stamp > 1000))) {
+			if (gamepad_input != 0.0f && ((gamepad_input_consumption_stamp == 0) || (timer->elapsed() - gamepad_input_consumption_stamp > debounce_duration))) {
 				value = gamepad_input;
 				if (gamepad_input_consumption_stamp == 0) {
 					gamepad_input_consumption_stamps[gamepad_index][input_code] = timer->elapsed();

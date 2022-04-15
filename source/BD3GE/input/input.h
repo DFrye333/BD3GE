@@ -157,6 +157,7 @@ namespace BD3GE {
 #endif
 
 									Input();
+									Input(unsigned short debounce_duration);
 									Input(std::vector<Gamepad*> gamepads);
 									~Input();
 			void					handle(const Window::InputEvent input_event);
@@ -176,7 +177,6 @@ namespace BD3GE {
 			float					get_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code);
 			void					set_gamepad_output_value(short gamepad_index, Gamepad::OUTPUT_CODE output_code, float output_value);
 
-			bool is_mouse_position_fresh;
 
 		protected:
 
@@ -186,9 +186,11 @@ namespace BD3GE {
 			void					record_mouse_wheel(short mouse_wheel_delta);
 
 			Timer* timer;
+			unsigned short debounce_duration;
 			std::map<KEY_CODE, uint64_t> keys;
 			std::pair<short, short> current_mouse_position;
 			std::pair<short, short> previous_mouse_position;
+			bool is_mouse_position_fresh;
 			std::map<short, Gamepad*> gamepads;
 			std::map<short, std::map<Gamepad::INPUT_CODE, float>> gamepad_inputs;
 			std::map<short, std::map<Gamepad::INPUT_CODE, uint64_t>> gamepad_input_consumption_stamps;
