@@ -88,7 +88,7 @@ namespace BD3GE {
 				return;
 			}
 			// Pauses the program if necessary.
-			if (input->get_key_state(Input::KEY_CODE::F1) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
+			if (input->consume_key_input(Input::KEY_CODE::F1) || input->consume_gamepad_input_value(primary_gamepad_index, BD3GE::Gamepad::INPUT_CODE::UTIL_0)) {
 				logic_timer->toggle_pause();
 			}
 
