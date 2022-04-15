@@ -131,9 +131,9 @@ namespace BD3GE {
 		window->message_listener();
 
 		// Pass window input events.
-		Message<Input::InputEvent> window_input_message = window->pull_input_event();
+		Message<Window::InputEvent> window_input_message = window->pull_input_event();
 		if (window_input_message.get_data() != nullptr) {
-			input->handle(Input::InputEvent(*(window_input_message.get_data())));
+			input->handle(Window::InputEvent(*(window_input_message.get_data())));
 		}
 
 		input->update();

@@ -7,7 +7,6 @@
 #include <Windows.h>
 #include <direct.h>
 
-#include "../input/input.h"
 #include "../management/config_manager.h"
 #include "../system/api.h"
 #include "../system/constants.h"
@@ -27,8 +26,6 @@ namespace BD3GE {
 			static bool does_directory_exist(std::string directory_path);
 			static bool does_directory_exist(std::string directory_path, WIN32_FILE_ATTRIBUTE_DATA* file_attributes);
 			static BOOL get_file_info(std::string& absolute_file_path, WIN32_FILE_ATTRIBUTE_DATA* file_attributes);
-
-			static std::map<int, Input::KEY_CODE> key_code_map;
 	};
 
 	extern "C" class BD3GE_API WinAPIWindow : public Window {
@@ -51,8 +48,8 @@ namespace BD3GE {
 			void											set_window_exists(bool does_window_exist) override;
 			void											message_listener() override;
 			void											swap_buffers() override;
-			void											push_input_event(Input::InputEvent input_event) override;
-			Message<Input::InputEvent>						pull_input_event() override;
+			void											push_input_event(Window::InputEvent input_event) override;
+			Message<InputEvent>								pull_input_event() override;
 			void											push_reshape_event(Window::ReshapeEvent reshape_event) override;
 			Message<Window::ReshapeEvent>					pull_reshape_event() override;
 			void											set_mouse_cursor_visibility(bool should_be_visible) override;

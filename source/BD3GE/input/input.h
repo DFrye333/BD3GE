@@ -6,11 +6,20 @@
 #include <map>
 #include <utility>
 
+#ifdef __linux__
+#elif _WIN32
+
+#include <Windows.h>
+
+#endif
+
 #include "../input/gamepad.h"
 #include "../system/api.h"
 #include "../system/constants.h"
 #include "../system/globals.h"
+#include "../utility/factory.h"
 #include "../utility/message.h"
+#include "../utility/timer.h"
 
 namespace BD3GE {
 	extern "C" class BD3GE_API Input {
@@ -142,20 +151,20 @@ namespace BD3GE {
 				MOUSE_WHEELDOWN
 			};
 
-			struct InputEvent {
-				// TODO: Make this a set?
-				std::map<Input::KEY_CODE, bool> key_state_map;
-				std::pair<short, short> mouse_position;
-			};
+#ifdef __linux__
+#elif _WIN32
+			static std::map<int, Input::KEY_CODE> key_code_map;
+#endif
 
 									Input();
 									Input(std::vector<Gamepad*> gamepads);
 									~Input();
-			void					handle(const Input::InputEvent input_event);
+			void					handle(const Window::InputEvent input_event);
 			void					handle(const Gamepad::InputEvent input_event);
 			void					update();
 			bool					get_key_state(KEY_CODE key);
 			bool					consume_key_input(KEY_CODE key);
+			bool					consume_key_input(KEY_CODE key, bool should_debounce);
 			std::pair<short, short>	get_current_mouse_position();
 			std::pair<short, short>	get_previous_mouse_position();
 			Gamepad*				get_gamepad(short gamepad_index);
@@ -171,14 +180,18 @@ namespace BD3GE {
 
 		protected:
 
-			void					record_key_state(KEY_CODE key, bool state);
+			void					record_key_state(unsigned int key_code, bool state);
+			void					record_key_state(KEY_CODE key_code, bool state);
 			void					record_mouse_position(std::pair<short, short> mouse_position);
+			void					record_mouse_wheel(short mouse_wheel_delta);
 
-			std::map<KEY_CODE, bool> keys;
+			Timer* timer;
+			std::map<KEY_CODE, uint64_t> keys;
 			std::pair<short, short> current_mouse_position;
 			std::pair<short, short> previous_mouse_position;
 			std::map<short, Gamepad*> gamepads;
 			std::map<short, std::map<Gamepad::INPUT_CODE, float>> gamepad_inputs;
+			std::map<short, std::map<Gamepad::INPUT_CODE, uint64_t>> gamepad_input_consumption_stamps;
 			std::map<short, std::map<Gamepad::OUTPUT_CODE, float>> gamepad_outputs;
 	};
 }
