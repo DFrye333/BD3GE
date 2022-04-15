@@ -222,12 +222,6 @@ namespace BD3GE {
 
 		std::cout << "Command line arguments: ";
 		std::cout << winAPIEntryArgs->command_line << std::endl;
-
-		/*std::string command_line = std::string(winAPIEntryArgs->command_line);
-		unsigned short split_index = command_line.find(' ');
-		int width = atoi(command_line.substr(0, split_index).c_str());
-		int height = atoi(command_line.substr(split_index).c_str());
-		BD3GE::WinAPI::resize_window(window_handle, width, height);*/
 	}
 
 	WinAPIWindow::~WinAPIWindow() {}
