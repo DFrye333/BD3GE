@@ -125,7 +125,7 @@ namespace BD3GE {
 	Vector3::Vector3(const Vector3& source) : v{source.v.a[0], source.v.a[1], source.v.a[2]} {}
 
 	const float Vector3::dot_product(const Vector3& other) {
-		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]) + (v.a[2] + other.v.a[2]));
+		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]) + (v.a[2] * other.v.a[2]));
 	}
 
 	const Vector3 Vector3::cross_product(const Vector3& other) {
