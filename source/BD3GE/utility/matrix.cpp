@@ -1,10 +1,6 @@
 #include "matrix.h"
 
 namespace BD3GE {
-	/*
-	 *	Matrix class
-	 */
-
 	Matrix4 Matrix4::identity(void) {
 		return Matrix4(
 			1.0f, 0.0f, 0.0f, 0.0f,
@@ -28,14 +24,14 @@ namespace BD3GE {
 	}
 
 	// Constructs a matrix given individual values.
-	Matrix4::Matrix4(float a11, float a12, float a13, float a14,
-					float a21, float a22, float a23, float a24,
-					float a31, float a32, float a33, float a34,
-					float a41, float a42, float a43, float a44) {
-		elements[0] = a11;	elements[1] = a12;	elements[2] = a13;	elements[3] = a14;
-		elements[4] = a21;	elements[5] = a22;	elements[6] = a23;	elements[7] = a24;
-		elements[8] = a31;	elements[9] = a32;	elements[10] = a33;	elements[11] = a34;
-		elements[12] = a41;	elements[13] = a42;	elements[14] = a43;	elements[15] = a44;
+	Matrix4::Matrix4(float a00, float a10, float a20, float a30,
+					float a01, float a11, float a21, float a31,
+					float a02, float a12, float a22, float a32,
+					float a03, float a13, float a23, float a33) {
+		elements[0] = a00;	elements[1] = a10;	elements[2] = a20;	elements[3] = a30;
+		elements[4] = a01;	elements[5] = a11;	elements[6] = a21;	elements[7] = a31;
+		elements[8] = a02;	elements[9] = a12;	elements[10] = a22;	elements[11] = a32;
+		elements[12] = a03;	elements[13] = a13;	elements[14] = a23;	elements[15] = a33;
 	}
 
 	Matrix4::Matrix4(const Matrix4& source) {
@@ -48,7 +44,7 @@ namespace BD3GE {
 		}
 	}
 
-	void Matrix4::print(void) const {
+	void Matrix4::print() const {
 		float matrix_array[16];
 		to_float_array(matrix_array);
 		std::cout << "Printing matrix: ";
@@ -62,7 +58,7 @@ namespace BD3GE {
 		std::cout << std::endl;
 	}
 
-	const Matrix4 Matrix4::inverse(void) const {
+	const Matrix4 Matrix4::inverse() const {
 		// If determinant is zero, the matrix is not invertible. In that case, the original matrix is returned.
 		if (compute_determinant() == 0) {
 			return *this;
@@ -126,7 +122,7 @@ namespace BD3GE {
 	}
 
 	// Computes the determinant by row-reducing the matrix to lower-triangular form and using the resulting determinant to compute the actual determinant (keeping track of row operations and their effects).
-	const float Matrix4::compute_determinant(void) const {
+	const float Matrix4::compute_determinant() const {
 		Matrix4 determinant_matrix(*this);
 		float determinant_modifier = 1.0f;
 
@@ -181,6 +177,15 @@ namespace BD3GE {
 
 		// Return the determinant of the original matrix by dividing accounting for effects of all row operations.
 		return determinant_temporary / determinant_modifier;
+	}
+
+	const Matrix4 Matrix4::transpose() const {
+		return Matrix4(
+			(*this)(0, 0), (*this)(0, 1), (*this)(0, 2), (*this)(0, 3),
+			(*this)(1, 0), (*this)(1, 1), (*this)(1, 2), (*this)(1, 3),
+			(*this)(2, 0), (*this)(2, 1), (*this)(2, 2), (*this)(2, 3),
+			(*this)(3, 0), (*this)(3, 1), (*this)(3, 2), (*this)(3, 3)
+		);
 	}
 
 	void Matrix4::row_add(unsigned short row_destination, unsigned short row_source, float multiplier) {

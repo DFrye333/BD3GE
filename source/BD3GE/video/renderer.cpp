@@ -57,7 +57,7 @@ namespace BD3GE {
 			}
 		}
 
-		Transform view_projection_transform = scene->camera->get_view_projection_transform();
+		Matrix4 view_projection_transform = scene->camera->get_view_projection_matrix();
 		for (SlotmapKey scene_node_key : scene->renderable_objects) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			if (!scene_node) { continue; }
@@ -89,7 +89,7 @@ namespace BD3GE {
 
 				shader->set_uniform("world_transform", world_transform_stack.get_matrix());
 				shader->set_uniform("inverse_world_transform", world_transform_stack.get_matrix().inverse());
-				shader->set_uniform("view_projection_transform", view_projection_transform.get_matrix());
+				shader->set_uniform("view_projection_transform", view_projection_transform);
 
 				Material* material = renderable_unit->material;
 				if (material->type == Material::TYPE::SIMPLE) {

@@ -3,9 +3,12 @@
 
 #include <iostream>
 
+#include "../system/api.h"
+
 namespace BD3GE {
 	class Matrix4 {
 		public:
+
 			static const short NUMBER_ROWS = 4;
 			static const short NUMBER_COLUMNS = 4;
 			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
@@ -15,14 +18,15 @@ namespace BD3GE {
 
 							Matrix4();
 							Matrix4(float* elements);
-							Matrix4(float a11, float a12, float a13, float a14,
-									float a21, float a22, float a23, float a24,
-									float a31, float a32, float a33, float a34,
-									float a41, float a42, float a43, float a44);
+							Matrix4(float a00, float a10, float a20, float a30,
+									float a01, float a11, float a21, float a31,
+									float a02, float a12, float a22, float a32,
+									float a03, float a13, float a23, float a33);
 							Matrix4(const Matrix4& source);
 			void 			to_float_array(float* float_array) const;
-			void 			print(void) const;
-			const 			Matrix4 inverse(void) const;
+			void 			print() const;
+			const 			Matrix4 inverse() const;
+			const 			Matrix4 transpose() const;
 			void 			row_add(unsigned short row_destination, unsigned short row_source, float multiplier);
 			void 			row_multiply(unsigned short row, float multipler);
 			void 			row_swap(unsigned short row_1, unsigned short row_2);
@@ -38,7 +42,7 @@ namespace BD3GE {
 
 		private:
 
-			const float compute_determinant(void) const;
+			const float compute_determinant() const;
 
 			float elements[NUMBER_ELEMENTS];
 	};

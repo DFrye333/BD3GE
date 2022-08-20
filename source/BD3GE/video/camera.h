@@ -18,16 +18,17 @@ namespace BD3GE {
 								Camera(Transform world_transform);
 								Camera();
 								~Camera();
-			const Transform		get_projection_transform(void);
-			const Transform		get_view_transform(void) const;
-			const Transform		get_view_projection_transform(void);
+			Transform			get_view_transform() const;
+			const Matrix4		get_view_projection_matrix();
 			void				set_viewport(const unsigned int viewport_width, const unsigned int viewport_height);
 
 		private:
 
+			const Matrix4		get_projection_matrix();
+
 			unsigned int viewport_width;
 			unsigned int viewport_height;
-			Transform projection_transform;
+			Matrix4 projection_transform;
 			bool should_recalculate_projection_transform = true;
 	};
 }

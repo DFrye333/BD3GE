@@ -21,11 +21,11 @@ namespace BD3GE {
 		this->renderable = ComponentManager::add_renderable(renderable);
 	}
 
-	void Object::set_position(Vector3 position) {
+	void Object::set_position(const Vector3 position) {
 		get_world_transform()->set_position(position);
 	}
 
-	void Object::set_orientation(Vector3 orientation) {
+	void Object::set_orientation(const Vector3 orientation) {
 		get_world_transform()->set_orientation(orientation);
 	}
 

@@ -1,172 +1,198 @@
 #include "transform.h"
 
 namespace BD3GE {
-	/*
-	 *	Transform class
-	 */
+	Transform::Transform() : scale(Vector3(1, 1, 1)), matrix(Matrix4::identity()) {}
 
-	Transform::Transform() {
-		this->matrix = Matrix4::identity();
-	}
-
-	Transform::Transform(const Matrix4& matrix) {
-		this->matrix = matrix;
-	}
-
-	Transform::Transform(const Transform& other) {
-		this->matrix = other.get_matrix();
+	Transform::Transform(const Matrix4& matrix) : matrix(matrix) {
+		decompose_matrix();
 	}
 
 	Transform::Transform(const Vector3& position) : Transform() {
 		set_position(position);
 	}
 
-	Transform::Transform(const Vector3& position, const Vector3& orientation) : Transform() {
-		set_position(position);
+	Transform::Transform(const Vector3& position, const Vector3& orientation) : Transform(position) {
 		set_orientation(orientation);
 	}
 
-	Transform::Transform(const Vector3& position, const Vector3& orientation, const Vector3& scale) : Transform() {
-		set_position(position);
+	Transform::Transform(const Vector3& position, const Quaternion& orientation) : Transform(position) {
 		set_orientation(orientation);
+	}
+
+	Transform::Transform(const Vector3& position, const Vector3& orientation, const Vector3& scale) : Transform(position, orientation) {
+		set_scale(scale);
+	}
+
+	Transform::Transform(const Vector3& position, const Quaternion& orientation, const Vector3& scale) : Transform(position, orientation) {
 		set_scale(scale);
 	}
 
 	Transform::~Transform() {}
 
-	void Transform::set_position(Vector3 position) {
-		this->matrix(3, 0, position.v.g.x);
-		this->matrix(3, 1, position.v.g.y);
-		this->matrix(3, 2, position.v.g.z);
+	Vector3 Transform::get_position() const {
+		return this->position;
 	}
 
-	void Transform::set_orientation(Vector3 orientation) {
-		set_orientation_z(orientation.v.g.z);
-		set_orientation_y(orientation.v.g.y);
-		set_orientation_x(orientation.v.g.x);
+	Quaternion Transform::get_orientation() const {
+		return this->orientation;
+	}
+
+	Vector3 Transform::get_scale() const {
+		return this->scale;
+	}
+
+	Matrix4 Transform::get_matrix() {
+		if (this->is_matrix_dirty) {
+			recalculate_matrix();
+		}
+
+		return this->matrix;
+	}
+
+	void Transform::set_position(const Vector3 position) {
+		this->position = position;
+
+		this->is_matrix_dirty = true;
+	}
+
+	void Transform::set_orientation(float angle, Vector3 axis) {
+		set_orientation(Quaternion(angle, axis));
+	}
+
+	void Transform::set_orientation(const Vector3 orientation) {
+		set_orientation(Quaternion(orientation));
+	}
+
+	void Transform::set_orientation(const Quaternion& orientation) {
+		this->orientation = orientation;
+
+		this->is_matrix_dirty = true;
 	}
 
 	void Transform::set_orientation_x(float angle) {
-		this->matrix(1, 1, cos(angle));
-		this->matrix(1, 2, -sin(angle));
-		this->matrix(2, 1, sin(angle));
-		this->matrix(2, 2, cos(angle));
+		set_orientation(Vector3(angle, 0, 0));
 	}
 
 	void Transform::set_orientation_y(float angle) {
-		this->matrix(0, 0, cos(angle));
-		this->matrix(0, 2, sin(angle));
-		this->matrix(2, 0, -sin(angle));
-		this->matrix(2, 2, cos(angle));
+		set_orientation(Vector3(0, angle, 0));
 	}
 
 	void Transform::set_orientation_z(float angle) {
-		this->matrix(0, 0, cos(angle));
-		this->matrix(0, 1, -sin(angle));
-		this->matrix(1, 0, sin(angle));
-		this->matrix(1, 1, cos(angle));
+		set_orientation(Vector3(0, 0, angle));
 	}
 
-	void Transform::set_scale_uniform(float scaler) {
-		this->matrix(0, 0, scaler);
-		this->matrix(1, 1, scaler);
-		this->matrix(2, 2, scaler);
+	void Transform::set_scale(Vector3 scale) {
+		this->scale = scale;
+
+		this->is_matrix_dirty = true;
 	}
 
-	void Transform::set_scale(Vector3 scaler) {
-		this->matrix(0, 0, scaler.v.g.x);
-		this->matrix(1, 1, scaler.v.g.y);
-		this->matrix(2, 2, scaler.v.g.z);
+	void Transform::set_scale_uniform(float scale) {
+		set_scale(Vector3(scale, scale, scale));
 	}
 
 	void Transform::translate(Vector3 translation) {
-		this->matrix += Matrix4(
-			0, 0, 0, translation.v.g.x,
-			0, 0, 0, translation.v.g.y,
-			0, 0, 0, translation.v.g.z,
-			0, 0, 0, 0
-		);
+		set_position(get_position() + translation);
 	}
 
-	void Transform::rotate(Vector3 angle) {
-		rotate_z(angle.v.g.z);
-		rotate_y(angle.v.g.y);
-		rotate_x(angle.v.g.x);
+	void Transform::rotate(Quaternion rotation) {
+		this->orientation = rotation * this->orientation;
+
+		this->is_matrix_dirty = true;
+	}
+
+	void Transform::rotate(float angle, Vector3 axis) {
+		rotate(Quaternion(cos(angle / 2), axis.get_normalized() * sin(angle / 2)));
+	}
+
+	void Transform::rotate(Vector3 euler) {
+		rotate(Quaternion(euler));
 	}
 
 	void Transform::rotate_x(float angle) {
-		this->matrix *= Matrix4(
-			1,	0,			0,				0,
-			0,	cos(angle),	-(sin(angle)),	0,
-			0,	sin(angle),	cos(angle),		0,
-			0,	0,			0,				1
-		);
+		rotate(angle, Vector3(1, 0, 0));
 	}
 
 	void Transform::rotate_y(float angle) {
-		this->matrix *= Matrix4(
-			cos(angle),		0,		sin(angle),	0,
-			0,				1,		0,			0,
-			-(sin(angle)),	0,		cos(angle),	0,
-			0,				0,		0,			1
-		);
+		rotate(angle, Vector3(0, 1, 0));
 	}
 
 	void Transform::rotate_z(float angle) {
-		this->matrix *= Matrix4(
-			cos(angle),	-(sin(angle)),	0,	0,
-			sin(angle),	cos(angle),		0,	0,
-			0,			0,				1,	0,
-			0,			0,				0,	1
-		);
+		rotate(angle, Vector3(0, 0, 1));
 	}
 
-	void Transform::to_float_array(float* float_array) const {
-		this->matrix.to_float_array(float_array);
+	void Transform::to_float_array(float* float_array) {
+		get_matrix().to_float_array(float_array);
 	}
 
-	Transform Transform::inverse(void) const {
-		return Transform(this->matrix.inverse());
+	Transform Transform::inverse() {
+		return Transform(get_matrix().inverse());
 	}
 
-	Matrix4 Transform::get_matrix(void) const {
-		return this->matrix;
-	}
-	
-	Vector3 Transform::get_position() const {
-		Matrix4 matrix = get_matrix();
-		return Vector3(matrix(3, 0), matrix(3, 1), matrix(3, 2));
-	}
-
-	const float Transform::operator()(unsigned short i, unsigned short j) const {
-		return this->matrix(i, j);
-	}
-
-	void Transform::operator()(unsigned short i, unsigned short j, float value) {
-		this->matrix(i, j, value);
+	void Transform::print() {
+		get_matrix().print();
 	}
 
 	const Transform& Transform::operator=(const Transform& other) {
-		this->matrix = other.get_matrix();
+		set_position(other.get_position());
+		set_orientation(other.get_orientation());
+		set_scale(other.get_scale());
 
 		return *this;
 	}
 
 	const Transform& Transform::operator*=(const Transform& other) {
-		this->matrix *= other.get_matrix();
+		recalculate_matrix();
+		this->matrix *= Transform(other).get_matrix();
+		decompose_matrix();
 
 		return *this;
 	}
 
 	const Transform Transform::operator*(const Transform& other) const {
-		return Transform(this->matrix * other.get_matrix());
+		return Transform(*this) *= other;
 	}
 
 	bool operator==(const Transform& lhs, const Transform& rhs) {
-		return lhs.matrix == rhs.matrix;
+		return Transform(lhs).get_matrix() == Transform(rhs).get_matrix();
 	}
 
 	bool operator!=(const Transform& lhs, const Transform& rhs) {
 		return !(lhs == rhs);
+	}
+
+	void Transform::recalculate_matrix() {
+		Vector3 scale = get_scale();
+		this->matrix = Matrix4(
+			scale.v.g.x, 0, 0, 0,
+			0, scale.v.g.y, 0, 0,
+			0, 0, scale.v.g.z, 0,
+			0, 0, 0, 1
+		);
+
+		Matrix4 rotation = get_orientation().get_rotation_matrix();
+		this->matrix = rotation * this->matrix;
+
+		Vector3 position = get_position();
+		this->matrix(3, 0, position.v.g.x);
+		this->matrix(3, 1, position.v.g.y);
+		this->matrix(3, 2, position.v.g.z);
+
+		this->is_matrix_dirty = false;
+	}
+
+	void Transform::decompose_matrix() {
+		this->position = Vector3(this->matrix(3, 0), this->matrix(3, 1), this->matrix(3, 2));
+		this->scale = Vector3(
+			Vector3(this->matrix(0, 0), this->matrix(0, 1), this->matrix(0, 2)).get_magnitude(),
+			Vector3(this->matrix(1, 0), this->matrix(1, 1), this->matrix(1, 2)).get_magnitude(),
+			Vector3(this->matrix(2, 0), this->matrix(2, 1), this->matrix(2, 2)).get_magnitude()
+		);
+		this->orientation = Quaternion(Matrix4(
+			this->matrix(0, 0) / this->scale.v.g.x, this->matrix(1, 0) / this->scale.v.g.y, this->matrix(2, 0) / this->scale.v.g.z, 0,
+			this->matrix(0, 1) / this->scale.v.g.x, this->matrix(1, 1) / this->scale.v.g.y, this->matrix(2, 1) / this->scale.v.g.z, 0,
+			this->matrix(0, 2) / this->scale.v.g.x, this->matrix(1, 2) / this->scale.v.g.y, this->matrix(2, 2) / this->scale.v.g.z, 0,
+			0, 0, 0, 1
+		));
 	}
 }
