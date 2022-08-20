@@ -144,14 +144,13 @@ namespace BD3GE {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return Vector3(*this / magnitude);
+		} else {
+			return Vector3(0, 0, 0);
 		}
 	}
 
 	const Vector3& Vector3::normalize(void) {
-		float magnitude = get_magnitude();
-		if (magnitude > EPSILON) {
-			return *this /= magnitude;
-		}
+		return *this = get_normalized();
 	}
 
 	const Vector3& Vector3::operator=(const Vector3& other) {

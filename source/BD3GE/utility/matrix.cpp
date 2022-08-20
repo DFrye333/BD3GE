@@ -71,10 +71,10 @@ namespace BD3GE {
 		for (unsigned short i = 0; i < NUMBER_COLUMNS; ++i) {
 			// If (i, i) is zero, try to swap rows.
 			float i_i = input_matrix(i, i);
-			if (i_i == 0.0f) {
+			if (abs(i_i) < Matrix4::EPSILON) {
 				for (unsigned short l = i; l < NUMBER_ROWS; ++l) {
 					// If a suitable row has been found to swap with row i, swap rows.
-					if (input_matrix(i, l) != 0.0f) {
+					if (abs(input_matrix(i, l)) > Matrix4::EPSILON) {
 						input_matrix.row_swap(i, l);
 						inverse_matrix.row_swap(i, l);
 
@@ -94,7 +94,7 @@ namespace BD3GE {
 
 				// If the current target (i, j) is already zero, move on to the next row rather than dividing by zero.
 				float i_j = input_matrix(i, j);
-				if (i_j == 0.0f) {
+				if (abs(i_j) < Matrix4::EPSILON) {
 					continue;
 				}
 
