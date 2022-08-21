@@ -8,6 +8,8 @@ namespace BD3GE {
 	std::map<std::string, float> ConfigManager::config_floats;
 	std::map<std::string, int> ConfigManager::config_ints;
 	std::map<std::string, bool> ConfigManager::config_bools;
+	std::map<std::string, ConfigManager::CONFIG_TYPE> ConfigManager::config_types;
+	std::vector<std::string> ConfigManager::config_order;
 
 	void ConfigManager::load_config() {
 #ifdef __linux__
@@ -31,6 +33,18 @@ namespace BD3GE {
 		config_file_read_handle.close();
 	}
 
+	void ConfigManager::save_config() {
+		config_file_write_handle.open(config_file_path, std::ios::out, std::ios::trunc);
+		if (config_file_write_handle.is_open()) {
+			config_file_write_handle << std::boolalpha << std::fixed << std::setprecision(2);
+
+			for (std::string config_key : config_order) {
+				write_config_file_line(config_key);
+			}
+		}
+		config_file_write_handle.close();
+	}
+
 	std::string ConfigManager::get_config_value_string(const std::string config_key) {
 		return config_strings.contains(config_key) ? config_strings[config_key] : "";
 	}
@@ -48,19 +62,30 @@ namespace BD3GE {
 	}
 
 	void ConfigManager::set_config_value_string(const std::string config_key, std::string config_value) {
+		set_config_value(config_key, CONFIG_TYPE::STRING);
 		config_strings[config_key] = config_value;
 	}
 
 	void ConfigManager::set_config_value_float(const std::string config_key, float config_value) {
+		set_config_value(config_key, CONFIG_TYPE::FLOAT);
 		config_floats[config_key] = config_value;
 	}
 
 	void ConfigManager::set_config_value_int(const std::string config_key, int config_value) {
+		set_config_value(config_key, CONFIG_TYPE::INTEGER);
 		config_ints[config_key] = config_value;
 	}
 
 	void ConfigManager::set_config_value_bool(const std::string config_key, bool config_value) {
+		set_config_value(config_key, CONFIG_TYPE::BOOLEAN);
 		config_bools[config_key] = config_value;
+	}
+
+	void ConfigManager::set_config_value(const std::string config_key, CONFIG_TYPE config_type) {
+		if (!config_types.contains(config_key)) {
+			config_order.push_back(config_key);
+			config_types[config_key] = config_type;
+		}
 	}
 
 	void ConfigManager::read_config_file_line(std::string config_file_line) {
@@ -78,6 +103,23 @@ namespace BD3GE {
 			set_config_value_float(config_key, std::stof(config_string_value, nullptr));
 		} else {
 			set_config_value_int(config_key, std::stoi(config_string_value, nullptr, 10));
+		}
+	}
+
+	void ConfigManager::write_config_file_line(std::string config_key) {
+		switch (config_types[config_key]) {
+			case CONFIG_TYPE::STRING:
+				config_file_write_handle << config_key << " \"" << config_strings[config_key] << "\"\n";
+				break;
+			case CONFIG_TYPE::FLOAT:
+				config_file_write_handle << config_key << " " << config_floats[config_key] << "\n";
+				break;
+			case CONFIG_TYPE::INTEGER:
+				config_file_write_handle << config_key << " " << config_ints[config_key] << "\n";
+				break;
+			case CONFIG_TYPE::BOOLEAN:
+				config_file_write_handle << config_key << " " << config_bools[config_key] << "\n";
+				break;
 		}
 	}
 }

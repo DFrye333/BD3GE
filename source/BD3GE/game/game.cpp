@@ -43,6 +43,8 @@ namespace BD3GE {
 	Game::~Game() {
 		g_log->write(Log::TYPE::INFO, "Shutting down BD3GE now...");
 
+		ConfigManager::save_config();
+
 		delete window;
 		window = nullptr;
 
