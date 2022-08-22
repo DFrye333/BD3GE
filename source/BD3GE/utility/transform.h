@@ -42,8 +42,6 @@ namespace BD3GE {
 			void 				to_float_array(float* float_array);
 			Transform 			inverse();
 			void 				print();
-			//const float 		operator()(unsigned short i, unsigned short j) const;
-			//void 				operator()(unsigned short i, unsigned short j, float value);
 			const Transform& 	operator=(const Transform& other);
 			const Transform& 	operator*=(const Transform& other);
 			const Transform 	operator*(const Transform& other) const;
