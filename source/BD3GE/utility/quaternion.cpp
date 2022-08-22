@@ -17,9 +17,9 @@ namespace BD3GE {
 
 			float t = 0.5f / s;
 			vector = Vector3(
-				t * (matrix(2, 1) - matrix(1, 2)),
-				t * (matrix(0, 2) - matrix(2, 0)),
-				t * (matrix(1, 0) - matrix(0, 1))
+				t * (matrix(1, 2) - matrix(2, 1)),
+				t * (matrix(2, 0) - matrix(0, 2)),
+				t * (matrix(0, 1) - matrix(1, 0))
 			);
 		} else {
 			int i = 0;
@@ -33,12 +33,12 @@ namespace BD3GE {
 			float s = sqrt((matrix(i, i) - (matrix(j, j) + matrix(k, k))) + 1.0f);
 			float t = s != 0.0f ? 0.5f / s : s;
 			
-			scalar = t * (matrix(k, j) - matrix(j, k));
+			scalar = t * (matrix(j, k) - matrix(k, j));
 
 			float v[3];
 			v[i] = 0.5f * s;
-			v[j] = t * (matrix(j, i) + matrix(i, j));
-			v[k] = t * (matrix(k, i) + matrix(i, k));
+			v[j] = t * (matrix(i, j) + matrix(j, i));
+			v[k] = t * (matrix(i, k) + matrix(k, i));
 
 			vector = Vector3(v[0], v[1], v[2]);
 		}
@@ -131,9 +131,9 @@ namespace BD3GE {
 		float z = vector.v.g.z;
 
 		return Matrix4(
-			1 - (2 * ((y * y) + (z * z))), 2 * ((x * y) + (s * z)), 2 * ((x * z) - (s * y)), 0,
-			2 * ((x * y) - (s * z)), 1 - (2 * ((x * x) + (z * z))), 2 * ((y * z) + (s * x)), 0,
-			2 * ((x * z) + (s * y)), 2 * ((y * z) - (s * x)), 1 - (2 * ((x * x) + (y * y))), 0,
+			1 - (2 * ((y * y) + (z * z))), 2 * ((x * y) - (s * z)), 2 * ((x * z) + (s * y)), 0,
+			2 * ((x * y) + (s * z)), 1 - (2 * ((x * x) + (z * z))), 2 * ((y * z) - (s * x)), 0,
+			2 * ((x * z) - (s * y)), 2 * ((y * z) + (s * x)), 1 - (2 * ((x * x) + (y * y))), 0,
 			0, 0, 0, 1
 		);
 	}
