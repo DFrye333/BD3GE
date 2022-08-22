@@ -41,7 +41,7 @@ namespace BD3GE {
 		return this->scale;
 	}
 
-	Matrix4 Transform::get_matrix() {
+	Matrix4& Transform::get_matrix() {
 		if (this->is_matrix_dirty) {
 			recalculate_matrix();
 		}
@@ -127,6 +127,15 @@ namespace BD3GE {
 
 	Transform Transform::inverse() {
 		return Transform(get_matrix().inverse());
+	}
+
+	Vector3 Transform::get_forward() {
+		Matrix4 matrix = get_matrix();
+		return -Vector3(
+			matrix(2, 0),
+			matrix(2, 1),
+			matrix(2, 2)
+		);
 	}
 
 	void Transform::print() {

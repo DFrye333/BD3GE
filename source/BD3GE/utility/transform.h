@@ -22,7 +22,7 @@ namespace BD3GE {
 			Vector3				get_position() const;
 			Quaternion			get_orientation() const;
 			Vector3				get_scale() const;
-			Matrix4				get_matrix();
+			Matrix4&			get_matrix();
 			void 				set_position(const Vector3 position);
 			void				set_orientation(float angle, Vector3 axis);
 			void				set_orientation(const Vector3 orientation);
@@ -41,6 +41,7 @@ namespace BD3GE {
 			void				rotate_z(float angle);
 			void 				to_float_array(float* float_array);
 			Transform 			inverse();
+			Vector3				get_forward();
 			void 				print();
 			const Transform& 	operator=(const Transform& other);
 			const Transform& 	operator*=(const Transform& other);

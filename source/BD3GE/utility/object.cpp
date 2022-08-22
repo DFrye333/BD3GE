@@ -44,4 +44,8 @@ namespace BD3GE {
 	Vector3 Object::get_position() {
 		return get_world_transform()->get_position();
 	}
+
+	Vector3 Object::get_forward() {
+		return get_world_transform()->get_forward();
+	}
 }

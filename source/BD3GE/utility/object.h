@@ -21,6 +21,7 @@ namespace BD3GE {
 			void translate(Vector3 translation);
 			void rotate(Vector3 angle);
 			Vector3 get_position();
+			Vector3 get_forward();
 
 			SlotmapKey world_transform;
 			SlotmapKey renderable;
