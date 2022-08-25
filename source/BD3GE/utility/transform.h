@@ -42,6 +42,8 @@ namespace BD3GE {
 			void 				to_float_array(float* float_array);
 			Transform 			inverse();
 			Vector3				get_forward();
+			Vector3				get_left();
+			Vector3				get_up();
 			void 				print();
 			const Transform& 	operator=(const Transform& other);
 			const Transform& 	operator*=(const Transform& other);

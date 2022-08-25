@@ -138,6 +138,24 @@ namespace BD3GE {
 		);
 	}
 
+	Vector3 Transform::get_left() {
+		Matrix4 matrix = get_matrix();
+		return -Vector3(
+			matrix(0, 0),
+			matrix(0, 1),
+			matrix(0, 2)
+		);
+	}
+
+	Vector3 Transform::get_up() {
+		Matrix4 matrix = get_matrix();
+		return -Vector3(
+			matrix(1, 0),
+			matrix(1, 1),
+			matrix(1, 2)
+		);
+	}
+
 	void Transform::print() {
 		get_matrix().print();
 	}

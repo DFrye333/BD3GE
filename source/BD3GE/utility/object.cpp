@@ -48,4 +48,12 @@ namespace BD3GE {
 	Vector3 Object::get_forward() {
 		return get_world_transform()->get_forward();
 	}
+
+	Vector3 Object::get_left() {
+		return get_world_transform()->get_left();
+	}
+
+	Vector3 Object::get_up() {
+		return get_world_transform()->get_up();
+	}
 }
