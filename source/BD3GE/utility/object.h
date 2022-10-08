@@ -11,10 +11,17 @@ namespace BD3GE {
 	extern "C" class BD3GE_API Object {
 		public:
 			Object();
-			Transform* get_world_transform();
-			Renderable* get_renderable();
-			void set_world_transform(Transform world_transform);
-			void set_renderable(Renderable renderable);
+			Object(const Object& other);
+			Object(Object&& other);
+			~Object();
+			Transform* get_world_transform() const;
+			Renderable* get_renderable() const;
+			SlotmapKey get_world_transform_key() const;
+			SlotmapKey get_renderable_key() const;
+			void set_world_transform(Transform&& world_transform);
+			void set_renderable(Renderable&& renderable);
+			void set_world_transform(SlotmapKey world_transform_key);
+			void set_renderable(SlotmapKey renderable_key);
 			void set_position(const Vector3 position);
 			void set_orientation(const Vector3 orientation);
 			void set_scale(Vector3 scaler);
@@ -24,9 +31,18 @@ namespace BD3GE {
 			Vector3 get_forward();
 			Vector3 get_left();
 			Vector3 get_up();
+			const Object& operator=(const Object& other);
+			const Object& operator=(Object&& other);
+
+		protected:
+			void cleanup();
+			void cleanup_transform();
+			void cleanup_renderable();
 
 			SlotmapKey world_transform;
 			SlotmapKey renderable;
+			bool owns_transform;
+			bool owns_renderable;
 	};
 }
 

@@ -112,6 +112,13 @@ namespace BD3GE {
 		return Vector2(*this) *= -1;
 	}
 
+	const bool Vector2::operator==(const Vector2& other) const {
+		return (
+			v.a[0] == other.v.a[0] &&
+			v.a[1] == other.v.a[1]
+		);
+	}
+
 	std::ostream& operator<<(std::ostream& out, const Vector2& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ")";
 	}
@@ -235,6 +242,14 @@ namespace BD3GE {
 
 	const Vector3 Vector3::operator-() const {
 		return Vector3(*this) *= -1;
+	}
+
+	const bool Vector3::operator==(const Vector3& other) const {
+		return (
+			v.a[0] == other.v.a[0] &&
+			v.a[1] == other.v.a[1] &&
+			v.a[2] == other.v.a[2]
+		);
 	}
 
 	std::ostream& operator<<(std::ostream& out, const Vector3& vec) {

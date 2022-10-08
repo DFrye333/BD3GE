@@ -13,7 +13,7 @@ namespace BD3GE {
 		this->scene->camera->set_viewport(gl.get_viewport_width(), gl.get_viewport_height());
 
 		unsigned int renderable_units_count = 0;
-		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
 			Renderable* renderable = scene_object.get_renderable();
@@ -21,21 +21,26 @@ namespace BD3GE {
 			// Lazy-loads renderables.
 			if (renderable->renderable_units.empty()) {
 				renderable = ModelManager::get_model(renderable->renderable_id);
-				scene_object.set_renderable(*renderable);
+				scene_object.set_renderable(ComponentManager::add_renderable(*renderable));
 			}
 
 			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				++renderable_units_count;
 			}
 		}
+		renderable_units_count += scene->renderable_keys.size();
 		
 		gl.create_buffers(renderable_units_count);
 
-		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
-			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
+			Renderable* renderable = ComponentManager::get_renderable(scene_object.get_renderable_key());
 
+			gl.setup_vaos(renderable->renderable_units);
+		}
+		for (SlotmapKey renderable_key : scene->renderable_keys) {
+			Renderable* renderable = ComponentManager::get_renderable(renderable_key);
 			gl.setup_vaos(renderable->renderable_units);
 		}
 
@@ -58,7 +63,7 @@ namespace BD3GE {
 		}
 
 		Matrix4 view_projection_transform = scene->camera->get_view_projection_matrix();
-		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			if (!scene_node) { continue; }
 
@@ -73,7 +78,7 @@ namespace BD3GE {
 				parent_node_transform = parent_node != nullptr ? parent_node->object.get_world_transform() : nullptr;
 			}
 
-			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
+			Renderable* renderable = ComponentManager::get_renderable(scene_object.get_renderable_key());
 			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				// Stacks transforms up the renderable hierarchy.
 				Transform world_transform_stack = Transform();
@@ -144,10 +149,10 @@ namespace BD3GE {
 	void Renderer::cache_resources() {
 		shader_ids.clear();
 
-		for (SlotmapKey scene_node_key : scene->renderable_objects) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
-			Renderable* renderable = ComponentManager::get_renderable(scene_object.renderable);
+			Renderable* renderable = ComponentManager::get_renderable(scene_object.get_renderable_key());
 
 			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
 				shader_ids.insert(renderable_unit->material->shader_id);

@@ -5,11 +5,11 @@ namespace BD3GE {
 	Slotmap<Renderable> ComponentManager::renderables;
 
 	SlotmapKey ComponentManager::add_transform(Transform transform) {
-		return transforms.insert(transform);
+		return transforms.insert(std::move(transform));
 	}
 
 	SlotmapKey ComponentManager::add_renderable(Renderable renderable) {
-		return renderables.insert(renderable);
+		return renderables.insert(std::move(renderable));
 	}
 
 	Transform* ComponentManager::get_transform(SlotmapKey transform_key) {
@@ -18,6 +18,14 @@ namespace BD3GE {
 
 	Renderable* ComponentManager::get_renderable(SlotmapKey renderable_key) {
 		return renderables.get(renderable_key);
+	}
+
+	void ComponentManager::remove_transform(SlotmapKey transform_key) {
+		transforms.remove(transform_key);
+	}
+
+	void ComponentManager::remove_renderable(SlotmapKey renderable_key) {
+		renderables.remove(renderable_key);
 	}
 
 	void ComponentManager::clear_all() {

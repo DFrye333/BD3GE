@@ -2,7 +2,7 @@
 
 namespace BD3GE {
 	Camera::Camera(Transform world_transform) : viewport_width(DEFAULT_WINDOW_WIDTH), viewport_height(DEFAULT_WINDOW_HEIGHT) {
-		this->world_transform = ComponentManager::add_transform(world_transform);
+		this->world_transform = ComponentManager::add_transform(std::move(world_transform));
 	}
 
 	Camera::Camera() : Camera(Transform()) {}

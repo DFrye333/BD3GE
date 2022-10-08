@@ -51,7 +51,7 @@ namespace BD3GE {
 			friend bool			operator==(const Transform& lhs, const Transform& rhs);
 			friend bool			operator!=(const Transform& lhs, const Transform& rhs);
 
-		//private:
+		private:
 
 			void				recalculate_matrix();
 			void				decompose_matrix();
