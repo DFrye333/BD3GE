@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
 
 #include "../system/api.h"
 
@@ -18,6 +19,7 @@ namespace BD3GE {
 			const float get_magnitude();
 			const Vector2 get_normalized();
 			const Vector2& normalize();
+			const std::string get_hash();
 			const Vector2& operator=(const Vector2& other);
 			const Vector2& operator+=(const Vector2& other);
 			const Vector2 operator+(const Vector2& other) const;
@@ -62,6 +64,7 @@ namespace BD3GE {
 			const float get_magnitude();
 			const Vector3 get_normalized();
 			const Vector3& normalize();
+			const std::string get_hash();
 			const Vector3& operator=(const Vector3& other);
 			const Vector3& operator+=(const Vector3& other);
 			const Vector3 operator+(const Vector3& other) const;

@@ -35,6 +35,10 @@ namespace BD3GE {
 		}
 	}
 
+	const std::string Vector2::get_hash() {
+		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]);
+	}
+
 	const Vector2& Vector2::operator=(const Vector2& other) {
 		v.a[0] = other.v.a[0];
 		v.a[1] = other.v.a[1];
@@ -158,6 +162,10 @@ namespace BD3GE {
 
 	const Vector3& Vector3::normalize(void) {
 		return *this = get_normalized();
+	}
+
+	const std::string Vector3::get_hash() {
+		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]) + "," + std::to_string(v.a[2]);
 	}
 
 	const Vector3& Vector3::operator=(const Vector3& other) {
