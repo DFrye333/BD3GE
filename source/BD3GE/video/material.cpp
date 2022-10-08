@@ -39,6 +39,12 @@ namespace BD3GE {
 		return new SimpleMaterial(*this);
 	}
 
+	void SimpleMaterial::set_color(Color color) {
+		this->color_ambient = color;
+		this->color_diffuse = color;
+		this->color_specular = color;
+	}
+
 	MappedMaterial::MappedMaterial() {
 		type = Material::TYPE::MAPPED;
 	}

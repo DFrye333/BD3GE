@@ -34,6 +34,7 @@ namespace BD3GE {
 			SimpleMaterial(size_t shader_id, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor);
 			SimpleMaterial(size_t shader_id, aiMaterial* material);
 			Material* clone() override;
+			void set_color(Color color);
 
 			Color color_ambient = Color(0.1f, 0.1f, 0.1f);
 			Color color_diffuse = Color(1.0f, 1.0f, 1.0f);
