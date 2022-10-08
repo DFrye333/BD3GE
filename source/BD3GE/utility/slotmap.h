@@ -14,16 +14,16 @@ namespace BD3GE {
 	class BD3GE_API SlotmapKey {
 		public:
 			SlotmapKey() {}
-			SlotmapKey(unsigned short index, unsigned short version) : index(index), version(version) {}
+			SlotmapKey(unsigned int index, unsigned int version) : index(index), version(version) {}
 			bool is_initialized() { return version > 0; }
 			friend std::ostream& operator<<(std::ostream& out, const SlotmapKey& key) {
 				return out << "(Index: " << key.index << ", Version: " << key.version << ")";
 			}
 
 			// Used by the Slotmap internally to address the desired datum.
-			unsigned short index = 0;
+			unsigned int index = 0;
 			// Used to control the datum's lifetime, preventing duplicate deletion or access to an element that has recycled the desired element's storage.
-			unsigned short version = 0;
+			unsigned int version = 0;
 	};
 
 	// The Slotmap is a data structure that provides constant-time lookup, insertion, and removal, along with high-density/high-locality storage.
@@ -37,7 +37,7 @@ namespace BD3GE {
 			Slotmap() : Slotmap(0) {};
 
 			// Initializes the Slotmap to accommodate for the given expected data quantity.
-			Slotmap(unsigned short size) : size(size), free_head(0), free_tail(0) {
+			Slotmap(unsigned int size) : size(size), free_head(0), free_tail(0) {
 				resize(size);
 			}
 
@@ -52,7 +52,7 @@ namespace BD3GE {
 				SlotmapKey& data_key = data_keys[free_head];
 
 				// Determines where the next free storage space will be after the current insertion, either advancing through the data key indices sequentially or by following the index trail.
-				unsigned short free_next = (data_key.is_initialized() || (free_head + 1) >= size) ? data_key.index : free_head + 1;
+				unsigned int free_next = (data_key.is_initialized() || (free_head + 1) >= size) ? data_key.index : free_head + 1;
 
 				// Sets up the return user key.
 				SlotmapKey map_key;
@@ -69,7 +69,7 @@ namespace BD3GE {
 				free_head = free_next;
 
 				// Inserts the provided datum at end of the data collection and updates the data key's index to point at this end location.
-				data.push_back(datum);
+				data.emplace_back(std::move(datum));
 				data_key.index = data.size() - 1;
 
 				// Adds an entry for the newly-added datum into the erase collection.
@@ -129,7 +129,7 @@ namespace BD3GE {
 				resize(size);
 			}
 
-			void resize(unsigned short size) {
+			void resize(unsigned int size) {
 				// If an invalid size is provided, do not accept it.
 				if (size <= 0) {
 					size = 100;
@@ -177,7 +177,7 @@ namespace BD3GE {
 				// Prints the erase indices.
 				std::cout << "Erase: ";
 				if (!erase.empty()) {
-					for (unsigned short erase_index : erase) {
+					for (unsigned int erase_index : erase) {
 						std::cout << " | ";
 						std::cout << erase_index;
 					}
@@ -198,13 +198,13 @@ namespace BD3GE {
 
 		private:
 			// Points to the on-deck free storage space. When this coincides with the free tail, it's time to resize the Slotmap.
-			unsigned short free_head;
+			unsigned int free_head;
 			// Points to the last free storage space in the Slotmap.
-			unsigned short free_tail;
+			unsigned int free_tail;
 			// Represents the quantity of data that the Slotmap is configured to store.
-			unsigned short size;
+			unsigned int size;
 			// Allows for data to be relocated as necessary without invalidating user handles.
-			std::vector<unsigned short> erase;
+			std::vector<unsigned int> erase;
 			// Represents the indirection layer, freeing users from concerns about the exact location of their data.
 			std::vector<SlotmapKey> data_keys;
 			// Represents the actual user data.
