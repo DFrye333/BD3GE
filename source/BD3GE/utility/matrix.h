@@ -12,7 +12,7 @@ namespace BD3GE {
 			static const short NUMBER_ROWS = 4;
 			static const short NUMBER_COLUMNS = 4;
 			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
-			static constexpr float EPSILON = 1.0e-6f;
+			static constexpr float EPSILON = 1.0e-12f;
 
 			static Matrix4 identity();
 

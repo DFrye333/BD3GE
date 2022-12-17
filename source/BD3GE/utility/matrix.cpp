@@ -71,10 +71,10 @@ namespace BD3GE {
 		for (unsigned short i = 0; i < NUMBER_COLUMNS; ++i) {
 			// If (i, i) is zero, try to swap rows.
 			float i_i = input_matrix(i, i);
-			if (abs(i_i) < Matrix4::EPSILON) {
+			if (abs(i_i) - EPSILON < 0.0f) {
 				for (unsigned short l = i; l < NUMBER_ROWS; ++l) {
 					// If a suitable row has been found to swap with row i, swap rows.
-					if (abs(input_matrix(i, l)) > Matrix4::EPSILON) {
+					if (abs(input_matrix(i, l)) > EPSILON) {
 						input_matrix.row_swap(i, l);
 						inverse_matrix.row_swap(i, l);
 
@@ -94,7 +94,7 @@ namespace BD3GE {
 
 				// If the current target (i, j) is already zero, move on to the next row rather than dividing by zero.
 				float i_j = input_matrix(i, j);
-				if (abs(i_j) < Matrix4::EPSILON) {
+				if (abs(i_j) - EPSILON < 0.0f) {
 					continue;
 				}
 
@@ -130,10 +130,10 @@ namespace BD3GE {
 		for (unsigned short i = 0; i < NUMBER_COLUMNS; ++i) {
 			// If (i, i) is zero, try to swap rows.
 			float i_i = determinant_matrix(i, i);
-			if (i_i == 0.0f) {
+			if (abs(i_i) - EPSILON < 0.0f) {
 				for (unsigned short l = i; l < NUMBER_ROWS; ++l) {
 					// If a suitable row has been found to swap with row i, swap rows.
-					if (determinant_matrix(i, l) != 0.0f) {
+					if (abs(determinant_matrix(i, l)) > EPSILON) {
 						determinant_matrix.row_swap(i, l);
 
 						// Keep track of each row-swap made, as it affects the final determinant.
@@ -151,7 +151,7 @@ namespace BD3GE {
 			for (unsigned short j = i + 1; j < NUMBER_ROWS; ++j) {
 				// If the current target (i, j) is already zero, move on to the next row rather than dividing by zero.
 				float i_j = determinant_matrix(i, j);
-				if (i_j == 0.0f) {
+				if (abs(i_j) - EPSILON < 0.0f) {
 					continue;
 				}
 
