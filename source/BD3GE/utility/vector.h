@@ -20,6 +20,7 @@ namespace BD3GE {
 			const Vector2 get_normalized();
 			const Vector2& normalize();
 			const std::string get_hash();
+			const std::string to_string();
 			const Vector2& operator=(const Vector2& other);
 			const Vector2& operator+=(const Vector2& other);
 			const Vector2 operator+(const Vector2& other) const;
@@ -65,6 +66,7 @@ namespace BD3GE {
 			const Vector3 get_normalized();
 			const Vector3& normalize();
 			const std::string get_hash();
+			const std::string to_string();
 			const Vector3& operator=(const Vector3& other);
 			const Vector3& operator+=(const Vector3& other);
 			const Vector3 operator+(const Vector3& other) const;
