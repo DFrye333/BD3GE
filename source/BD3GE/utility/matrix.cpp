@@ -16,14 +16,14 @@ namespace BD3GE {
 		}
 	}
 
-	// Constructs a matrix given an array of values.
+	// Constructs a matrix given an array of values in row-major order.
 	Matrix4::Matrix4(float* elements) {
 		for (int i = 0; i < NUMBER_ELEMENTS; ++i) {
 			elements[i] = elements[i];
 		}
 	}
 
-	// Constructs a matrix given individual values.
+	// Constructs a matrix given individual values in row-major order.
 	Matrix4::Matrix4(float a00, float a10, float a20, float a30,
 					float a01, float a11, float a21, float a31,
 					float a02, float a12, float a22, float a32,
