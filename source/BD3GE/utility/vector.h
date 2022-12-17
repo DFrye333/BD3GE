@@ -101,6 +101,55 @@ namespace BD3GE {
 				float a[3];		// Vector3 as generic array.
 			} v;
 	};
+
+	class BD3GE_API Vector4 {
+		public:
+			Vector4();
+			Vector4(const float a[4]);
+			Vector4(const float first, const float second, const float third, const float fourth);
+			Vector4(const Vector4& source);
+			const float dot_product(const Vector4& other);
+			const float get_magnitude();
+			const Vector4 get_normalized();
+			const Vector4& normalize();
+			const std::string get_hash();
+			const std::string to_string();
+			const Vector4& operator=(const Vector4& other);
+			const Vector4& operator+=(const Vector4& other);
+			const Vector4 operator+(const Vector4& other) const;
+			const Vector4& operator-=(const Vector4& other);
+			const Vector4 operator-(const Vector4& other) const;
+			const Vector4& operator*=(const Vector4& other);
+			const Vector4 operator*(const Vector4& other) const;
+			const Vector4& operator*=(const float other);
+			const Vector4 operator*(const float other) const;
+			const Vector4& operator/=(const Vector4& other);
+			const Vector4 operator/(const Vector4& other) const;
+			const Vector4& operator/=(const float other);
+			const Vector4 operator/(const float other) const;
+			const Vector4 operator-() const;
+			const bool operator==(const Vector4& other) const;
+			friend BD3GE_API std::ostream& operator<<(std::ostream& out, const Vector4& vec);
+
+			static constexpr float EPSILON = 1.0e-12f;
+			union {				// Union allows different Vector4 notation in different contexts.
+				struct {		// Vector4 as geometry.
+					float x;
+					float y;
+					float z;
+					float w;
+				} g;
+
+				struct {		// Vector4 as color.
+					float r;
+					float g;
+					float b;
+					float a;
+				} c;
+
+				float a[4];		// Vector4 as generic array.
+			} v;
+	};
 }
 
 #endif // BD3GE_VECTOR_H

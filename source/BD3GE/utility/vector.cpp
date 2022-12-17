@@ -271,4 +271,146 @@ namespace BD3GE {
 	std::ostream& operator<<(std::ostream& out, const Vector3& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ", " << vec.v.a[2] << ")";
 	}
+
+	Vector4::Vector4() : v{ 0.0f, 0.0f, 0.0f, 0.0f } {}
+
+	Vector4::Vector4(const float a[3]) : v{ a[0], a[1], a[2], a[3] } {}
+
+	Vector4::Vector4(const float first, const float second, const float third, const float fourth) : v{ first, second, third, fourth } {}
+
+	Vector4::Vector4(const Vector4& source) : v{ source.v.a[0], source.v.a[1], source.v.a[2], source.v.a[3] } {}
+
+	const float Vector4::dot_product(const Vector4& other) {
+		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]) + (v.a[2] * other.v.a[2]) + (v.a[3] * other.v.a[3]));
+	}
+
+	const float Vector4::get_magnitude(void) {
+		return sqrt(dot_product(*this));
+	}
+
+	const Vector4 Vector4::get_normalized(void) {
+		float magnitude = get_magnitude();
+		if (magnitude > EPSILON) {
+			return Vector4(*this / magnitude);
+		}
+		else {
+			return Vector4(0, 0, 0, 0);
+		}
+	}
+
+	const Vector4& Vector4::normalize(void) {
+		return *this = get_normalized();
+	}
+
+	const std::string Vector4::get_hash() {
+		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]) + "," + std::to_string(v.a[2]) + "," + std::to_string(v.a[3]);
+	}
+
+	const std::string Vector4::to_string() {
+		return get_hash();
+	}
+
+	const Vector4& Vector4::operator=(const Vector4& other) {
+		v.a[0] = other.v.a[0];
+		v.a[1] = other.v.a[1];
+		v.a[2] = other.v.a[2];
+		v.a[3] = other.v.a[3];
+
+		return *this;
+	}
+
+	const Vector4& Vector4::operator+=(const Vector4& other) {
+		v.a[0] += other.v.a[0];
+		v.a[1] += other.v.a[1];
+		v.a[2] += other.v.a[2];
+		v.a[3] += other.v.a[3];
+
+		return *this;
+	}
+
+	const Vector4 Vector4::operator+(const Vector4& other) const {
+		return Vector4(*this) += other;
+	}
+
+	const Vector4& Vector4::operator-=(const Vector4& other) {
+		v.a[0] -= other.v.a[0];
+		v.a[1] -= other.v.a[1];
+		v.a[2] -= other.v.a[2];
+		v.a[3] -= other.v.a[3];
+
+		return *this;
+	}
+
+	const Vector4 Vector4::operator-(const Vector4& other) const {
+		return Vector4(*this) -= other;
+	}
+
+	const Vector4& Vector4::operator*=(const Vector4& other) {
+		v.a[0] *= other.v.a[0];
+		v.a[1] *= other.v.a[1];
+		v.a[2] *= other.v.a[2];
+		v.a[3] *= other.v.a[3];
+
+		return *this;
+	}
+
+	const Vector4 Vector4::operator*(const Vector4& other) const {
+		return Vector4(*this) *= other;
+	}
+
+	const Vector4& Vector4::operator*=(const float other) {
+		v.a[0] *= other;
+		v.a[1] *= other;
+		v.a[2] *= other;
+		v.a[3] *= other;
+
+		return *this;
+	}
+
+	const Vector4 Vector4::operator*(const float other) const {
+		return Vector4(*this) *= other;
+	}
+
+	const Vector4& Vector4::operator/=(const Vector4& other) {
+		v.a[0] /= other.v.a[0];
+		v.a[1] /= other.v.a[1];
+		v.a[2] /= other.v.a[2];
+		v.a[3] /= other.v.a[3];
+
+		return *this;
+	}
+
+	const Vector4 Vector4::operator/(const Vector4& other) const {
+		return Vector4(*this) /= other;
+	}
+
+	const Vector4& Vector4::operator/=(const float other) {
+		v.a[0] /= other;
+		v.a[1] /= other;
+		v.a[2] /= other;
+		v.a[3] /= other;
+
+		return *this;
+	}
+
+	const Vector4 Vector4::operator/(const float other) const {
+		return Vector4(*this) /= other;
+	}
+
+	const Vector4 Vector4::operator-() const {
+		return Vector4(*this) *= -1;
+	}
+
+	const bool Vector4::operator==(const Vector4& other) const {
+		return (
+			v.a[0] == other.v.a[0] &&
+			v.a[1] == other.v.a[1] &&
+			v.a[2] == other.v.a[2] &&
+			v.a[3] == other.v.a[3]
+		);
+	}
+
+	std::ostream& operator<<(std::ostream& out, const Vector4& vec) {
+		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ", " << vec.v.a[2] << ", " << vec.v.a[3] << ")";
+	}
 }
