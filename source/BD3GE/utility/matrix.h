@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../system/api.h"
+#include "../utility/vector.h"
 
 namespace BD3GE {
 	class Matrix4 {
@@ -12,7 +13,8 @@ namespace BD3GE {
 			static const short NUMBER_ROWS = 4;
 			static const short NUMBER_COLUMNS = 4;
 			static const short NUMBER_ELEMENTS = NUMBER_ROWS * NUMBER_COLUMNS;
-			static constexpr float EPSILON = 1.0e-12f;
+			// This value is as large as it is to prevent near-zero values, which cause poorly-conditioned matrices. Recall The Great Rotation Jitter of '22.
+			static constexpr float EPSILON = 1.0e-3f;
 
 			static Matrix4 identity();
 
@@ -37,6 +39,10 @@ namespace BD3GE {
 			const Matrix4	operator+(const Matrix4& other) const;
 			const Matrix4& 	operator*=(const Matrix4& other);
 			const Matrix4 	operator*(const Matrix4& other) const;
+			const Vector4	operator*=(const Vector4& other) const;
+			const Vector4	operator*(const Vector4& other) const;
+			const Vector3	operator*=(const Vector3& other) const;
+			const Vector3	operator*(const Vector3& other) const;
 			friend bool		operator==(const Matrix4& lhs, const Matrix4& rhs);
 			friend bool		operator!=(const Matrix4& lhs, const Matrix4& rhs);
 

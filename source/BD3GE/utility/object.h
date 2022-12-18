@@ -22,11 +22,13 @@ namespace BD3GE {
 			void set_renderable(Renderable&& renderable);
 			void set_world_transform(SlotmapKey world_transform_key);
 			void set_renderable(SlotmapKey renderable_key);
-			void set_position(const Vector3 position);
-			void set_orientation(const Vector3 orientation);
-			void set_scale(Vector3 scaler);
-			void translate(Vector3 translation);
-			void rotate(Vector3 angle);
+			void set_world_position(const Vector3 position);
+			void set_world_orientation(const Vector3 orientation);
+			void set_world_scale(Vector3 scaler);
+			void world_translate(Vector3 translation);
+			void world_rotate(Vector3 rotation);
+			void local_translate(Vector3 translation);
+			void local_rotate(Vector3 rotation);
 			Vector3 get_position();
 			Vector3 get_forward();
 			Vector3 get_left();

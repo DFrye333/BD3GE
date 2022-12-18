@@ -46,8 +46,7 @@ namespace BD3GE {
 			Vector3				get_up();
 			void 				print();
 			const Transform& 	operator=(const Transform& other);
-			const Transform& 	operator*=(const Transform& other);
-			const Transform 	operator*(const Transform& other) const;
+			Transform 			operator*(const Transform& other);
 			friend bool			operator==(const Transform& lhs, const Transform& rhs);
 			friend bool			operator!=(const Transform& lhs, const Transform& rhs);
 

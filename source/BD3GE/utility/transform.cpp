@@ -168,16 +168,8 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Transform& Transform::operator*=(const Transform& other) {
-		recalculate_matrix();
-		this->matrix *= Transform(other).get_matrix();
-		decompose_matrix();
-
-		return *this;
-	}
-
-	const Transform Transform::operator*(const Transform& other) const {
-		return Transform(*this) *= other;
+	Transform Transform::operator*(const Transform& other) {
+		return Transform(get_matrix() * Transform(other).get_matrix());
 	}
 
 	bool operator==(const Transform& lhs, const Transform& rhs) {

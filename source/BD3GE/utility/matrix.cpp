@@ -99,7 +99,7 @@ namespace BD3GE {
 				}
 
 				// The cancellation factor is the number -(i, i) / (i, j) that, when multiplied by the current target (i, j), yields -(i, i), allowing for easy zeroing.
-				float cancellation_factor =  -1.0f * (i_i / i_j);
+				float cancellation_factor = -1.0f * (i_i / i_j);
 
 				// Update the current element by multiplying it with the cancellation factor.
 				input_matrix.row_multiply(j, cancellation_factor);
@@ -156,7 +156,7 @@ namespace BD3GE {
 				}
 
 				// The cancellation factor is the number -(i, i) / (i, j) that, when multiplied by the current target (i, j), yields -(i, i), allowing for easy zeroing.
-				float cancellation_factor =  -1.0f * (i_i / i_j);
+				float cancellation_factor = -1.0f * (i_i / i_j);
 
 				// Update the current element by multiplying it with the cancellation factor.
 				determinant_matrix.row_multiply(j, cancellation_factor);
@@ -259,6 +259,31 @@ namespace BD3GE {
 	}
 
 	const Matrix4 Matrix4::operator*(const Matrix4& other) const {
+		return Matrix4(*this) *= other;
+	}
+
+	const Vector4 Matrix4::operator*=(const Vector4& other) const {
+		return Vector4(
+			((*this)(0, 0) * other.v.a[0]) + ((*this)(1, 0) * other.v.a[1]) + ((*this)(2, 0) * other.v.a[2]) + ((*this)(3, 0) * other.v.a[3]),
+			((*this)(0, 1) * other.v.a[0]) + ((*this)(1, 1) * other.v.a[1]) + ((*this)(2, 1) * other.v.a[2]) + ((*this)(3, 1) * other.v.a[3]),
+			((*this)(0, 2) * other.v.a[0]) + ((*this)(1, 2) * other.v.a[1]) + ((*this)(2, 2) * other.v.a[2]) + ((*this)(3, 2) * other.v.a[3]),
+			((*this)(0, 3) * other.v.a[0]) + ((*this)(1, 3) * other.v.a[1]) + ((*this)(2, 3) * other.v.a[2]) + ((*this)(3, 3) * other.v.a[3])
+		);
+	}
+
+	const Vector4 Matrix4::operator*(const Vector4& other) const {
+		return Matrix4(*this) *= other;
+	}
+
+	const Vector3 Matrix4::operator*=(const Vector3& other) const {
+		return Vector3(
+			((*this)(0, 0) * other.v.a[0]) + ((*this)(1, 0) * other.v.a[1]) + ((*this)(2, 0) * other.v.a[2]),
+			((*this)(0, 1) * other.v.a[0]) + ((*this)(1, 1) * other.v.a[1]) + ((*this)(2, 1) * other.v.a[2]),
+			((*this)(0, 2) * other.v.a[0]) + ((*this)(1, 2) * other.v.a[1]) + ((*this)(2, 2) * other.v.a[2])
+		);
+	}
+
+	const Vector3 Matrix4::operator*(const Vector3& other) const {
 		return Matrix4(*this) *= other;
 	}
 

@@ -57,24 +57,38 @@ namespace BD3GE {
 		this->renderable = renderable_key;
 	}
 
-	void Object::set_position(const Vector3 position) {
+	void Object::set_world_position(const Vector3 position) {
 		get_world_transform()->set_position(position);
 	}
 
-	void Object::set_orientation(const Vector3 orientation) {
+	void Object::set_world_orientation(const Vector3 orientation) {
 		get_world_transform()->set_orientation(orientation);
 	}
 
-	void Object::set_scale(Vector3 scaler) {
+	void Object::set_world_scale(Vector3 scaler) {
 		get_world_transform()->set_scale(scaler);
 	}
 
-	void Object::translate(Vector3 translation) {
+	void Object::world_translate(Vector3 translation) {
 		get_world_transform()->translate(translation);
 	}
 
-	void Object::rotate(Vector3 angle) {
-		get_world_transform()->rotate(angle);
+	void Object::world_rotate(Vector3 rotation) {
+		get_world_transform()->rotate(rotation);
+	}
+
+	void Object::local_translate(Vector3 translation) {
+		Transform* world_transform = ComponentManager::get_transform(this->world_transform);
+		Vector3 world_translation = world_transform->get_matrix() * translation;
+		world_transform->translate(world_translation);
+	}
+
+	void Object::local_rotate(Vector3 rotation) {
+		Transform* world_transform = ComponentManager::get_transform(this->world_transform);
+		Quaternion q = world_transform->get_orientation();
+		Quaternion r = Quaternion(rotation);
+		Quaternion world_rotation = q * r * q.inverse();
+		world_transform->rotate(world_rotation);
 	}
 
 	Vector3 Object::get_position() {
