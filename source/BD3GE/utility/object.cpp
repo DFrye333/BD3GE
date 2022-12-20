@@ -78,13 +78,13 @@ namespace BD3GE {
 	}
 
 	void Object::local_translate(Vector3 translation) {
-		Transform* world_transform = ComponentManager::get_transform(this->world_transform);
+		Transform* world_transform = get_world_transform();
 		Vector3 world_translation = world_transform->get_matrix() * translation;
 		world_transform->translate(world_translation);
 	}
 
 	void Object::local_rotate(Vector3 rotation) {
-		Transform* world_transform = ComponentManager::get_transform(this->world_transform);
+		Transform* world_transform = get_world_transform();
 		Quaternion q = world_transform->get_orientation();
 		Quaternion r = Quaternion(rotation);
 		Quaternion world_rotation = q * r * q.inverse();
