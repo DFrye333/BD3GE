@@ -8,6 +8,11 @@
 #include "../system/api.h"
 
 namespace BD3GE {
+	// Forward declarations
+	class Vector2;
+	class Vector3;
+	class Vector4;
+
 	class BD3GE_API Vector2 {
 		public:
 			Vector2();
@@ -59,6 +64,7 @@ namespace BD3GE {
 			Vector3();
 			Vector3(const float a[3]);
 			Vector3(const float first, const float second, const float third);
+			Vector3(const Vector4& vec4);
 			Vector3(const Vector3& source);
 			const float dot_product(const Vector3& other);
 			const Vector3 cross_product(const Vector3& other);
@@ -107,6 +113,7 @@ namespace BD3GE {
 			Vector4();
 			Vector4(const float a[4]);
 			Vector4(const float first, const float second, const float third, const float fourth);
+			Vector4(const Vector3& vec3, const float fourth);
 			Vector4(const Vector4& source);
 			const float dot_product(const Vector4& other);
 			const float get_magnitude();

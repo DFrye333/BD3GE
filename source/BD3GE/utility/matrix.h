@@ -41,8 +41,6 @@ namespace BD3GE {
 			const Matrix4 	operator*(const Matrix4& other) const;
 			const Vector4	operator*=(const Vector4& other) const;
 			const Vector4	operator*(const Vector4& other) const;
-			const Vector3	operator*=(const Vector3& other) const;
-			const Vector3	operator*(const Vector3& other) const;
 			friend bool		operator==(const Matrix4& lhs, const Matrix4& rhs);
 			friend bool		operator!=(const Matrix4& lhs, const Matrix4& rhs);
 

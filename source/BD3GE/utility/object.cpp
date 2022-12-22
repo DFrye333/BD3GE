@@ -79,7 +79,7 @@ namespace BD3GE {
 
 	void Object::local_translate(Vector3 translation) {
 		Transform* world_transform = get_world_transform();
-		Vector3 world_translation = world_transform->get_matrix() * translation;
+		Vector3 world_translation = world_transform->get_matrix() * Vector4(translation, 0.0f);
 		world_transform->translate(world_translation);
 	}
 

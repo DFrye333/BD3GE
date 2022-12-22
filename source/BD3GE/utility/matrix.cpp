@@ -275,18 +275,6 @@ namespace BD3GE {
 		return Matrix4(*this) *= other;
 	}
 
-	const Vector3 Matrix4::operator*=(const Vector3& other) const {
-		return Vector3(
-			((*this)(0, 0) * other.v.a[0]) + ((*this)(1, 0) * other.v.a[1]) + ((*this)(2, 0) * other.v.a[2]),
-			((*this)(0, 1) * other.v.a[0]) + ((*this)(1, 1) * other.v.a[1]) + ((*this)(2, 1) * other.v.a[2]),
-			((*this)(0, 2) * other.v.a[0]) + ((*this)(1, 2) * other.v.a[1]) + ((*this)(2, 2) * other.v.a[2])
-		);
-	}
-
-	const Vector3 Matrix4::operator*(const Vector3& other) const {
-		return Matrix4(*this) *= other;
-	}
-
 	bool operator==(const Matrix4& lhs, const Matrix4& rhs) {
 		for (unsigned short i = 0; i < Matrix4::NUMBER_ELEMENTS; ++i) {
 			if ((lhs.elements[i] - rhs.elements[i]) > Matrix4::EPSILON) {
