@@ -18,6 +18,12 @@ namespace BD3GE {
 								Camera(Transform world_transform);
 								Camera();
 								~Camera();
+			float				get_horizontal_fov_degrees();
+			float				get_horizontal_fov_radians();
+			void				set_horizontal_fov_degrees(float horizontal_fov_degrees);
+			void				set_horizontal_fov_radians(float horizontal_fov_radians);
+			float				get_vertical_fov_degrees();
+			float				get_vertical_fov_radians();
 			Transform			get_view_transform() const;
 			const Matrix4		get_view_projection_matrix();
 			void				set_viewport(const unsigned int viewport_width, const unsigned int viewport_height);
@@ -28,6 +34,7 @@ namespace BD3GE {
 
 			unsigned int viewport_width;
 			unsigned int viewport_height;
+			float horizontal_fov;
 			Matrix4 projection_transform;
 			bool should_recalculate_projection_transform = true;
 	};
