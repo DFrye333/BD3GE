@@ -19,6 +19,8 @@ namespace BD3GE {
 			bool is_in_region(BD3GE::Vector2 position);
 			std::vector<BD3GE::Vector2> get_bordering_positions();
 			std::vector<BD3GE::Vector2> get_bordering_positions(std::vector<DIRECTION> directions);
+			float calculate_area();
+			friend BD3GE_API std::ostream& operator<<(std::ostream& out, const Region& region);
 
 		//private:
 			Vector2 position;

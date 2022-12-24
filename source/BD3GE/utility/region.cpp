@@ -120,4 +120,12 @@ namespace BD3GE {
 
 		return bordering_positions;
 	}
+
+	float Region::calculate_area() {
+		return range.v.g.x * range.v.g.y;
+	}
+
+	std::ostream& operator<<(std::ostream& out, const Region& region) {
+		return out << "Position: " << region.position << ", Range: " << region.range;
+	}
 }
