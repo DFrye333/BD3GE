@@ -50,6 +50,10 @@ namespace BD3GE {
 		this->should_recalculate_projection_transform = true;
 	}
 
+	Vector3 Camera::to_world_space(Vector4 camera_space_vector) {
+		return Vector3(get_world_transform()->get_matrix() * camera_space_vector);
+	}
+
 	const Matrix4 Camera::get_projection_matrix() {
 		if (should_recalculate_projection_transform) {
 			float inverse_aspect_ratio = ((float)this->viewport_height / (float)this->viewport_width);

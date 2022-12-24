@@ -30,6 +30,7 @@ namespace BD3GE {
 			Transform				get_view_transform() const;
 			const Matrix4			get_view_projection_matrix();
 			void					set_viewport(const unsigned int viewport_width, const unsigned int viewport_height);
+			Vector3					to_world_space(Vector4 camera_space_vector);
 			Region					calculate_bounding_image_plane_projection_region();
 			Region					calculate_bounding_image_plane_projection_region(float plane_y); // TODO: Generalize this as a frustum volume?
 			void					print_stats();
