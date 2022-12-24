@@ -54,8 +54,10 @@ namespace BD3GE {
 	}
 
 	SlotmapKey Scene::add_renderable_object(Object&& new_node, SlotmapKey parent_node) {
+		Vector2 position = Vector2(new_node.get_position().v.g.x, new_node.get_position().v.g.z);
 		SlotmapKey new_node_key = add_object(std::move(new_node), parent_node);
-		renderable_objects_keys.push_back(new_node_key);
+		renderable_objects_collection.push_back(new_node_key);
+		renderable_objects_partitioning.insert(QuadtreeData(new_node_key, position));
 		return new_node_key;
 	}
 
@@ -73,5 +75,14 @@ namespace BD3GE {
 
 	void Scene::remove_object(SlotmapKey node_key) {
 		scene_nodes.remove(node_key);
+	}
+
+	std::vector<SlotmapKey> Scene::get_visible_renderable_keys() {
+		if (this->should_frustum_cull) {
+			Region bounding_image_plane_projection_region = this->camera->calculate_bounding_image_plane_projection_region();
+			return this->renderable_objects_partitioning.collect_overlapping_nodes(bounding_image_plane_projection_region);
+		} else {
+			return renderable_objects_collection;
+		}
 	}
 }

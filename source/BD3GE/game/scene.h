@@ -9,6 +9,7 @@
 #include "../system/api.h"
 #include "../utility/color.h"
 #include "../utility/object.h"
+#include "../utility/quadtree.h"
 #include "../utility/slotmap.h"
 #include "../video/brush.h"
 #include "../video/camera.h"
@@ -42,14 +43,17 @@ namespace BD3GE {
 			SlotmapKey add_renderable(Renderable&& renderable);
 			Object* get_object(SlotmapKey node_key);
 			void remove_object(SlotmapKey node_key);
+			std::vector<SlotmapKey> get_visible_renderable_keys();
 
 			Camera* camera;
+			Quadtree renderable_objects_partitioning;
 			SlotmapKey root_scene_node;
 			Slotmap<SceneNode> scene_nodes;
-			std::vector<SlotmapKey> renderable_objects_keys;
+			std::vector<SlotmapKey> renderable_objects_collection;
 			std::vector<SlotmapKey> renderable_keys;
 			std::vector<Light*> lights;
 			std::vector<Material*> lit_materials;
+			bool should_frustum_cull = true;
 	};
 }
 

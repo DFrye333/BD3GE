@@ -13,7 +13,7 @@ namespace BD3GE {
 		this->scene->camera->set_viewport(gl.get_viewport_width(), gl.get_viewport_height());
 
 		unsigned int renderable_units_count = 0;
-		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_collection) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
 			Renderable* renderable = scene_object.get_renderable();
@@ -32,7 +32,7 @@ namespace BD3GE {
 		
 		gl.create_buffers(renderable_units_count);
 
-		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_collection) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
 			Renderable* renderable = ComponentManager::get_renderable(scene_object.get_renderable_key());
@@ -63,7 +63,7 @@ namespace BD3GE {
 		}
 
 		Matrix4 view_projection_transform = scene->camera->get_view_projection_matrix();
-		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
+		for (SlotmapKey scene_node_key : scene->get_visible_renderable_keys()) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			if (!scene_node) { continue; }
 
@@ -149,7 +149,7 @@ namespace BD3GE {
 	void Renderer::cache_resources() {
 		shader_ids.clear();
 
-		for (SlotmapKey scene_node_key : scene->renderable_objects_keys) {
+		for (SlotmapKey scene_node_key : scene->renderable_objects_collection) {
 			SceneNode* scene_node = scene->scene_nodes.get(scene_node_key);
 			Object& scene_object = scene_node->object;
 			Renderable* renderable = ComponentManager::get_renderable(scene_object.get_renderable_key());
