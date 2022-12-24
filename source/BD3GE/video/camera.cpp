@@ -102,6 +102,7 @@ namespace BD3GE {
 		camera_space_frustum_bottom.rotate(Vector3(vertical_fov * 0.5f, 0, 0));
 		camera_space_frustum_top.rotate(Vector3(-vertical_fov * 0.5f, 0, 0));
 
+		// TODO: Use camera z-plane, rather than world y-plane, for more flexibility?
 		Vector3 center_intersect = calculate_ray_plane_intercept(camera_world_position, ((*world_transform) * camera_space_frustum_center).get_forward(), plane_y);
 		Vector3 left_intersect = calculate_ray_plane_intercept(camera_world_position, ((*world_transform) * camera_space_frustum_left).get_forward(), plane_y);
 		Vector3 right_intersect = calculate_ray_plane_intercept(camera_world_position, ((*world_transform) * camera_space_frustum_right).get_forward(), plane_y);
@@ -127,7 +128,7 @@ namespace BD3GE {
 		std::vector<Vector3> world_bounding_region_corner_points = calculate_bounding_values(world_image_plane_projection_corner_points, 0, 2);
 
 		return Region(
-			Vector2(center_intersect.v.g.x, center_intersect.v.g.z),
+			Vector2(world_bounding_region_corner_points[0].v.g.x, world_bounding_region_corner_points[0].v.g.y),
 			Vector2(
 				world_bounding_region_corner_points[1].v.g.x - world_bounding_region_corner_points[0].v.g.x,
 				world_bounding_region_corner_points[2].v.g.y - world_bounding_region_corner_points[0].v.g.y
@@ -162,16 +163,11 @@ namespace BD3GE {
 				m = direction.v.g.y / direction.v.g.z;
 				z = (plane_y + ((m * origin.v.g.z) - origin.v.g.y)) / m;
 			}
-			g_log->write(Log::TYPE::INFO, "Ray intercepts y=" + std::to_string(plane_y) + " plane at (x, z): " + std::to_string(x) + ", " + std::to_string(z));
 
 			return Vector3(x, plane_y, z);
 		} else if (origin.v.g.y == plane_y) {
-			g_log->write(Log::TYPE::INFO, "Camera sitting on y=" + std::to_string(plane_y) + " plane at (x, z): " + std::to_string(origin.v.g.x) + ", " + std::to_string(origin.v.g.z));
-
 			return Vector3(origin.v.g.x, plane_y, origin.v.g.z);
 		} else { // If camera has zero pitch (numerator == 0) and pos.y != plane_y, the camera is not looking at y == plane_y, and therefore there is no solution.
-			g_log->write(Log::TYPE::INFO, "Ray does not intercept y=" + std::to_string(plane_y) + " plane.");
-
 			return Vector3();
 		}
 	}
