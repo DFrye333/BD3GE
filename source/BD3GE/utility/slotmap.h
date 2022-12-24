@@ -16,6 +16,7 @@ namespace BD3GE {
 			SlotmapKey() {}
 			SlotmapKey(unsigned int index, unsigned int version) : index(index), version(version) {}
 			bool is_initialized() { return version > 0; }
+			bool operator==(SlotmapKey& other) { return index == other.index && version == other.version; }
 			friend std::ostream& operator<<(std::ostream& out, const SlotmapKey& key) {
 				return out << "(Index: " << key.index << ", Version: " << key.version << ")";
 			}
