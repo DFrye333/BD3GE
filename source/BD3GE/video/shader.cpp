@@ -120,25 +120,53 @@ namespace BD3GE {
 	}
 
 	void Shader::set_uniform(std::string uniform_name, Matrix4 value) {
-		GLfloat transformation_array[16];
-		value.to_float_array(transformation_array);
-		glProgramUniformMatrix4fv(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, GL_TRUE, transformation_array);
+		this->set_uniform(uniform_name.c_str(), value);
 	}
 
 	void Shader::set_uniform(std::string uniform_name, Vector3 value) {
-		glProgramUniform3fv(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), 1, value.v.a);
+		this->set_uniform(uniform_name.c_str(), value);
 	}
 
 	void Shader::set_uniform(std::string uniform_name, float value) {
-		glProgramUniform1f(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
+		this->set_uniform(uniform_name.c_str(), value);
 	}
 
 	void Shader::set_uniform(std::string uniform_name, int value) {
-		glProgramUniform1i(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
+		this->set_uniform(uniform_name.c_str(), value);
 	}
 
 	void Shader::set_uniform(std::string uniform_name, unsigned int value) {
-		glProgramUniform1ui(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name.c_str()), value);
+		this->set_uniform(uniform_name.c_str(), value);
+	}
+
+	void Shader::set_uniform(std::string uniform_name, bool value) {
+		this->set_uniform(uniform_name.c_str(), value);
+	}
+
+	void Shader::set_uniform(const char* uniform_name, Matrix4 value) {
+		GLfloat transformation_array[16];
+		value.to_float_array(transformation_array);
+		glProgramUniformMatrix4fv(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name), 1, GL_TRUE, transformation_array);
+	}
+
+	void Shader::set_uniform(const char* uniform_name, Vector3 value) {
+		glProgramUniform3fv(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name), 1, value.v.a);
+	}
+
+	void Shader::set_uniform(const char* uniform_name, float value) {
+		glProgramUniform1f(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name), value);
+	}
+
+	void Shader::set_uniform(const char* uniform_name, int value) {
+		glProgramUniform1i(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name), value);
+	}
+
+	void Shader::set_uniform(const char* uniform_name, unsigned int value) {
+		glProgramUniform1ui(get_program_ID(), glGetUniformLocation(get_program_ID(), uniform_name), value);
+	}
+
+	void Shader::set_uniform(const char* uniform_name, bool value) {
+		this->set_uniform(uniform_name, (unsigned int)value);
 	}
 
 	void Shader::set_light(Light* light) {

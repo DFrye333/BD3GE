@@ -50,6 +50,13 @@ namespace BD3GE {
 			void	set_uniform(std::string uniform_name, float value);
 			void	set_uniform(std::string uniform_name, int value);
 			void	set_uniform(std::string uniform_name, unsigned int value);
+			void	set_uniform(std::string uniform_name, bool value);
+			void	set_uniform(const char* uniform_name, Matrix4 value);
+			void	set_uniform(const char* uniform_name, Vector3 value);
+			void	set_uniform(const char* uniform_name, float value);
+			void	set_uniform(const char* uniform_name, int value);
+			void	set_uniform(const char* uniform_name, unsigned int value);
+			void	set_uniform(const char* uniform_name, bool value);
 			void	set_light(Light* light);
 
 			GLuint program_ID;
