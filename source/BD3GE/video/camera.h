@@ -36,9 +36,9 @@ namespace BD3GE {
 
 		private:
 
+			const Matrix4			get_projection_matrix();
 			Vector3					calculate_ray_plane_intercept(Vector3 origin, Vector3 direction, float plane_y);
 			std::vector<Vector3>	calculate_bounding_values(std::vector<Vector3> points, unsigned short dimension_0, unsigned short dimension_1);
-			const Matrix4			get_projection_matrix();
 
 			unsigned int viewport_width;
 			unsigned int viewport_height;

@@ -5,7 +5,7 @@ namespace BD3GE {
 
 	Material::Material(size_t shader_id) : shader_id(shader_id) {}
 
-	Material::Material(size_t shader, float gloss_factor) : shader_id(shader), gloss_factor(gloss_factor) {}
+	Material::Material(size_t shader_id, float gloss_factor) : shader_id(shader_id), gloss_factor(gloss_factor) {}
 
 	SimpleMaterial::SimpleMaterial(size_t shader, Color color) : Material(shader), color_ambient(color), color_diffuse(color), color_specular(color) {
 		type = Material::TYPE::SIMPLE;
