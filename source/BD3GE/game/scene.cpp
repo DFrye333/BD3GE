@@ -77,6 +77,15 @@ namespace BD3GE {
 		scene_nodes.remove(node_key);
 	}
 
+	void Scene::move_object(SlotmapKey node_key, Vector3 translation) {
+		Object* object = get_object(node_key);
+		Vector3 old_world_position = object->get_position();
+		Vector3 new_world_position = old_world_position + translation;
+		object->set_world_position(new_world_position);
+		renderable_objects_partitioning.remove(QuadtreeData(node_key, Vector2(old_world_position.v.g.x, old_world_position.v.g.z)));
+		renderable_objects_partitioning.insert(QuadtreeData(node_key, Vector2(new_world_position.v.g.x, new_world_position.v.g.z)));
+	}
+
 	std::vector<SlotmapKey> Scene::get_visible_renderable_keys() {
 		if (this->should_frustum_cull) {
 			Region bounding_image_plane_projection_region = this->camera->calculate_bounding_image_plane_projection_region();

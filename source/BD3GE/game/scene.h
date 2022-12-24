@@ -43,6 +43,7 @@ namespace BD3GE {
 			SlotmapKey add_renderable(Renderable&& renderable);
 			Object* get_object(SlotmapKey node_key);
 			void remove_object(SlotmapKey node_key);
+			void move_object(SlotmapKey node_key, Vector3 new_world_position);
 			std::vector<SlotmapKey> get_visible_renderable_keys();
 
 			Camera* camera;
