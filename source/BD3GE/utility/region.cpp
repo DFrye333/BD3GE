@@ -30,10 +30,10 @@ namespace BD3GE {
 				bottom_region = intersection;
 			}
 
-			unsigned short left_region_right_edge = (left_region.position + left_region.range).v.g.x;
-			unsigned short right_region_left_edge = right_region.position.v.g.x;
-			unsigned short bottom_region_top_edge = (bottom_region.position + bottom_region.range).v.g.y;
-			unsigned short top_region_bottom_edge = top_region.position.v.g.y;
+			short left_region_right_edge = (left_region.position + left_region.range).v.g.x;
+			short right_region_left_edge = right_region.position.v.g.x;
+			short bottom_region_top_edge = (bottom_region.position + bottom_region.range).v.g.y;
+			short top_region_bottom_edge = top_region.position.v.g.y;
 
 			// No overlap between the current candidate region and the running cumulative intersection means no overall intersection.
 			if (left_region_right_edge < right_region_left_edge || bottom_region_top_edge < top_region_bottom_edge) {
@@ -42,8 +42,8 @@ namespace BD3GE {
 
 			BD3GE::Vector2 new_intersection_lower_endpoint = BD3GE::Vector2(right_region_left_edge, top_region_bottom_edge);
 
-			unsigned short right_region_right_edge = (right_region.position + right_region.range).v.g.x;
-			unsigned short top_region_top_edge = (top_region.position + top_region.range).v.g.y;
+			short right_region_right_edge = (right_region.position + right_region.range).v.g.x;
+			short top_region_top_edge = (top_region.position + top_region.range).v.g.y;
 			BD3GE::Vector2 new_intersection_upper_endpoint(
 				std::min(right_region_right_edge, left_region_right_edge),
 				std::min(top_region_top_edge, bottom_region_top_edge)
