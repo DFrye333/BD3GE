@@ -32,6 +32,7 @@ namespace BD3GE {
 			const Matrix4			get_view_projection_matrix();
 			void					set_viewport(const unsigned int viewport_width, const unsigned int viewport_height);
 			Vector3					to_world_space(Vector4 camera_space_vector);
+			void					calculate_view_frustum();
 			Region					calculate_bounding_image_plane_projection_region();
 			Region					calculate_bounding_image_plane_projection_region(float plane_y); // TODO: Generalize this as a frustum volume?
 			void					print_stats();
@@ -40,12 +41,21 @@ namespace BD3GE {
 
 			const Matrix4			get_projection_matrix();
 			Vector3					calculate_ray_plane_intercept(Vector3 origin, Vector3 direction, float plane_y);
-			std::vector<Vector3>	calculate_bounding_values(std::vector<Vector3> points, unsigned short dimension_0, unsigned short dimension_1);
 
+			Matrix4 projection_transform;
 			unsigned int viewport_width;
 			unsigned int viewport_height;
 			float horizontal_fov;
-			Matrix4 projection_transform;
+			float aspect_ratio;
+			float frustum_near;
+			float frustum_far;
+			float frustum_left;
+			float frustum_right;
+			float frustum_bottom;
+			float frustum_top;
+			float frustum_width;
+			float frustum_height;
+			float frustum_depth;
 			bool should_recalculate_projection_transform = true;
 	};
 }
