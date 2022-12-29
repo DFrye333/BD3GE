@@ -5,6 +5,7 @@
 #include <limits>
 
 #include "../management/component_manager.h"
+#include "../management/config_manager.h"
 #include "../system/api.h"
 #include "../system/constants.h"
 #include "../utility/log.h"

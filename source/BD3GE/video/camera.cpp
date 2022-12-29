@@ -1,7 +1,7 @@
 #include "camera.h"
 
 namespace BD3GE {
-	Camera::Camera(Transform world_transform) : viewport_width(DEFAULT_WINDOW_WIDTH), viewport_height(DEFAULT_WINDOW_HEIGHT), horizontal_fov(135.0f * (BD3GE::PI / 180)) {
+	Camera::Camera(Transform world_transform) : viewport_width(DEFAULT_WINDOW_WIDTH), viewport_height(DEFAULT_WINDOW_HEIGHT), horizontal_fov(ConfigManager::get_config_value_float("camera_fov_horizontal") * (BD3GE::PI / 180)) {
 		this->world_transform = ComponentManager::add_transform(std::move(world_transform));
 	}
 
