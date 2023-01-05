@@ -30,8 +30,8 @@ namespace BD3GE {
 			virtual void load_scene(Scene* scene);
 			virtual void run();
 			void bus_messages();
-			virtual void tick(Input* input) = 0;
-			virtual void mouse_move(Input* input) = 0;
+			virtual void tick() = 0;
+			virtual void mouse_move() = 0;
 
 		protected:
 
