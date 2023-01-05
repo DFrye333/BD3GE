@@ -99,8 +99,8 @@ namespace BD3GE {
 		return get_world_transform()->get_forward();
 	}
 
-	Vector3 Object::get_left() {
-		return get_world_transform()->get_left();
+	Vector3 Object::get_right() {
+		return get_world_transform()->get_right();
 	}
 
 	Vector3 Object::get_up() {

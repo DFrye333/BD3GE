@@ -1,6 +1,10 @@
 #include "vector.h"
 
 namespace BD3GE {
+	Vector2 Vector2::Zero() {
+		return Vector2(0, 0);
+	}
+
 	Vector2::Vector2() : v{ 0.0f, 0.0f } {}
 
 	Vector2::Vector2(const float a[2]) : v{ a[0], a[1] } {}
@@ -9,118 +13,118 @@ namespace BD3GE {
 
 	Vector2::Vector2(const Vector2& source) : v{ source.v.a[0], source.v.a[1] } {}
 
-	const float Vector2::dot_product(const Vector2& other) {
+	float Vector2::dot_product(const Vector2& other) {
 		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]));
 	}
 
-	const float Vector2::cross_product(const Vector2& other) {
+	float Vector2::cross_product(const Vector2& other) {
 		return (this->v.a[0] * other.v.a[1]) - (other.v.a[0] * this->v.a[1]);
 	}
 
-	const float Vector2::get_magnitude() {
+	float Vector2::get_magnitude() {
 		return sqrt(dot_product(*this));
 	}
 
-	const Vector2 Vector2::get_normalized() {
+	Vector2 Vector2::get_normalized() {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return Vector2(*this / magnitude);
 		}
 	}
 
-	const Vector2& Vector2::normalize() {
+	Vector2& Vector2::normalize() {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return *this /= magnitude;
 		}
 	}
 
-	const std::string Vector2::get_hash() {
+	std::string Vector2::get_hash() {
 		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]);
 	}
 
-	const std::string Vector2::to_string() {
+	std::string Vector2::to_string() {
 		return get_hash();
 	}
 
-	const Vector2& Vector2::operator=(const Vector2& other) {
+	Vector2& Vector2::operator=(const Vector2& other) {
 		v.a[0] = other.v.a[0];
 		v.a[1] = other.v.a[1];
 
 		return *this;
 	}
 
-	const Vector2& Vector2::operator+=(const Vector2& other) {
+	Vector2& Vector2::operator+=(const Vector2& other) {
 		v.a[0] += other.v.a[0];
 		v.a[1] += other.v.a[1];
 
 		return *this;
 	}
 
-	const Vector2 Vector2::operator+(const Vector2& other) const {
+	Vector2 Vector2::operator+(const Vector2& other) const {
 		return Vector2(*this) += other;
 	}
 
-	const Vector2& Vector2::operator-=(const Vector2& other) {
+	Vector2& Vector2::operator-=(const Vector2& other) {
 		v.a[0] -= other.v.a[0];
 		v.a[1] -= other.v.a[1];
 
 		return *this;
 	}
 
-	const Vector2 Vector2::operator-(const Vector2& other) const {
+	Vector2 Vector2::operator-(const Vector2& other) const {
 		return Vector2(*this) -= other;
 	}
 
-	const Vector2& Vector2::operator*=(const Vector2& other) {
+	Vector2& Vector2::operator*=(const Vector2& other) {
 		v.a[0] *= other.v.a[0];
 		v.a[1] *= other.v.a[1];
 
 		return *this;
 	}
 
-	const Vector2 Vector2::operator*(const Vector2& other) const {
+	Vector2 Vector2::operator*(const Vector2& other) const {
 		return Vector2(*this) *= other;
 	}
 
-	const Vector2& Vector2::operator*=(const float other) {
+	Vector2& Vector2::operator*=(const float other) {
 		v.a[0] *= other;
 		v.a[1] *= other;
 
 		return *this;
 	}
 
-	const Vector2 Vector2::operator*(const float other) const {
+	Vector2 Vector2::operator*(const float other) const {
 		return Vector2(*this) *= other;
 	}
 
-	const Vector2& Vector2::operator/=(const Vector2& other) {
+	Vector2& Vector2::operator/=(const Vector2& other) {
 		v.a[0] /= other.v.a[0];
 		v.a[1] /= other.v.a[1];
 
 		return *this;
 	}
 
-	const Vector2 Vector2::operator/(const Vector2& other) const {
+	Vector2 Vector2::operator/(const Vector2& other) const {
 		return Vector2(*this) /= other;
 	}
 
-	const Vector2& Vector2::operator/=(const float other) {
+	Vector2& Vector2::operator/=(const float other) {
 		v.a[0] /= other;
 		v.a[1] /= other;
 
 		return *this;
 	}
 
-	const Vector2 Vector2::operator/(const float other) const {
+	Vector2 Vector2::operator/(const float other) const {
 		return Vector2(*this) /= other;
 	}
 
-	const Vector2 Vector2::operator-() const {
+	Vector2 Vector2::operator-() const {
 		return Vector2(*this) *= -1;
 	}
 
-	const bool Vector2::operator==(const Vector2& other) const {
+	bool Vector2::operator==(const Vector2& other) const {
 		return (
 			v.a[0] == other.v.a[0] &&
 			v.a[1] == other.v.a[1]
@@ -129,6 +133,10 @@ namespace BD3GE {
 
 	std::ostream& operator<<(std::ostream& out, const Vector2& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ")";
+	}
+
+	Vector3 Vector3::Zero() {
+		return Vector3(0, 0, 0);
 	}
 
 	Vector3::Vector3() : v{ 0.0f, 0.0f, 0.0f } {}
@@ -141,11 +149,11 @@ namespace BD3GE {
 
 	Vector3::Vector3(const Vector3& source) : v{ source.v.a[0], source.v.a[1], source.v.a[2] } {}
 
-	const float Vector3::dot_product(const Vector3& other) {
+	float Vector3::dot_product(const Vector3& other) {
 		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]) + (v.a[2] * other.v.a[2]));
 	}
 
-	const Vector3 Vector3::cross_product(const Vector3& other) {
+	Vector3 Vector3::cross_product(const Vector3& other) {
 		return Vector3(
 			(this->v.a[1] * other.v.a[2]) - (this->v.a[2] * other.v.a[1]),
 			(this->v.a[2] * other.v.a[0]) - (this->v.a[0] * other.v.a[2]),
@@ -153,11 +161,11 @@ namespace BD3GE {
 		);
 	}
 
-	const float Vector3::get_magnitude(void) {
+	float Vector3::get_magnitude(void) {
 		return sqrt(dot_product(*this));
 	}
 
-	const Vector3 Vector3::get_normalized(void) {
+	Vector3 Vector3::get_normalized(void) {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return Vector3(*this / magnitude);
@@ -166,19 +174,19 @@ namespace BD3GE {
 		}
 	}
 
-	const Vector3& Vector3::normalize(void) {
+	Vector3& Vector3::normalize(void) {
 		return *this = get_normalized();
 	}
 
-	const std::string Vector3::get_hash() {
+	std::string Vector3::get_hash() {
 		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]) + "," + std::to_string(v.a[2]);
 	}
 
-	const std::string Vector3::to_string() {
+	std::string Vector3::to_string() {
 		return get_hash();
 	}
 
-	const Vector3& Vector3::operator=(const Vector3& other) {
+	Vector3& Vector3::operator=(const Vector3& other) {
 		v.a[0] = other.v.a[0];
 		v.a[1] = other.v.a[1];
 		v.a[2] = other.v.a[2];
@@ -186,7 +194,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3& Vector3::operator+=(const Vector3& other) {
+	Vector3& Vector3::operator+=(const Vector3& other) {
 		v.a[0] += other.v.a[0];
 		v.a[1] += other.v.a[1];
 		v.a[2] += other.v.a[2];
@@ -194,11 +202,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator+(const Vector3& other) const {
+	Vector3 Vector3::operator+(const Vector3& other) const {
 		return Vector3(*this) += other;
 	}
 
-	const Vector3& Vector3::operator-=(const Vector3& other) {
+	Vector3& Vector3::operator-=(const Vector3& other) {
 		v.a[0] -= other.v.a[0];
 		v.a[1] -= other.v.a[1];
 		v.a[2] -= other.v.a[2];
@@ -206,11 +214,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator-(const Vector3& other) const {
+	Vector3 Vector3::operator-(const Vector3& other) const {
 		return Vector3(*this) -= other;
 	}
 
-	const Vector3& Vector3::operator*=(const Vector3& other) {
+	Vector3& Vector3::operator*=(const Vector3& other) {
 		v.a[0] *= other.v.a[0];
 		v.a[1] *= other.v.a[1];
 		v.a[2] *= other.v.a[2];
@@ -218,11 +226,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator*(const Vector3& other) const {
+	Vector3 Vector3::operator*(const Vector3& other) const {
 		return Vector3(*this) *= other;
 	}
 
-	const Vector3& Vector3::operator*=(const float other) {
+	Vector3& Vector3::operator*=(const float other) {
 		v.a[0] *= other;
 		v.a[1] *= other;
 		v.a[2] *= other;
@@ -230,11 +238,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator*(const float other) const {
+	Vector3 Vector3::operator*(const float other) const {
 		return Vector3(*this) *= other;
 	}
 
-	const Vector3& Vector3::operator/=(const Vector3& other) {
+	Vector3& Vector3::operator/=(const Vector3& other) {
 		v.a[0] /= other.v.a[0];
 		v.a[1] /= other.v.a[1];
 		v.a[2] /= other.v.a[2];
@@ -242,11 +250,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator/(const Vector3& other) const {
+	Vector3 Vector3::operator/(const Vector3& other) const {
 		return Vector3(*this) /= other;
 	}
 
-	const Vector3& Vector3::operator/=(const float other) {
+	Vector3& Vector3::operator/=(const float other) {
 		v.a[0] /= other;
 		v.a[1] /= other;
 		v.a[2] /= other;
@@ -254,15 +262,15 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector3 Vector3::operator/(const float other) const {
+	Vector3 Vector3::operator/(const float other) const {
 		return Vector3(*this) /= other;
 	}
 
-	const Vector3 Vector3::operator-() const {
+	Vector3 Vector3::operator-() const {
 		return Vector3(*this) *= -1;
 	}
 
-	const bool Vector3::operator==(const Vector3& other) const {
+	bool Vector3::operator==(const Vector3& other) const {
 		return (
 			v.a[0] == other.v.a[0] &&
 			v.a[1] == other.v.a[1] &&
@@ -272,6 +280,10 @@ namespace BD3GE {
 
 	std::ostream& operator<<(std::ostream& out, const Vector3& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ", " << vec.v.a[2] << ")";
+	}
+
+	Vector4 Vector4::Zero() {
+		return Vector4(0, 0, 0, 0);
 	}
 
 	Vector4::Vector4() : v{ 0.0f, 0.0f, 0.0f, 0.0f } {}
@@ -284,15 +296,15 @@ namespace BD3GE {
 
 	Vector4::Vector4(const Vector4& source) : v{ source.v.a[0], source.v.a[1], source.v.a[2], source.v.a[3] } {}
 
-	const float Vector4::dot_product(const Vector4& other) {
+	float Vector4::dot_product(const Vector4& other) {
 		return ((v.a[0] * other.v.a[0]) + (v.a[1] * other.v.a[1]) + (v.a[2] * other.v.a[2]) + (v.a[3] * other.v.a[3]));
 	}
 
-	const float Vector4::get_magnitude(void) {
+	float Vector4::get_magnitude(void) {
 		return sqrt(dot_product(*this));
 	}
 
-	const Vector4 Vector4::get_normalized(void) {
+	Vector4 Vector4::get_normalized(void) {
 		float magnitude = get_magnitude();
 		if (magnitude > EPSILON) {
 			return Vector4(*this / magnitude);
@@ -302,19 +314,19 @@ namespace BD3GE {
 		}
 	}
 
-	const Vector4& Vector4::normalize(void) {
+	Vector4& Vector4::normalize(void) {
 		return *this = get_normalized();
 	}
 
-	const std::string Vector4::get_hash() {
+	std::string Vector4::get_hash() {
 		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]) + "," + std::to_string(v.a[2]) + "," + std::to_string(v.a[3]);
 	}
 
-	const std::string Vector4::to_string() {
+	std::string Vector4::to_string() {
 		return get_hash();
 	}
 
-	const Vector4& Vector4::operator=(const Vector4& other) {
+	Vector4& Vector4::operator=(const Vector4& other) {
 		v.a[0] = other.v.a[0];
 		v.a[1] = other.v.a[1];
 		v.a[2] = other.v.a[2];
@@ -323,7 +335,7 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4& Vector4::operator+=(const Vector4& other) {
+	Vector4& Vector4::operator+=(const Vector4& other) {
 		v.a[0] += other.v.a[0];
 		v.a[1] += other.v.a[1];
 		v.a[2] += other.v.a[2];
@@ -332,11 +344,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4 Vector4::operator+(const Vector4& other) const {
+	Vector4 Vector4::operator+(const Vector4& other) const {
 		return Vector4(*this) += other;
 	}
 
-	const Vector4& Vector4::operator-=(const Vector4& other) {
+	Vector4& Vector4::operator-=(const Vector4& other) {
 		v.a[0] -= other.v.a[0];
 		v.a[1] -= other.v.a[1];
 		v.a[2] -= other.v.a[2];
@@ -345,11 +357,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4 Vector4::operator-(const Vector4& other) const {
+	Vector4 Vector4::operator-(const Vector4& other) const {
 		return Vector4(*this) -= other;
 	}
 
-	const Vector4& Vector4::operator*=(const Vector4& other) {
+	Vector4& Vector4::operator*=(const Vector4& other) {
 		v.a[0] *= other.v.a[0];
 		v.a[1] *= other.v.a[1];
 		v.a[2] *= other.v.a[2];
@@ -358,11 +370,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4 Vector4::operator*(const Vector4& other) const {
+	Vector4 Vector4::operator*(const Vector4& other) const {
 		return Vector4(*this) *= other;
 	}
 
-	const Vector4& Vector4::operator*=(const float other) {
+	Vector4& Vector4::operator*=(const float other) {
 		v.a[0] *= other;
 		v.a[1] *= other;
 		v.a[2] *= other;
@@ -371,11 +383,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4 Vector4::operator*(const float other) const {
+	Vector4 Vector4::operator*(const float other) const {
 		return Vector4(*this) *= other;
 	}
 
-	const Vector4& Vector4::operator/=(const Vector4& other) {
+	Vector4& Vector4::operator/=(const Vector4& other) {
 		v.a[0] /= other.v.a[0];
 		v.a[1] /= other.v.a[1];
 		v.a[2] /= other.v.a[2];
@@ -384,11 +396,11 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4 Vector4::operator/(const Vector4& other) const {
+	Vector4 Vector4::operator/(const Vector4& other) const {
 		return Vector4(*this) /= other;
 	}
 
-	const Vector4& Vector4::operator/=(const float other) {
+	Vector4& Vector4::operator/=(const float other) {
 		v.a[0] /= other;
 		v.a[1] /= other;
 		v.a[2] /= other;
@@ -397,15 +409,15 @@ namespace BD3GE {
 		return *this;
 	}
 
-	const Vector4 Vector4::operator/(const float other) const {
+	Vector4 Vector4::operator/(const float other) const {
 		return Vector4(*this) /= other;
 	}
 
-	const Vector4 Vector4::operator-() const {
+	Vector4 Vector4::operator-() const {
 		return Vector4(*this) *= -1;
 	}
 
-	const bool Vector4::operator==(const Vector4& other) const {
+	bool Vector4::operator==(const Vector4& other) const {
 		return (
 			v.a[0] == other.v.a[0] &&
 			v.a[1] == other.v.a[1] &&

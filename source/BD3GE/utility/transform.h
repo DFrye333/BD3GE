@@ -18,10 +18,9 @@ namespace BD3GE {
 								Transform(const Vector3& position, const Quaternion& orientation);
 								Transform(const Vector3& position, const Vector3& orientation, const Vector3& scale);
 								Transform(const Vector3& position, const Quaternion& orientation, const Vector3& scale);
-								~Transform();
-			Vector3				get_position() const;
-			Quaternion			get_orientation() const;
-			Vector3				get_scale() const;
+			Vector3				get_position();
+			Quaternion			get_orientation();
+			Vector3				get_scale();
 			Matrix4&			get_matrix();
 			void 				set_position(const Vector3 position);
 			void				set_orientation(float angle, Vector3 axis);
@@ -42,8 +41,11 @@ namespace BD3GE {
 			void 				to_float_array(float* float_array);
 			Transform 			inverse();
 			Vector3				get_forward();
-			Vector3				get_left();
+			Vector3				get_right();
 			Vector3				get_up();
+			void				set_forward(Vector3 forward);
+			void				set_right(Vector3 left);
+			void				set_up(Vector3 up);
 			void 				print();
 			const Transform& 	operator=(const Transform& other);
 			Transform 			operator*(const Transform& other);
@@ -59,7 +61,8 @@ namespace BD3GE {
 			Quaternion orientation;
 			Vector3 position;
 			Vector3 scale;
-			bool is_matrix_dirty = true;
+			bool is_matrix_dirty;
+			bool are_components_dirty;
 	};
 
 	struct TransformNode {

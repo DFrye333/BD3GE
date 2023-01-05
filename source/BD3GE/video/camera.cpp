@@ -60,6 +60,22 @@ namespace BD3GE {
 		return Vector3(get_world_transform()->get_matrix() * camera_space_vector);
 	}
 
+	void Camera::look_at(Vector3 target_world_position) {
+		Matrix4 world_transform_matrix = get_world_transform()->get_matrix();
+
+		Vector3 forward = (get_position() - target_world_position).normalize();
+
+		Vector3 right = (-Vector3(-forward.v.g.z, 0, forward.v.g.x)).normalize();
+		right = Vector3(right != Vector3::Zero() ? right : world_transform_matrix * Vector4(1, 0, 0, 0));
+
+		Vector3 up = (forward.cross_product(right)).normalize();
+		up = Vector3(up != Vector3::Zero() ? up : world_transform_matrix * Vector4(0, 1, 0, 0));
+
+		get_world_transform()->set_forward(forward);
+		get_world_transform()->set_right(right);
+		get_world_transform()->set_up(up);
+	}
+
 	const Matrix4 Camera::get_projection_matrix() {
 		if (should_recalculate_projection_transform) {
 			this->projection_transform = Matrix4(

@@ -1,7 +1,7 @@
 #include "transform.h"
 
 namespace BD3GE {
-	Transform::Transform() : scale(Vector3(1, 1, 1)), matrix(Matrix4::identity()) {}
+	Transform::Transform() : scale(Vector3(1, 1, 1)), matrix(Matrix4::identity()), is_matrix_dirty(true), are_components_dirty(false) {}
 
 	Transform::Transform(const Matrix4& matrix) : matrix(matrix) {
 		decompose_matrix();
@@ -27,17 +27,27 @@ namespace BD3GE {
 		set_scale(scale);
 	}
 
-	Transform::~Transform() {}
+	Vector3 Transform::get_position() {
+		if (this->are_components_dirty) {
+			decompose_matrix();
+		}
 
-	Vector3 Transform::get_position() const {
 		return this->position;
 	}
 
-	Quaternion Transform::get_orientation() const {
+	Quaternion Transform::get_orientation() {
+		if (this->are_components_dirty) {
+			decompose_matrix();
+		}
+
 		return this->orientation;
 	}
 
-	Vector3 Transform::get_scale() const {
+	Vector3 Transform::get_scale() {
+		if (this->are_components_dirty) {
+			decompose_matrix();
+		}
+
 		return this->scale;
 	}
 
@@ -96,7 +106,7 @@ namespace BD3GE {
 	}
 
 	void Transform::rotate(Quaternion rotation) {
-		this->orientation = rotation * this->orientation;
+		this->orientation = rotation * get_orientation();
 
 		this->is_matrix_dirty = true;
 	}
@@ -130,7 +140,7 @@ namespace BD3GE {
 	}
 
 	Vector3 Transform::get_forward() {
-		Matrix4 matrix = get_matrix();
+		Matrix4& matrix = get_matrix();
 		return -Vector3(
 			matrix(2, 0),
 			matrix(2, 1),
@@ -138,8 +148,8 @@ namespace BD3GE {
 		);
 	}
 
-	Vector3 Transform::get_left() {
-		Matrix4 matrix = get_matrix();
+	Vector3 Transform::get_right() {
+		Matrix4& matrix = get_matrix();
 		return -Vector3(
 			matrix(0, 0),
 			matrix(0, 1),
@@ -148,7 +158,7 @@ namespace BD3GE {
 	}
 
 	Vector3 Transform::get_up() {
-		Matrix4 matrix = get_matrix();
+		Matrix4& matrix = get_matrix();
 		return -Vector3(
 			matrix(1, 0),
 			matrix(1, 1),
@@ -156,14 +166,43 @@ namespace BD3GE {
 		);
 	}
 
+	void Transform::set_forward(Vector3 forward) {
+		Matrix4& matrix = get_matrix();
+		matrix(2, 0, forward.v.g.x);
+		matrix(2, 1, forward.v.g.y);
+		matrix(2, 2, forward.v.g.z);
+		
+		this->are_components_dirty = true;
+	}
+
+	void Transform::set_right(Vector3 left) {
+		Matrix4& matrix = get_matrix();
+		matrix(0, 0, left.v.g.x);
+		matrix(0, 1, left.v.g.y);
+		matrix(0, 2, left.v.g.z);
+		
+		this->are_components_dirty = true;
+	}
+
+	void Transform::set_up(Vector3 up) {
+		Matrix4& matrix = get_matrix();
+		matrix(1, 0, up.v.g.x);
+		matrix(1, 1, up.v.g.y);
+		matrix(1, 2, up.v.g.z);
+		
+		this->are_components_dirty = true;
+	}
+
 	void Transform::print() {
 		get_matrix().print();
 	}
 
 	const Transform& Transform::operator=(const Transform& other) {
-		set_position(other.get_position());
-		set_orientation(other.get_orientation());
-		set_scale(other.get_scale());
+		Transform other_copy = Transform(other);
+
+		set_position(other_copy.get_position());
+		set_orientation(other_copy.get_orientation());
+		set_scale(other_copy.get_scale());
 
 		return *this;
 	}
@@ -213,5 +252,7 @@ namespace BD3GE {
 			this->matrix(0, 2) / this->scale.v.g.x, this->matrix(1, 2) / this->scale.v.g.y, this->matrix(2, 2) / this->scale.v.g.z, 0,
 			0, 0, 0, 1
 		));
+
+		this->are_components_dirty = false;
 	}
 }
