@@ -184,15 +184,15 @@ namespace BD3GE {
 	}
 
 	bool Input::consume_key_input(KEY_CODE key_code, bool should_debounce) {
-		if (!get_key_state(key_code) || (should_debounce && keys[key_code] != 0 && (timer->elapsed() - keys[key_code] <= debounce_duration))) { return false; }
+		if (!get_key_state(key_code) || (should_debounce && keys[key_code] != 0 && (timer->elapsed() - keys[key_code] <= debounce_duration))) {
+			return false;
+		}
 
 		if (keys[key_code] == 0) {
 			keys[key_code] = timer->elapsed();
 		}
 
-		if (key_code == KEY_CODE::MOUSE_WHEELUP || key_code == KEY_CODE::MOUSE_WHEELDOWN) {
-			record_key_state(key_code, false);
-		}
+		record_key_state(key_code, false);
 
 		return true;
 	}
