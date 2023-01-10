@@ -54,10 +54,14 @@ namespace BD3GE {
 	}
 
 	SlotmapKey Scene::add_renderable_object(Object&& new_node, SlotmapKey parent_node) {
-		Vector2 position = Vector2(new_node.get_position().v.g.x, new_node.get_position().v.g.z);
+		Vector3 new_node_relative_position = new_node.get_position();
 		SlotmapKey new_node_key = add_object(std::move(new_node), parent_node);
+
+		Transform ancestry_transform_stack = build_node_ancestry_transform_stack(new_node_key);
+
+		Vector3 new_node_world_partitioning_position = ancestry_transform_stack.get_matrix() * Vector4(new_node_relative_position, 1.0f);
 		renderable_objects_collection.push_back(new_node_key);
-		renderable_objects_partitioning.insert(QuadtreeData(new_node_key, position));
+		renderable_objects_partitioning.insert(QuadtreeData(new_node_key, Vector2(new_node_world_partitioning_position.v.g.x, new_node_world_partitioning_position.v.g.z)));
 		return new_node_key;
 	}
 
@@ -74,6 +78,12 @@ namespace BD3GE {
 	}
 
 	void Scene::remove_object(SlotmapKey node_key) {
+		Transform ancestry_transform_stack = build_node_ancestry_transform_stack(node_key);
+
+		Object* object = get_object(node_key);
+		Vector3 world_partitioning_position = ancestry_transform_stack.get_matrix() * Vector4(object->get_position(), 1.0f);
+		renderable_objects_partitioning.remove(QuadtreeData(node_key, Vector2(world_partitioning_position.v.g.x, world_partitioning_position.v.g.z)));
+
 		scene_nodes.remove(node_key);
 	}
 
@@ -93,5 +103,18 @@ namespace BD3GE {
 		} else {
 			return renderable_objects_collection;
 		}
+	}
+
+	Transform Scene::build_node_ancestry_transform_stack(SlotmapKey node_key) {
+		Transform ancestry_transform_stack;
+		SlotmapKey current_ancestor_key = scene_nodes.get(node_key)->parent;
+		while (current_ancestor_key != root_scene_node) {
+			SceneNode* current_ancestor_node = scene_nodes.get(current_ancestor_key);
+			ancestry_transform_stack = *(current_ancestor_node->object.get_world_transform()) * ancestry_transform_stack;
+			current_ancestor_key = current_ancestor_node->parent;
+		}
+		ancestry_transform_stack = *(get_object(root_scene_node)->get_world_transform()) * ancestry_transform_stack;
+
+		return ancestry_transform_stack;
 	}
 }

@@ -46,6 +46,8 @@ namespace BD3GE {
 			void move_object(SlotmapKey node_key, Vector3 new_world_position);
 			std::vector<SlotmapKey> get_visible_renderable_keys();
 
+			Transform build_node_ancestry_transform_stack(SlotmapKey node_key);
+
 			Camera* camera;
 			Quadtree renderable_objects_partitioning;
 			SlotmapKey root_scene_node;
