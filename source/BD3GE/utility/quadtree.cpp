@@ -14,8 +14,8 @@ namespace BD3GE {
 	}
 
 	void Quadtree::insert(QuadtreeData node) {
-		// If the current level is full, fragment and shift the children downward.
-		if (this->nodes.size() + 1 > max_nodes_per_level) {
+		// If the current level is full and there is still room to subdivide, fragment and shift the children downward.
+		if (this->nodes.size() + 1 > max_nodes_per_level && region.calculate_area() > 1.0f) {
 			children[0] = new Quadtree(Region(region.position, region.range / 2));
 			children[1] = new Quadtree(Region(Vector2(region.position.v.g.x + region.range.v.g.x / 2, region.position.v.g.y), region.range / 2));
 			children[2] = new Quadtree(Region(Vector2(region.position.v.g.x, region.position.v.g.y + region.range.v.g.y / 2), region.range / 2));
