@@ -61,6 +61,26 @@ namespace BD3GE {
 		}
 	}
 
+	unsigned int Quadtree::size() {
+		return size(Region());
+	}
+
+	unsigned int Quadtree::size(Region region) {
+		unsigned int size = 0;
+
+		if (!this->has_children()) {
+			return this->nodes.size();
+		} else {
+			for (unsigned short i = 0; i < 4; ++i) {
+				if (region.calculate_area() == 0.0f || Region::calculate_intersection(std::vector<Region>{ region, this->children[i]->region }).calculate_area() > 0.0f) {
+					size += this->children[i]->size(region);
+				}
+			}
+		}
+
+		return size;
+	}
+
 	std::vector<SlotmapKey> Quadtree::collect_overlapping_nodes(Region region) {
 		std::vector<SlotmapKey> overlapping_nodes;
 

@@ -24,6 +24,8 @@ namespace BD3GE {
 											Quadtree(Region region, std::vector<QuadtreeData>& nodes);
 			void							insert(QuadtreeData node);
 			void							remove(QuadtreeData node);
+			unsigned int					size();
+			unsigned int					size(Region region);
 			std::vector<SlotmapKey>			collect_overlapping_nodes(Region region);
 			bool							has_children();
 			void							print();
