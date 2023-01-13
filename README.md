@@ -23,6 +23,7 @@ Let's build a game from the ground up. Rendering, physics, audio, input - all of
     * Integrate slot maps where possible (in-progress).
 * Add an orthogonal camera mode.
 * Create a wrapper for the brushes.
+* Centralize rendering library calls (e.g. OpenGL, DirectX, Vulkan, etc.) into GL class to ease swapping of rendering libraries.
 
 **Linux Installation Dependencies:**
 
