@@ -43,6 +43,9 @@ namespace BD3GE {
 
 	constexpr double	PI = 3.1415926535;
 	constexpr float		FLOAT_EPSILON = 1.0e-12f;
+
+	// A default, standard-ish SRGB gamma value for decoding uncertain encodings.
+	constexpr float		GAMMA = 2.2f;
 }
 
 #endif // BD3GE_CONSTANTS_H

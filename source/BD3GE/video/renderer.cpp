@@ -52,6 +52,9 @@ namespace BD3GE {
 
 		if (!scene || !scene->camera) { return; }
 
+		float gamma = ConfigManager::get_config_value_float("gamma");
+		bool enable_blinn_phong = ConfigManager::get_config_value_bool("enable_blinn_phong");
+
 		Transform* camera_transform = scene->camera->get_world_transform();
 		Vector3 camera_position = camera_transform->get_position();
 		for (Light* light : scene->lights) {
@@ -95,6 +98,8 @@ namespace BD3GE {
 				shader->set_uniform("world_transform", world_transform_stack.get_matrix());
 				shader->set_uniform("inverse_world_transform", world_transform_stack.get_matrix().inverse());
 				shader->set_uniform("view_projection_transform", view_projection_transform);
+				shader->set_uniform("gamma", gamma);
+				shader->set_uniform("enable_blinn_phong", enable_blinn_phong);
 
 				Material* material = renderable_unit->material;
 				if (material->type == Material::TYPE::SIMPLE) {
@@ -104,18 +109,19 @@ namespace BD3GE {
 					shader->set_uniform("simple_material.color_ambient", simple_material->color_ambient.rgb);
 					shader->set_uniform("simple_material.color_diffuse", simple_material->color_diffuse.rgb);
 					shader->set_uniform("simple_material.color_specular", simple_material->color_specular.rgb);
-					shader->set_uniform("simple_material.gloss_factor", simple_material->gloss_factor);
 				} else if (material->type == Material::TYPE::MAPPED) {
 					MappedMaterial* mapped_material = ((MappedMaterial*)renderable_unit->material);
 
 					shader->set_uniform("is_material_mapped", true);
 					shader->set_uniform("mapped_material.map_diffuse[0]", 0);
 					shader->set_uniform("mapped_material.map_specular[0]", 1);
-					shader->set_uniform("mapped_material.gloss_factor", mapped_material->gloss_factor);
 
 					enable_texture(mapped_material->map_diffuse_id, 0);
 					enable_texture(mapped_material->map_specular_id, 1);
 				}
+				shader->set_uniform("material.gloss_factor", material->gloss_factor);
+				shader->set_uniform("material.gamma_diffuse", material->gamma_diffuse);
+				shader->set_uniform("material.gamma_specular", material->gamma_specular);
 
 				// Draw!
 				glBindVertexArray(renderable_unit->geometry.vao_handle);

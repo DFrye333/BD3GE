@@ -8,19 +8,27 @@ namespace BD3GE {
 	Material::Material(size_t shader_id, float gloss_factor) : shader_id(shader_id), gloss_factor(gloss_factor) {}
 
 	SimpleMaterial::SimpleMaterial(size_t shader, Color color) : Material(shader), color_ambient(color), color_diffuse(color), color_specular(color) {
-		type = Material::TYPE::SIMPLE;
+		this->type = Material::TYPE::SIMPLE;
+		this->gamma_diffuse = 1.0f;
+		this->gamma_specular = 1.0f;
 	}
 
 	SimpleMaterial::SimpleMaterial(size_t shader, Color color_ambient, Color color_diffuse, Color color_specular) : Material(shader), color_ambient(color_ambient), color_diffuse(color_diffuse), color_specular(color_specular) {
-		type = Material::TYPE::SIMPLE;
+		this->type = Material::TYPE::SIMPLE;
+		this->gamma_diffuse = 1.0f;
+		this->gamma_specular = 1.0f;
 	}
 
 	SimpleMaterial::SimpleMaterial(size_t shader, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor) : Material(shader, gloss_factor), color_ambient(color_ambient), color_diffuse(color_diffuse), color_specular(color_specular) {
-		type = Material::TYPE::SIMPLE;
+		this->type = Material::TYPE::SIMPLE;
+		this->gamma_diffuse = 1.0f;
+		this->gamma_specular = 1.0f;
 	}
 
 	SimpleMaterial::SimpleMaterial(size_t shader, aiMaterial* material) : Material(shader) {
-		type = Material::TYPE::SIMPLE;
+		this->type = Material::TYPE::SIMPLE;
+		this->gamma_diffuse = 1.0f;
+		this->gamma_specular = 1.0f;
 
 		aiString name;
 		float ambient[4];
@@ -46,30 +54,31 @@ namespace BD3GE {
 	}
 
 	MappedMaterial::MappedMaterial() {
-		type = Material::TYPE::MAPPED;
+		this->type = Material::TYPE::MAPPED;
+		this->gamma_diffuse = GAMMA;
+		this->gamma_specular = GAMMA;
 	}
 
-	MappedMaterial::MappedMaterial(size_t shader, size_t map_diffuse_id, size_t map_specular_id, float gloss_factor) : Material(shader, gloss_factor) {
-		type = Material::TYPE::MAPPED;
-
-		this->map_diffuse_id = map_diffuse_id;
-		this->map_specular_id = map_specular_id;
+	MappedMaterial::MappedMaterial(size_t shader, size_t map_diffuse_id, size_t map_specular_id, float gloss_factor) : Material(shader, gloss_factor), map_diffuse_id(map_diffuse_id), map_specular_id(map_specular_id) {
+		this->type = Material::TYPE::MAPPED;
+		this->gamma_diffuse = GAMMA;
+		this->gamma_specular = GAMMA;
 	}
 
 	MappedMaterial::MappedMaterial(size_t shader, aiMaterial* material) : Material(shader) {
-		type = Material::TYPE::MAPPED;
+		this->type = Material::TYPE::MAPPED;
+		this->gamma_diffuse = GAMMA;
+		this->gamma_specular = GAMMA;
 
 		for (unsigned short i = 0; i < material->GetTextureCount(aiTextureType_DIFFUSE); ++i) {
 			aiString texture_file_path;
 			material->GetTexture(aiTextureType_DIFFUSE, i, &texture_file_path);
 			this->map_diffuse_id = TextureManager::load_texture(std::string(texture_file_path.C_Str()));
-			this->map_diffuse_id = map_diffuse_id;
 		}
 		for (unsigned short i = 0; i < material->GetTextureCount(aiTextureType_SPECULAR); ++i) {
 			aiString texture_file_path;
 			material->GetTexture(aiTextureType_SPECULAR, i, &texture_file_path);
 			this->map_specular_id = TextureManager::load_texture(std::string(texture_file_path.C_Str()));
-			this->map_specular_id = map_specular_id;
 		}
 	}
 

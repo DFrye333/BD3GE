@@ -5,6 +5,7 @@
 
 #include "../management/texture_manager.h"
 #include "../system/api.h"
+#include "../system/constants.h"
 #include "../system/globals.h"
 #include "../utility/color.h"
 #include "../utility/log.h"
@@ -25,6 +26,8 @@ namespace BD3GE {
 			Material::TYPE type;
 			size_t shader_id;
 			float gloss_factor = 32.0f;
+			float gamma_diffuse = 1.0f;
+			float gamma_specular = 1.0f;
 	};
 
 	extern "C" class BD3GE_API SimpleMaterial : public Material {
