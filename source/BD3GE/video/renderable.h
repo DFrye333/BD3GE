@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include <glew/GL/glew.h>
-
 #include "../system/api.h"
 #include "../utility/transform.h"
 #include "../utility/vector.h"

@@ -4,8 +4,6 @@
 #include <map>
 #include <string>
 
-#include <glew/GL/glew.h>
-
 #include "../management/config_manager.h"
 #include "../system/api.h"
 #include "../system/constants.h"
