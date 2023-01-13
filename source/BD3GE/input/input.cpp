@@ -206,6 +206,10 @@ namespace BD3GE {
 		return this->previous_mouse_position;
 	}
 
+	bool Input::get_is_mouse_position_fresh() {
+		return this->is_mouse_position_fresh;
+	}
+
 	void Input::record_key_state(unsigned int key_code, bool state) {
 		record_key_state(key_code_map[key_code], state);
 	}
