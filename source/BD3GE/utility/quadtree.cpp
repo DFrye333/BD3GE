@@ -3,7 +3,7 @@
 namespace BD3GE {
 	QuadtreeData::QuadtreeData(SlotmapKey key, Vector2 position) : key(key), position(position) {}
 
-	Quadtree::Quadtree() : region(Region(Vector2(-1000, -1000), Vector2(2000, 2000))) {}
+	Quadtree::Quadtree() : region(Region(Vector2(-100000, -100000), Vector2(200000, 200000))) {}
 
 	Quadtree::Quadtree(Region region) : region(region) {}
 
