@@ -174,11 +174,11 @@ void main(void) {
 
 			float specular_factor = 0.0f;
 			if (enable_blinn_phong) {
-				vec3 reflection_direction = normalize(reflect(-towards_light_direction, normal_vector));
-				float specular_factor = pow(max(0.0f, dot(reflection_direction, view_direction)), material.gloss_factor);
-			} else {
 				vec3 halfway_view_light = normalize(towards_light_direction + view_direction);
-				float specular_factor = pow(max(0.0f, dot(normal, halfway_view_light)), material.gloss_factor);
+				specular_factor = pow(max(0.0f, dot(normal, halfway_view_light)), material.gloss_factor);
+			} else {
+				vec3 reflection_direction = normalize(reflect(-towards_light_direction, normal_vector));
+				specular_factor = pow(max(0.0f, dot(reflection_direction, view_direction)), material.gloss_factor);
 			}
 			vec3 specular_component = light.color_specular * material_component_specular * specular_factor;
 
