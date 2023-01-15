@@ -3,8 +3,6 @@
 
 #include <set>
 
-#include <glew/GL/glew.h>
-
 #include "../management/component_manager.h"
 #include "../management/model_manager.h"
 #include "../management/shader_manager.h"
@@ -19,8 +17,6 @@ namespace BD3GE {
 			Renderer();
 			void load_scene(Scene* scene);
 			void render();
-			void initialize_texture(size_t texture_id);
-			void enable_texture(size_t texture_id, unsigned int index);
 			void reshape_viewport(unsigned int width, unsigned int height);
 			void toggle_wireframe_mode();
 		private:

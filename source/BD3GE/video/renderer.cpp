@@ -116,28 +116,18 @@ namespace BD3GE {
 					shader->set_uniform("mapped_material.map_diffuse[0]", 0);
 					shader->set_uniform("mapped_material.map_specular[0]", 1);
 
-					enable_texture(mapped_material->map_diffuse_id, 0);
-					enable_texture(mapped_material->map_specular_id, 1);
+					gl.enable_texture(mapped_material->map_diffuse_id, 0);
+					gl.enable_texture(mapped_material->map_specular_id, 1);
 				}
 				shader->set_uniform("material.gloss_factor", material->gloss_factor);
 				shader->set_uniform("material.gamma_diffuse", material->gamma_diffuse);
 				shader->set_uniform("material.gamma_specular", material->gamma_specular);
 
-				// Draw!
-				glBindVertexArray(renderable_unit->geometry.vao_handle);
-				glDrawElements(GL_TRIANGLES, renderable_unit->geometry.num_indices, GL_UNSIGNED_INT, 0);
+				gl.draw_renderable_unit(renderable_unit);
 
 				shader->disable();
 			}
 		}
-	}
-
-	void Renderer::initialize_texture(size_t texture_id) {
-		gl.initialize_texture(texture_id);
-	}
-
-	void Renderer::enable_texture(size_t texture_id, unsigned int index) {
-		gl.enable_texture(texture_id, index);
 	}
 
 	void Renderer::reshape_viewport(unsigned int width, unsigned int height) {

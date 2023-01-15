@@ -106,6 +106,12 @@ namespace BD3GE {
 		++renderables_quantity;
 	}
 
+	void GL::draw_renderable_unit(RenderableUnit* renderable_unit) {
+		// Draw!
+		glBindVertexArray(renderable_unit->geometry.vao_handle);
+		glDrawElements(GL_TRIANGLES, renderable_unit->geometry.num_indices, GL_UNSIGNED_INT, 0);
+	}
+
 	void GL::create_texture_handle(unsigned int* texture_handle) {
 		glGenTextures(1, texture_handle);
 	}
