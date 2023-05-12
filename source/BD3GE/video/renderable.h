@@ -27,6 +27,7 @@ namespace BD3GE {
 			RenderableUnit(const RenderableUnit& other);
 			virtual ~RenderableUnit();
 			const RenderableUnit& operator=(const RenderableUnit& other);
+			Transform build_transform_hierarchy();
 
 			RenderableGeometry geometry;
 			Material* material;

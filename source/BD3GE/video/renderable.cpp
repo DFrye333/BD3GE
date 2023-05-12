@@ -53,4 +53,17 @@ namespace BD3GE {
 
 		return *this;
 	}
+
+	Transform RenderableUnit::build_transform_hierarchy() {
+		// Stacks transforms up the renderable hierarchy.
+		Transform world_transform_stack = Transform();
+
+		TransformNode* current_transform_node = this->transform_node;
+		while (current_transform_node) {
+			world_transform_stack = current_transform_node->transform * world_transform_stack;
+			current_transform_node = current_transform_node->parent;
+		}
+
+		return world_transform_stack;
+	}
 }

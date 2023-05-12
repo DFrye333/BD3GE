@@ -120,13 +120,7 @@ namespace BD3GE {
 
 			Renderable* renderable = ComponentManager::get_renderable(scene_object.get_renderable_key());
 			for (RenderableUnit* renderable_unit : renderable->renderable_units) {
-				// Stacks transforms up the renderable hierarchy.
-				Transform world_transform_stack = Transform();
-				TransformNode* current_transform_node = renderable_unit->transform_node;
-				while (current_transform_node) {
-					world_transform_stack = current_transform_node->transform * world_transform_stack;
-					current_transform_node = current_transform_node->parent;
-				}
+				Transform world_transform_stack = renderable_unit->build_transform_hierarchy();
 				world_transform_stack = scene_object_transform * world_transform_stack;
 
 				Shader* shader = ShaderManager::get_shader(renderable_unit->material->shader_id);
