@@ -30,7 +30,7 @@ namespace BD3GE {
 	}
 
 	Shader* ShaderManager::get_shader(const size_t shader_manifest_hash) {
-		return shaders[shader_manifest_hash];
+		return shaders.contains(shader_manifest_hash) ? shaders[shader_manifest_hash] : nullptr;
 	}
 
 	const size_t ShaderManager::get_shader_id(ShaderManifest shader_manifest) {
