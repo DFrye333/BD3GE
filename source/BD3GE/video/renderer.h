@@ -21,6 +21,7 @@ namespace BD3GE {
 			void toggle_wireframe_mode();
 		private:
 			void cache_resources();
+			void setup_renderable(Renderable* renderable);
 
 			Scene* scene;
 			GL gl;

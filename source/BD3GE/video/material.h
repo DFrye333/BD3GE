@@ -15,7 +15,8 @@ namespace BD3GE {
 		public:
 			enum class TYPE {
 				SIMPLE,
-				MAPPED
+				MAPPED,
+				CUBE_MAPPED
 			};
 
 			Material();
@@ -53,6 +54,25 @@ namespace BD3GE {
 
 			size_t map_diffuse_id;
 			size_t map_specular_id;
+	};
+
+	extern "C" class BD3GE_API CubeMappedMaterial : public Material {
+		public:
+			enum class FACE {
+				RIGHT,
+				LEFT,
+				TOP,
+				BOTTOM,
+				BACK,
+				FRONT
+			};
+
+			CubeMappedMaterial();
+			CubeMappedMaterial(size_t shader_id, size_t cubemap_id, CubeMappedMaterial::FACE face);
+			Material* clone() override;
+
+			size_t cubemap_id;
+			CubeMappedMaterial::FACE face;
 	};
 }
 

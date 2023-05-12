@@ -1,7 +1,7 @@
 #include "GL.h"
 
 namespace BD3GE {
-	GL::GL() : vao_handles(nullptr), vbo_handles(nullptr), ibo_handles(nullptr), renderables_quantity(0), is_wireframe_mode_enabled(false) {
+	GL::GL() : vao_handles(nullptr), vbo_handles(nullptr), ibo_handles(nullptr), renderable_units_quantity(0), is_wireframe_mode_enabled(false) {
 		// Set the clear color of the screen.
 		Color dark(16, 16, 16);
 		Color gray(64, 64, 64);
@@ -38,7 +38,7 @@ namespace BD3GE {
 		delete_buffers();
 
 		this->buffers_quantity = buffers_quantity;
-		this->renderables_quantity = 0;
+		this->renderable_units_quantity = 0;
 
 		vao_handles = new GLuint[buffers_quantity];
 		vbo_handles = new GLuint[buffers_quantity];
@@ -75,13 +75,17 @@ namespace BD3GE {
 	}
 
 	void GL::setup_vao(RenderableUnit* renderable_unit) {
-		renderable_unit->geometry.vao_handle = vao_handles[renderables_quantity];
+		if (renderable_units_quantity > buffers_quantity) {
+			std::cout << "Surpassed buffer quantity!" << std::endl;
+		}
+
+		renderable_unit->geometry.vao_handle = vao_handles[renderable_units_quantity];
 
 		glBindVertexArray(renderable_unit->geometry.vao_handle);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_handles[renderables_quantity]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_handles[renderable_units_quantity]);
 		glBufferData(GL_ARRAY_BUFFER, renderable_unit->geometry.num_vertices * sizeof(Vertex), renderable_unit->geometry.vbo, GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_handles[renderables_quantity]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_handles[renderable_units_quantity]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderable_unit->geometry.num_indices * sizeof(GLuint), renderable_unit->geometry.ibo, GL_DYNAMIC_DRAW);
 
 		// Positions
@@ -96,24 +100,13 @@ namespace BD3GE {
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, uv)));
 		glEnableVertexAttribArray(2);
 
-		Material* material = renderable_unit->material;
-		if (material->type == Material::TYPE::MAPPED) {
-			MappedMaterial* mapped_material = (MappedMaterial*)material;
-			initialize_texture(mapped_material->map_diffuse_id);
-			initialize_texture(mapped_material->map_specular_id);
-		}
-
-		++renderables_quantity;
+		++renderable_units_quantity;
 	}
 
 	void GL::draw_renderable_unit(RenderableUnit* renderable_unit) {
 		// Draw!
 		glBindVertexArray(renderable_unit->geometry.vao_handle);
 		glDrawElements(GL_TRIANGLES, renderable_unit->geometry.num_indices, GL_UNSIGNED_INT, 0);
-	}
-
-	void GL::create_texture_handle(unsigned int* texture_handle) {
-		glGenTextures(1, texture_handle);
 	}
 
 	void GL::initialize_texture(size_t texture_id) {
@@ -126,8 +119,9 @@ namespace BD3GE {
 
 		glBindTexture(GL_TEXTURE_2D, texture_handle);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -145,11 +139,56 @@ namespace BD3GE {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
+	void GL::initialize_cubemap(size_t cubemap_id) {
+		unsigned int cubemap_handle;
+		if (!texture_id_to_handle.contains(cubemap_id)) {
+			create_texture_handle(&cubemap_handle);
+			texture_id_to_handle[cubemap_id] = cubemap_handle;
+		}
+		cubemap_handle = texture_id_to_handle[cubemap_id];
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_handle);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		std::vector<Texture*> textures = TextureManager::get_cubemap(cubemap_id);
+		if (textures.empty()) { return; }
+
+		for (unsigned short i = 0; i < 6; ++i) {
+			Texture* texture = textures[i];
+
+			GLint format = 0;
+			switch (texture->quantity_channels) {
+				case 1: format = GL_RED; break;
+				case 3: format = GL_RGB; break;
+				case 4: format = GL_RGBA; break;
+			}
+
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, texture->width, texture->height, 0, format, GL_UNSIGNED_BYTE, texture->data);
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		}
+	}
+
 	void GL::enable_texture(size_t texture_id, unsigned int index) {
 		unsigned int texture_handle = texture_id_to_handle[texture_id];
 		// TODO: Make this dynamic.
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, texture_handle);
+	}
+
+	void GL::enable_cubemap(size_t cubemap_id, unsigned int index) {
+		unsigned int texture_handle = texture_id_to_handle[cubemap_id];
+		// TODO: Make this dynamic.
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_handle);
+	}
+
+	void GL::create_texture_handle(unsigned int* texture_handle) {
+		glGenTextures(1, texture_handle);
 	}
 
 	void GL::clear_buffers() {
@@ -209,5 +248,9 @@ namespace BD3GE {
 	void GL::toggle_wireframe_mode() {
 		is_wireframe_mode_enabled = !is_wireframe_mode_enabled;
 		set_wireframe_mode(is_wireframe_mode_enabled);
+	}
+
+	void GL::set_depth_testing(bool should_enable_depth_testing) {
+		should_enable_depth_testing ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 	}
 }

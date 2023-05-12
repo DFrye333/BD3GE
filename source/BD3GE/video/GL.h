@@ -24,9 +24,10 @@ namespace BD3GE {
 			void									setup_vaos(std::vector<RenderableUnit*> renderable_units);
 			void									setup_vao(RenderableUnit* renderable_unit);
 			void									draw_renderable_unit(RenderableUnit* renderable_unit);
-			void									create_texture_handle(unsigned int* texture_handle);
 			void									initialize_texture(size_t texture_id);
+			void									initialize_cubemap(size_t cubemap_id);
 			void									enable_texture(size_t texture_id, unsigned int index);
+			void									enable_cubemap(size_t texture_id, unsigned int index);
 			void									clear_buffers();
 			void									reshape_viewport(unsigned int x, unsigned int y);
 			const void								print_info();
@@ -38,8 +39,11 @@ namespace BD3GE {
 			unsigned int							get_viewport_height();
 			void									set_wireframe_mode(bool should_enable_wireframe_mode);
 			void									toggle_wireframe_mode();
+			void									set_depth_testing(bool should_enable_depth_testing);
 
 		private:
+
+			void									create_texture_handle(unsigned int* texture_handle);
 
 			unsigned int							viewport_width;
 			unsigned int							viewport_height;
@@ -49,7 +53,7 @@ namespace BD3GE {
 			GLuint*									vbo_handles;
 			GLuint*									ibo_handles;
 			unsigned int							buffers_quantity;
-			unsigned int							renderables_quantity;
+			unsigned int							renderable_units_quantity;
 	};
 }
 

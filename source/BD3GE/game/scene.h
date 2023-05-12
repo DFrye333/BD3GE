@@ -13,6 +13,7 @@
 #include "../utility/slotmap.h"
 #include "../video/brush.h"
 #include "../video/camera.h"
+#include "../video/cubemap.h"
 #include "../video/mesh.h"
 #include "../video/model.h"
 #include "../video/renderable.h"
@@ -41,6 +42,7 @@ namespace BD3GE {
 			SlotmapKey add_renderable_object(Object&& new_node);
 			SlotmapKey add_renderable_object(Object&& new_node, SlotmapKey parent_node);
 			SlotmapKey add_renderable(Renderable&& renderable);
+			SlotmapKey set_skybox(std::string skybox_path);
 			Object* get_object(SlotmapKey node_key);
 			void remove_object(SlotmapKey node_key);
 			void move_object(SlotmapKey node_key, Vector3 new_world_position);
@@ -50,6 +52,7 @@ namespace BD3GE {
 
 			Camera* camera;
 			Quadtree renderable_objects_partitioning;
+			SlotmapKey skybox_key;
 			SlotmapKey root_scene_node;
 			Slotmap<SceneNode> scene_nodes;
 			std::vector<SlotmapKey> renderable_objects_collection;

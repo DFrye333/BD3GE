@@ -47,6 +47,10 @@ namespace BD3GE {
 		geometry.ibo[5] = (GLuint)3;
 	}
 
+	RectangleBrush::RectangleBrush(Material* material, float width, float height, TransformNode* transform_node) : RectangleBrush(material, width, height) {
+		this->transform_node = transform_node;
+	}
+
 	CircularBrush::CircularBrush(Material* material, float radius, int resolution) : Brush(material) {
 		geometry.num_vertices = (4 * resolution) + 1;
 		geometry.vbo = new Vertex[geometry.num_vertices];
@@ -91,7 +95,7 @@ namespace BD3GE {
 		geometry.vbo[0] = Vertex(
 			Vector3(-width / 2, height / 2, length / 2),
 			Vector3(-1, 1, 1),
-			Vector2(0, 0)
+			Vector2(0, 0)	// TODO (unified cubemaps): Set these up for a standard cubemap cross layout?
 		);
 
 		// Near top-right

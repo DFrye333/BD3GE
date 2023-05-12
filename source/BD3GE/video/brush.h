@@ -5,6 +5,7 @@
 #include <numbers>
 
 #include "../system/api.h"
+#include "../utility/transform.h"
 #include "../utility/vector.h"
 #include "../video/material.h"
 #include "../video/renderable.h"
@@ -21,6 +22,7 @@ namespace BD3GE {
 	extern "C" class BD3GE_API RectangleBrush : public Brush {
 		public:
 			RectangleBrush(Material* material, float width, float height);
+			RectangleBrush(Material* material, float width, float height, TransformNode* transform_node);
 	};
 
 	extern "C" class BD3GE_API CircularBrush : public Brush {

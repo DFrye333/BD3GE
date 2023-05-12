@@ -7,25 +7,25 @@ namespace BD3GE {
 
 	Material::Material(size_t shader_id, float gloss_factor) : shader_id(shader_id), gloss_factor(gloss_factor) {}
 
-	SimpleMaterial::SimpleMaterial(size_t shader, Color color) : Material(shader), color_ambient(color), color_diffuse(color), color_specular(color) {
+	SimpleMaterial::SimpleMaterial(size_t shader_id, Color color) : Material(shader_id), color_ambient(color), color_diffuse(color), color_specular(color) {
 		this->type = Material::TYPE::SIMPLE;
 		this->gamma_diffuse = 1.0f;
 		this->gamma_specular = 1.0f;
 	}
 
-	SimpleMaterial::SimpleMaterial(size_t shader, Color color_ambient, Color color_diffuse, Color color_specular) : Material(shader), color_ambient(color_ambient), color_diffuse(color_diffuse), color_specular(color_specular) {
+	SimpleMaterial::SimpleMaterial(size_t shader_id, Color color_ambient, Color color_diffuse, Color color_specular) : Material(shader_id), color_ambient(color_ambient), color_diffuse(color_diffuse), color_specular(color_specular) {
 		this->type = Material::TYPE::SIMPLE;
 		this->gamma_diffuse = 1.0f;
 		this->gamma_specular = 1.0f;
 	}
 
-	SimpleMaterial::SimpleMaterial(size_t shader, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor) : Material(shader, gloss_factor), color_ambient(color_ambient), color_diffuse(color_diffuse), color_specular(color_specular) {
+	SimpleMaterial::SimpleMaterial(size_t shader_id, Color color_ambient, Color color_diffuse, Color color_specular, float gloss_factor) : Material(shader_id, gloss_factor), color_ambient(color_ambient), color_diffuse(color_diffuse), color_specular(color_specular) {
 		this->type = Material::TYPE::SIMPLE;
 		this->gamma_diffuse = 1.0f;
 		this->gamma_specular = 1.0f;
 	}
 
-	SimpleMaterial::SimpleMaterial(size_t shader, aiMaterial* material) : Material(shader) {
+	SimpleMaterial::SimpleMaterial(size_t shader_id, aiMaterial* material) : Material(shader_id) {
 		this->type = Material::TYPE::SIMPLE;
 		this->gamma_diffuse = 1.0f;
 		this->gamma_specular = 1.0f;
@@ -59,13 +59,13 @@ namespace BD3GE {
 		this->gamma_specular = GAMMA;
 	}
 
-	MappedMaterial::MappedMaterial(size_t shader, size_t map_diffuse_id, size_t map_specular_id, float gloss_factor) : Material(shader, gloss_factor), map_diffuse_id(map_diffuse_id), map_specular_id(map_specular_id) {
+	MappedMaterial::MappedMaterial(size_t shader_id, size_t map_diffuse_id, size_t map_specular_id, float gloss_factor) : Material(shader_id, gloss_factor), map_diffuse_id(map_diffuse_id), map_specular_id(map_specular_id) {
 		this->type = Material::TYPE::MAPPED;
 		this->gamma_diffuse = GAMMA;
 		this->gamma_specular = GAMMA;
 	}
 
-	MappedMaterial::MappedMaterial(size_t shader, aiMaterial* material) : Material(shader) {
+	MappedMaterial::MappedMaterial(size_t shader_id, aiMaterial* material) : Material(shader_id) {
 		this->type = Material::TYPE::MAPPED;
 		this->gamma_diffuse = GAMMA;
 		this->gamma_specular = GAMMA;
@@ -84,5 +84,21 @@ namespace BD3GE {
 
 	Material* MappedMaterial::clone() {
 		return new MappedMaterial(*this);
+	}
+
+	CubeMappedMaterial::CubeMappedMaterial() {
+		this->type = Material::TYPE::CUBE_MAPPED;
+		this->gamma_diffuse = GAMMA;
+		this->gamma_specular = GAMMA;
+	}
+
+	CubeMappedMaterial::CubeMappedMaterial(size_t shader_id, size_t cubemap_id, CubeMappedMaterial::FACE face) : Material(shader_id), cubemap_id(cubemap_id), face(face) {
+		this->type = Material::TYPE::CUBE_MAPPED;
+		this->gamma_diffuse = GAMMA;
+		this->gamma_specular = GAMMA;
+	}
+
+	Material* CubeMappedMaterial::clone() {
+		return new CubeMappedMaterial(*this);
 	}
 }

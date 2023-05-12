@@ -72,6 +72,12 @@ namespace BD3GE {
 		return renderable_key;
 	}
 
+	SlotmapKey Scene::set_skybox(std::string skybox_path) {
+		SlotmapKey skybox_key = ComponentManager::add_renderable(Cubemap(skybox_path));
+		this->skybox_key = skybox_key;
+		return skybox_key;
+	}
+
 	Object* Scene::get_object(SlotmapKey node_key) {
 		SceneNode* node = scene_nodes[node_key];
 		return node != nullptr ? &(node->object) : nullptr;
@@ -97,7 +103,7 @@ namespace BD3GE {
 	}
 
 	std::vector<SlotmapKey> Scene::get_visible_renderable_keys() {
-		if (this->should_frustum_cull) {
+		if (ConfigManager::get_config_value_bool("enable_camera_frustum_culling") && should_frustum_cull) {
 			Region bounding_image_plane_projection_region = this->camera->calculate_bounding_image_plane_projection_region();
 			return this->renderable_objects_partitioning.collect_overlapping_nodes(bounding_image_plane_projection_region);
 		} else {
