@@ -110,8 +110,6 @@ namespace BD3GE {
 	Region Camera::calculate_bounding_image_plane_projection_region(float plane_y) {
 		Transform* world_transform = get_world_transform();
 		Matrix4 world_transform_matrix = world_transform->get_matrix();
-		Transform view_transform = get_view_transform();
-		Matrix4 view_transform_matrix = view_transform.get_matrix();
 
 		Vector3 camera_world_position = this->get_position();
 		Vector3 camera_space_forward = Vector3(0, 0, -1);
@@ -133,7 +131,7 @@ namespace BD3GE {
 
 		Vector3 bounding_bottom_left_world = bottom_left_intersect;
 		Vector3 bounding_top_right_world = top_right_intersect;
-		for (Vector3 intersect_world : std::vector<Vector3>{ bottom_right_intersect, top_left_intersect, top_right_intersect }) {
+		for (Vector3 intersect_world : std::vector<Vector3>{ bottom_left_intersect, bottom_right_intersect, top_left_intersect, top_right_intersect }) {
 			bounding_bottom_left_world.v.g.x = intersect_world.v.g.x < bounding_bottom_left_world.v.g.x ? intersect_world.v.g.x : bounding_bottom_left_world.v.g.x;
 			bounding_bottom_left_world.v.g.z = intersect_world.v.g.z < bounding_bottom_left_world.v.g.z ? intersect_world.v.g.z : bounding_bottom_left_world.v.g.z;
 			bounding_top_right_world.v.g.x = intersect_world.v.g.x > bounding_top_right_world.v.g.x ? intersect_world.v.g.x : bounding_top_right_world.v.g.x;
