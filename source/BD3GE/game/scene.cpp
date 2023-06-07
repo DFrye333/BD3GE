@@ -105,6 +105,12 @@ namespace BD3GE {
 	std::vector<SlotmapKey> Scene::get_visible_renderable_keys() {
 		if (ConfigManager::get_config_value_bool("enable_camera_frustum_culling") && should_frustum_cull) {
 			Region bounding_image_plane_projection_region = this->camera->calculate_bounding_image_plane_projection_region();
+
+			// Overfitting projection region helps to mitigate overly-aggressive culling at the edges of the camera frustum.
+			float overfit = 1000;
+			bounding_image_plane_projection_region.position -= BD3GE::Vector2(overfit, overfit);
+			bounding_image_plane_projection_region.range += BD3GE::Vector2(2 * overfit, 2 * overfit);
+
 			return this->renderable_objects_partitioning.collect_overlapping_nodes(bounding_image_plane_projection_region);
 		} else {
 			return renderable_objects_collection;
