@@ -253,6 +253,10 @@ namespace BD3GE {
 	}
 
 	short Input::get_primary_connected_gamepad_index() {
+		if (BD3GE::ConfigManager::has_config_value_int("gamepad_index")) {
+			return BD3GE::ConfigManager::get_config_value_int("gamepad_index");
+		}
+
 		for (short i = 0; i < Gamepad::MAX_QUANTITY_GAMEPADS; ++i) {
 			if (check_is_gamepad_connected(i)) {
 				return i;

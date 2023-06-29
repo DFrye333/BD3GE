@@ -40,6 +40,7 @@ namespace BD3GE {
 	}
 
 	std::string Vector2::get_hash() {
+		// TODO: This is pretty slow. Optimize!
 		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]);
 	}
 
@@ -131,6 +132,10 @@ namespace BD3GE {
 		);
 	}
 
+	bool Vector2::operator!=(const Vector2& other) const {
+		return !(*this == other);
+	}
+
 	std::ostream& operator<<(std::ostream& out, const Vector2& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ")";
 	}
@@ -179,6 +184,7 @@ namespace BD3GE {
 	}
 
 	std::string Vector3::get_hash() {
+		// TODO: This is pretty slow. Optimize!
 		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]) + "," + std::to_string(v.a[2]);
 	}
 
@@ -278,6 +284,10 @@ namespace BD3GE {
 		);
 	}
 
+	bool Vector3::operator!=(const Vector3& other) const {
+		return !(*this == other);
+	}
+
 	std::ostream& operator<<(std::ostream& out, const Vector3& vec) {
 		return out << "(" << vec.v.a[0] << ", " << vec.v.a[1] << ", " << vec.v.a[2] << ")";
 	}
@@ -319,6 +329,7 @@ namespace BD3GE {
 	}
 
 	std::string Vector4::get_hash() {
+		// TODO: This is pretty slow. Optimize!
 		return std::to_string(v.a[0]) + "," + std::to_string(v.a[1]) + "," + std::to_string(v.a[2]) + "," + std::to_string(v.a[3]);
 	}
 
@@ -424,6 +435,10 @@ namespace BD3GE {
 			v.a[2] == other.v.a[2] &&
 			v.a[3] == other.v.a[3]
 		);
+	}
+
+	bool Vector4::operator!=(const Vector4& other) const {
+		return !(*this == other);
 	}
 
 	std::ostream& operator<<(std::ostream& out, const Vector4& vec) {

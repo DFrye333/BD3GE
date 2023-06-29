@@ -7,7 +7,7 @@
 #include "../utility/vector.h"
 
 namespace BD3GE {
-	class Matrix4 {
+	class BD3GE_API Matrix4 {
 		public:
 
 			static const short NUMBER_ROWS = 4;

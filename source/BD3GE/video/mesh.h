@@ -5,6 +5,7 @@
 #include <assimp/scene.h>
 #include <assimp/vector3.h>
 
+#include "../utility/transform.h"
 #include "../utility/vector.h"
 #include "../video/renderable.h"
 

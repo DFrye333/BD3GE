@@ -30,6 +30,7 @@ namespace BD3GE {
 			void local_translate(Vector3 translation);
 			void local_rotate(Vector3 rotation);
 			Vector3 get_position();
+			Vector3 get_scale();
 			Vector3 get_forward();
 			Vector3 get_right();
 			Vector3 get_up();

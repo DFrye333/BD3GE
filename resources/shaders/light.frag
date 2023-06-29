@@ -137,11 +137,11 @@ void main(void) {
 
 		if (!light.is_active) { continue; }
 
-		vec3 towards_light_direction = light.position - world_position.xyz;
+		vec3 towards_light_direction = normalize(light.position - world_position.xyz);
 
 		vec3 ambient_component = light.color_ambient * material_component_ambient;
 
-		vec3 diffuse_component = light.color_diffuse * max(0.0f, dot(normal_vector, normalize(towards_light_direction))) * material_component_diffuse;
+		vec3 diffuse_component = light.color_diffuse * max(0.0f, dot(normal_vector, towards_light_direction)) * material_component_diffuse;
 		
 		float specular_factor = 0.0f;
 		if (enable_blinn_phong) {
@@ -164,13 +164,13 @@ void main(void) {
 
 		if (!light.is_active) { continue; }
 
-		vec3 towards_light_direction = normalize(spot_lights[i].position - world_position.xyz);
+		vec3 towards_light_direction = normalize(light.position - world_position.xyz);
 		float light_center_offset = dot(light.direction, -towards_light_direction);
 
 		if (light_center_offset > light.outer_cutoff) {
 			vec3 ambient_component = light.color_ambient * material_component_ambient;
 
-			vec3 diffuse_component = light.color_diffuse * max(0.0f, dot(normal_vector, normalize(towards_light_direction))) * material_component_diffuse;
+			vec3 diffuse_component = light.color_diffuse * max(0.0f, dot(normal_vector, towards_light_direction)) * material_component_diffuse;
 
 			float specular_factor = 0.0f;
 			if (enable_blinn_phong) {

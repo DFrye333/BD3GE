@@ -43,6 +43,7 @@ namespace BD3GE {
 			Vector2 operator/(const float other) const;
 			Vector2 operator-() const;
 			bool operator==(const Vector2& other) const;
+			bool operator!=(const Vector2& other) const;
 			friend BD3GE_API std::ostream& operator<<(std::ostream& out, const Vector2& vec);
 
 			static constexpr float EPSILON = 1.0e-12f;
@@ -92,6 +93,7 @@ namespace BD3GE {
 			Vector3 operator/(const float other) const;
 			Vector3 operator-() const;
 			bool operator==(const Vector3& other) const;
+			bool operator!=(const Vector3& other) const;
 			friend BD3GE_API std::ostream& operator<<(std::ostream& out, const Vector3& vec);
 
 			static constexpr float EPSILON = 1.0e-12f;
@@ -142,6 +144,7 @@ namespace BD3GE {
 			Vector4 operator/(const float other) const;
 			Vector4 operator-() const;
 			bool operator==(const Vector4& other) const;
+			bool operator!=(const Vector4& other) const;
 			friend BD3GE_API std::ostream& operator<<(std::ostream& out, const Vector4& vec);
 
 			static constexpr float EPSILON = 1.0e-12f;

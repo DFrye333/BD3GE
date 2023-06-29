@@ -95,6 +95,10 @@ namespace BD3GE {
 		return get_world_transform()->get_position();
 	}
 
+	Vector3 Object::get_scale() {
+		return get_world_transform()->get_scale();
+	}
+
 	Vector3 Object::get_forward() {
 		return get_world_transform()->get_forward();
 	}

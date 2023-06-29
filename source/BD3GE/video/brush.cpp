@@ -88,8 +88,8 @@ namespace BD3GE {
 		geometry.vbo = new Vertex[geometry.num_vertices];
 
 		float width = dimensions.v.g.x;
-		float length = dimensions.v.g.y;
-		float height = dimensions.v.g.z;
+		float height = dimensions.v.g.y;
+		float length = dimensions.v.g.z;
 
 		// Near top-left
 		geometry.vbo[0] = Vertex(

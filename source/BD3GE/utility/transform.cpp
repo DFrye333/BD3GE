@@ -145,7 +145,7 @@ namespace BD3GE {
 			matrix(2, 0),
 			matrix(2, 1),
 			matrix(2, 2)
-		);
+		).normalize();
 	}
 
 	Vector3 Transform::get_right() {
@@ -154,7 +154,7 @@ namespace BD3GE {
 			matrix(0, 0),
 			matrix(0, 1),
 			matrix(0, 2)
-		);
+		).normalize();
 	}
 
 	Vector3 Transform::get_up() {
@@ -163,7 +163,7 @@ namespace BD3GE {
 			matrix(1, 0),
 			matrix(1, 1),
 			matrix(1, 2)
-		);
+		).normalize();
 	}
 
 	void Transform::set_forward(Vector3 forward) {
