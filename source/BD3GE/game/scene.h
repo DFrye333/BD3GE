@@ -15,6 +15,7 @@
 #include "../video/camera.h"
 #include "../video/cubemap.h"
 #include "../video/mesh.h"
+#include "../video/light.h"
 #include "../video/model.h"
 #include "../video/renderable.h"
 #include "../video/shader.h"
@@ -42,8 +43,14 @@ namespace BD3GE {
 			SlotmapKey add_renderable_object(Object&& new_node);
 			SlotmapKey add_renderable_object(Object&& new_node, SlotmapKey parent_node);
 			SlotmapKey add_renderable(Renderable&& renderable);
+			SlotmapKey add_directional_light(DirectionalLight&& directional_light);
+			SlotmapKey add_point_light(PointLight&& point_light);
+			SlotmapKey add_spot_light(SpotLight&& spot_light);
 			SlotmapKey set_skybox(std::string skybox_path);
 			Object* get_object(SlotmapKey node_key);
+			DirectionalLight* get_directional_light(SlotmapKey directional_light_key);
+			PointLight* get_point_light(SlotmapKey point_light_key);
+			SpotLight* get_spot_light(SlotmapKey spot_light_key);
 			void remove_object(SlotmapKey node_key);
 			void move_object(SlotmapKey node_key, Vector3 new_world_position);
 			std::vector<SlotmapKey> get_visible_renderable_keys();
@@ -57,7 +64,9 @@ namespace BD3GE {
 			Slotmap<SceneNode> scene_nodes;
 			std::vector<SlotmapKey> renderable_objects_collection;
 			std::vector<SlotmapKey> renderable_keys;
-			std::vector<Light*> lights;
+			std::vector<SlotmapKey> directional_light_keys;
+			std::vector<SlotmapKey> point_light_keys;
+			std::vector<SlotmapKey> spot_light_keys;
 			std::vector<Material*> lit_materials;
 			bool should_frustum_cull = true;
 	};

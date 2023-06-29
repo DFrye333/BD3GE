@@ -72,6 +72,27 @@ namespace BD3GE {
 		return renderable_key;
 	}
 
+	SlotmapKey Scene::add_directional_light(DirectionalLight&& directional_light) {
+		SlotmapKey directional_light_key = ComponentManager::add_directional_light(directional_light);
+		this->directional_light_keys.push_back(directional_light_key);
+
+		return directional_light_key;
+	}
+
+	SlotmapKey Scene::add_point_light(PointLight&& point_light) {
+		SlotmapKey point_light_key = ComponentManager::add_point_light(point_light);
+		this->point_light_keys.push_back(point_light_key);
+
+		return point_light_key;
+	}
+
+	SlotmapKey Scene::add_spot_light(SpotLight&& spot_light) {
+		SlotmapKey spot_light_key = ComponentManager::add_spot_light(spot_light);
+		this->spot_light_keys.push_back(spot_light_key);
+
+		return spot_light_key;
+	}
+
 	SlotmapKey Scene::set_skybox(std::string skybox_path) {
 		SlotmapKey skybox_key = ComponentManager::add_renderable(Cubemap(skybox_path));
 		this->skybox_key = skybox_key;
@@ -81,6 +102,18 @@ namespace BD3GE {
 	Object* Scene::get_object(SlotmapKey node_key) {
 		SceneNode* node = scene_nodes[node_key];
 		return node != nullptr ? &(node->object) : nullptr;
+	}
+
+	DirectionalLight* Scene::get_directional_light(SlotmapKey directional_light_key) {
+		return ComponentManager::get_directional_light(directional_light_key);
+	}
+
+	PointLight* Scene::get_point_light(SlotmapKey point_light_key) {
+		return ComponentManager::get_point_light(point_light_key);
+	}
+
+	SpotLight* Scene::get_spot_light(SlotmapKey spot_light_key) {
+		return ComponentManager::get_spot_light(spot_light_key);
 	}
 
 	void Scene::remove_object(SlotmapKey node_key) {

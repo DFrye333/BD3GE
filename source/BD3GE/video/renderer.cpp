@@ -95,7 +95,17 @@ namespace BD3GE {
 		bool enable_blinn_phong = ConfigManager::get_config_value_bool("enable_blinn_phong");
 
 		Vector3 camera_position = camera_transform->get_position();
-		for (Light* light : scene->lights) {
+		std::vector<Light*> lights;
+		for (SlotmapKey directional_light_key : scene->directional_light_keys) {
+			lights.emplace_back(scene->get_directional_light(directional_light_key));
+		}
+		for (SlotmapKey point_light_key : scene->point_light_keys) {
+			lights.emplace_back(scene->get_point_light(point_light_key));
+		}
+		for (SlotmapKey spot_light_key : scene->spot_light_keys) {
+			lights.emplace_back(scene->get_spot_light(spot_light_key));
+		}
+		for (Light* light : lights) {
 			for (size_t shader_id : shader_ids) {
 				Shader* shader = ShaderManager::get_shader(shader_id);
 				shader->set_light(light);
